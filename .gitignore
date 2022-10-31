@@ -1,0 +1,8 @@
+venv/
+db.sqlite3
+account/__pycache__
+account/migrations
+account/__init__.py
+backend/__init__.py
+backend/__pycache__
+backend.code-workspace
