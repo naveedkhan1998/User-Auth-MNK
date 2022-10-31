@@ -74,12 +74,12 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
         if User.objects.filter(email=email).exists():
             user =  User.objects.get(email=email)
             uid = urlsafe_base64_encode(force_bytes(user.id))
-            print('Encoded UID ',uid)
+            #print('Encoded UID ',uid)
             token = PasswordResetTokenGenerator().make_token(user)
-            print('Password token', token)
-            link = 'http://localhost:3000/api/user/reset/'+uid+'/'+token
-            print('Link reset',link)
-            body = 'Click Following Link to reset your password'+link
+            #print('Password token', token)
+            link = 'http://localhost:3000/api/user/reset/'+uid+'/'+token+'/'
+            #print('Link reset',link)
+            body = 'Click Following Link to reset your password '+link
             data = {
                 'subject':'Password Reset link',
                 'body':body,
