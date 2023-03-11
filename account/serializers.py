@@ -77,7 +77,7 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
             #print('Encoded UID ',uid)
             token = PasswordResetTokenGenerator().make_token(user)
             #print('Password token', token)
-            link = 'https://naveedkhan98.pythonanywhere.com/#/api/user/reset/'+uid+'/'+token+'/'
+            link = 'https://naveedkhan1998.github.io/user-auth-react/#/api/user/reset/'+uid+'/'+token+'/'
             #print('Link reset',link)
             body = 'Click Following Link to reset your password '+link
             data = {
