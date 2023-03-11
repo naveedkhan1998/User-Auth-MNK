@@ -112,6 +112,11 @@ DATABASES = {
         'USER': os.environ.get('MYSQL_USER'),
         'PASSWORD': os.environ.get('MYSQL_PASSWORD'),
         'HOST': os.environ.get('MYSQL_DATABASE_HOST'),
+        'default-character-set': "utf8",
+        'OPTIONS': {
+            'init_command': 'SET default_storage_engine=INNODB',
+            'charset': 'utf8mb4',
+        }
     }
 }
 
