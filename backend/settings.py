@@ -9,12 +9,12 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-import django_heroku
+
 from pathlib import Path
 from datetime import timedelta
 import os
 from pickle import TRUE
-django_heroku.settings(locals())
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     "corsheaders",
+    "managment",
 ]
 
 MIDDLEWARE = [
@@ -106,8 +107,11 @@ AUTH_USER_MODEL = 'account.User'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.environ.get('MYSQL_DATABASE'),
+        'USER': os.environ.get('MYSQL_USER'),
+        'PASSWORD': os.environ.get('MYSQL_PASSWORD'),
+        'HOST': os.environ.get('MYSQL_DATABASE_HOST'),
     }
 }
 
@@ -145,12 +149,21 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+STATIC_URL = 'static/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+MEDIA_URL = 'media/'
+OUTPUT_ROOT = os.path.join(BASE_DIR, "OUTPUTS/")
+OUTPUT_URL = 'outputs/'
+async_load = True
+MAIN_URL = "http://localhost:5000/"
+MAIN_URL_2 = "http://localhost:5000"
 
-STATIC_URL = '/static/'
-
-STATICFILES_DIRS = [
-    BASE_DIR / 'frontend/build/static'
-]
+#STATIC_URL = '/static/'
+#
+#STATICFILES_DIRS = [
+#    BASE_DIR / 'frontend/build/static'
+#]
 
 
 # Default primary key field type
