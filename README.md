@@ -9,13 +9,12 @@ Brief description of the project.
 
 ## Installation
 
-1. Clone the repository: `git clone https://github.com/your-username/project.git`
+1. Clone the repository: `git clone https://github.com/naveedkhan1998/User-Auth-MNK.git`
 2. Change directory to project: `cd project`
-3. Build the Docker image: `docker build -t project-image .`
 
 ## Usage
 
-1. Start the Docker containers: `docker-compose up`
+1. Start the Docker containers: `docker-compose up --build`
 2. Open your web browser and go to `http://localhost:8000`
 
 ## Contributing
