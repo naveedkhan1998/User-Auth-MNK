@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "managment",
     'account',
+    'home',
 ]
 
 MIDDLEWARE = [
@@ -106,10 +107,11 @@ AUTH_USER_MODEL = 'account.User'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('MYSQL_DATABASE','naveedkhan98$userproject'),
-        'USER': os.environ.get('MYSQL_USER','naveedkhan98'),
-        'PASSWORD': os.environ.get('MYSQL_PASSWORD','sefvah-xedVis-0xesju'),
-        'HOST': os.environ.get('MYSQL_DATABASE_HOST','naveedkhan98.mysql.pythonanywhere-services.com'),
+        'NAME': 'user_project',
+        'USER': 'user_project',
+        'PASSWORD':'user_project',
+        'HOST': 'db',
+        'PORT': os.environ.get('MYSQL_DATABASE_PORT', 3306),
         'default-character-set': "utf8",
         'OPTIONS': {
             'init_command': 'SET default_storage_engine=INNODB',
