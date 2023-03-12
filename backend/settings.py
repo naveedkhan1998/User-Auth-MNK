@@ -108,11 +108,10 @@ AUTH_USER_MODEL = 'account.User'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'user_project',
-        'USER': 'user_project',
-        'PASSWORD':'user_project',
-        'HOST': 'db',
-        'PORT': os.environ.get('MYSQL_DATABASE_PORT', 3306),
+        'NAME': os.environ.get('MYSQL_DATABASE','naveedkhan98$userproject'),
+        'USER': os.environ.get('MYSQL_USER','naveedkhan98'),
+        'PASSWORD': os.environ.get('MYSQL_PASSWORD','sefvah-xedVis-0xesju'),
+        'HOST': os.environ.get('MYSQL_DATABASE_HOST','naveedkhan98.mysql.pythonanywhere-services.com'),
         'default-character-set': "utf8",
         'OPTIONS': {
             'init_command': 'SET default_storage_engine=INNODB',
@@ -120,7 +119,6 @@ DATABASES = {
         }
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
