@@ -14,6 +14,7 @@ from pathlib import Path
 from datetime import timedelta
 import os
 from pickle import TRUE
+import mimetypes
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -53,6 +54,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "managment",
     'account',
+    'home',
 ]
 
 MIDDLEWARE = [
@@ -106,10 +108,11 @@ AUTH_USER_MODEL = 'account.User'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('MYSQL_DATABASE','naveedkhan98$userproject'),
-        'USER': os.environ.get('MYSQL_USER','naveedkhan98'),
-        'PASSWORD': os.environ.get('MYSQL_PASSWORD','sefvah-xedVis-0xesju'),
-        'HOST': os.environ.get('MYSQL_DATABASE_HOST','naveedkhan98.mysql.pythonanywhere-services.com'),
+        'NAME': 'user_project',
+        'USER': 'user_project',
+        'PASSWORD':'user_project',
+        'HOST': 'db',
+        'PORT': os.environ.get('MYSQL_DATABASE_PORT', 3306),
         'default-character-set': "utf8",
         'OPTIONS': {
             'init_command': 'SET default_storage_engine=INNODB',
@@ -171,7 +174,8 @@ MAIN_URL_2 = "http://localhost:5000"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
-
+mimetypes.add_type("text/css", ".css", True)
+mimetypes.add_type("text/javascript", ".js", True)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SIMPLE_JWT = {
