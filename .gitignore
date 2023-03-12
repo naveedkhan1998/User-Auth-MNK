@@ -1,8 +1,7 @@
 venv/
 db.sqlite3
-account/__pycache__
-backend/__pycache__
+__pycache__
 backend.code-workspace
 .env
-/migrations/
+migrations
 static/
