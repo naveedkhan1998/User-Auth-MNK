@@ -1,31 +1,28 @@
 # User-Auth-MNK
-README
-This project contains a Dockerized application that can be easily deployed using Docker Compose.
 
-Getting Started
-To get started with this project, you'll need to have Docker and Docker Compose installed on your machine.
+Brief description of the project.
 
-Installation
-If you don't have Docker and Docker Compose installed on your machine, you can follow the instructions provided by Docker to install Docker and install Docker Compose.
+## Prerequisites
 
-Running the Application
-Once you have Docker and Docker Compose installed, you can clone this repository and run the application using the following commands:
+- Docker
+- Docker Compose
 
-Clone the repository:
+## Installation
 
-sh
-Copy code
-git clone https://github.com/username/repository.git
-cd repository
-Build and start the Docker containers:
+1. Clone the repository: `git clone https://github.com/your-username/project.git`
+2. Change directory to project: `cd project`
+3. Build the Docker image: `docker build -t project-image .`
 
-sh
-Copy code
-docker-compose up --build
-This command will build the Docker containers for the application and start them. Once the containers are running, you can access the application in your web browser by visiting http://localhost:8000.
+## Usage
 
-Contributing
-If you'd like to contribute to this project, please fork the repository and make your changes. When you're ready to submit your changes, create a pull request and describe the changes you've made. We'll review your changes and merge them if they look good.
+1. Start the Docker containers: `docker-compose up`
+2. Open your web browser and go to `http://localhost:8000`
 
-License
-This project is licensed under the MIT License.
+## Contributing
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
