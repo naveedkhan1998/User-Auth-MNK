@@ -9,7 +9,7 @@ from rest_framework.response import Response
 
 
 @api_view(["GET"])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def get_students_list(request):
     student_qs = Student.objects.all()
     data = StudentSerializer(student_qs,many=True).data
@@ -17,7 +17,7 @@ def get_students_list(request):
 
 
 @api_view(["POST","PUT","DELETE"])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def update_students_list(request):
     if request.method == 'POST':
         data2 = request.data
