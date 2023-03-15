@@ -24,8 +24,8 @@ def update_students_list(request):
         data2 = request.data
         serializer = StudentSerializer(data=data2)
         if serializer.is_valid():
-            serializer.create(validated_data=serializer.validated_data)
-            return Response({"msg":"created_succesfully"},status=200)
+            obj = serializer.create(validated_data=serializer.validated_data)
+            return Response({"new_object":{'id':obj.id,**serializer.data},"msg":"created_succesfully"},status=200)
         else:
             return Response({"msg":"error"},status=400)
     if request.method == 'PUT':
