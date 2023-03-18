@@ -1,11 +1,11 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from .serializers import SendPasswordResetEmailSerializer, UserChangePasswordSerializer, UserLoginSerializer, UserPasswordResetSerializer, UserProfileSerializer, UserRegistrationSerializer
+from .serializers import SendPasswordResetEmailSerializer, UserChangePasswordSerializer, UserLoginSerializer, UserPasswordResetSerializer, UserProfileSerializer, UserRegistrationSerializer,UserRegistrationEmailSerializer
 from django.contrib.auth import authenticate
 from .renderers import UserRenderer
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework.decorators import api_view, permission_classes
 # Create your views here.
 
@@ -20,6 +20,14 @@ def get_tokens_for_user(user):
 
 
 
+@permission_classes([AllowAny])
+class UserRegistrationEmailView(APIView):
+    renderer_classes = [UserRenderer]
+    def post(self,request,format=None):
+        serializer = UserRegistrationEmailSerializer(data= request.data)
+        if serializer.is_valid(raise_exception=True):
+            user = serializer.save()
+            return Response({'msg':' opt sent'},status=status.HTTP_201_CREATED)
 
 class UserRegistrationView(APIView):
     renderer_classes = [UserRenderer]
