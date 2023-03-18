@@ -4,8 +4,7 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
 #custom model
 class UserManager(BaseUserManager):
-    def create_user(self, email, name,tc, password=None,
-    password2=None):
+    def create_user(self, email, name,tc,otp, password=None,password2=None):
         """
         Creates and saves a User with the given email, name,
         tc and password.
@@ -17,12 +16,14 @@ class UserManager(BaseUserManager):
             email=self.normalize_email(email),
             name=name,
             tc=tc,
+            otp = otp,
+            is_email_verify=True
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email,name,tc, password=None,
+    def create_superuser(self, email,name,tc,otp, password=None,
     password2=None):
         """
         Creates and saves a superuser with the given email, date of
@@ -33,6 +34,8 @@ class UserManager(BaseUserManager):
             password=password,
             name=name,
             tc=tc,
+            otp = otp,
+            is_email_verify=True
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -48,7 +51,9 @@ class User(AbstractBaseUser):
     name = models.CharField(max_length=200)
     tc = models.BooleanField()
     is_active = models.BooleanField(default=True)
+    is_email_verify = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
+    otp = models.IntegerField(null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
 
@@ -77,3 +82,17 @@ class User(AbstractBaseUser):
         return self.is_admin
 
 
+class UserOtps(models.Model):
+    email = models.EmailField(
+        verbose_name='Email',
+        max_length=255,
+        unique=True,
+    )
+    otp = models.IntegerField(blank=False,null=False)
+    attempts = models.IntegerField(default=5)
+    is_used = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)
+
+    def __str__(self):
+        return self.email

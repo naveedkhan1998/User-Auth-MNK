@@ -14,6 +14,7 @@ from pathlib import Path
 from datetime import timedelta
 import os
 from pickle import TRUE
+import mimetypes
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -34,8 +35,8 @@ ALLOWED_HOSTS = ['*']
 EMAIL_BACKEND ="django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
+EMAIL_HOST_USER = os.environ.get('EMAIL_USER','dtemplarsarsh@gmail.com')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD','felrivmvhkybxigr')
 EMAIL_USE_TLS = True
 
 # Application definition
@@ -47,12 +48,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'account',
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     "corsheaders",
     "managment",
+    'account',
+    'home',
 ]
 
 MIDDLEWARE = [
@@ -74,9 +76,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            BASE_DIR / 'frontend/build'
-        ],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -108,13 +108,17 @@ AUTH_USER_MODEL = 'account.User'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('MYSQL_DATABASE'),
-        'USER': os.environ.get('MYSQL_USER'),
-        'PASSWORD': os.environ.get('MYSQL_PASSWORD'),
-        'HOST': os.environ.get('MYSQL_DATABASE_HOST'),
+        'NAME': os.environ.get('MYSQL_DATABASE','naveedkhan98$userproject'),
+        'USER': os.environ.get('MYSQL_USER','naveedkhan98'),
+        'PASSWORD': os.environ.get('MYSQL_PASSWORD','sefvah-xedVis-0xesju'),
+        'HOST': os.environ.get('MYSQL_DATABASE_HOST','naveedkhan98.mysql.pythonanywhere-services.com'),
+        'default-character-set': "utf8",
+        'OPTIONS': {
+            'init_command': 'SET default_storage_engine=INNODB',
+            'charset': 'utf8mb4',
+        }
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -168,12 +172,13 @@ MAIN_URL_2 = "http://localhost:5000"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
-
+mimetypes.add_type("text/css", ".css", True)
+mimetypes.add_type("text/javascript", ".js", True)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=10),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=5),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': True,
