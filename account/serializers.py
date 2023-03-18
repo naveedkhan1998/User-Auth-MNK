@@ -99,9 +99,17 @@ class UserLoginSerializer(serializers.ModelSerializer):
         fields = ['email','password']
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    @staticmethod
+    def get_avatar(obj):
+        try:
+            return obj.file.url
+        except:
+            return None
+        
+    avatar = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ['id','email','name']
+        fields = ['id','email','name','avatar']
 
 class UserChangePasswordSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=255,style = {

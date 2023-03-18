@@ -48,6 +48,12 @@ class User(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
+    avatar = models.ImageField(
+        verbose_name='avatar',
+        upload_to='user/avatar/',
+        null=True,
+        default='/profile_icon.png'
+    )
     name = models.CharField(max_length=200)
     tc = models.BooleanField()
     is_active = models.BooleanField(default=True)
