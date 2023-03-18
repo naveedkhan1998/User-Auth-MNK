@@ -4,4 +4,3 @@ __pycache__
 backend.code-workspace
 .env
 migrations
-static/
