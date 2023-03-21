@@ -109,7 +109,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     avatar = serializers.SerializerMethodField('get_avatar')
     class Meta:
         model = User
-        fields = ['id','email','name','avatar','is_admin','is_staff','is_in_session']
+        fields = ['id','email','name','avatar','is_admin','is_teacher','is_in_session']
 
 class UserChangePasswordSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=255,style = {
