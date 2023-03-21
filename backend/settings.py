@@ -160,10 +160,10 @@ MEDIA_URL = 'media/'
 OUTPUT_ROOT = os.path.join(BASE_DIR, "OUTPUTS/")
 OUTPUT_URL = 'outputs/'
 async_load = True
-MAIN_URL = "http://localhost:8000/"
-MAIN_URL_2 = "http://localhost:8000"
-#MAIN_URL = "https://naveedkhan98.pythonanywhere.com/"
-#MAIN_URL_2 = "https://naveedkhan98.pythonanywhere.com"
+#MAIN_URL = "http://localhost:8000/"
+#MAIN_URL_2 = "http://localhost:8000"
+MAIN_URL = "https://naveedkhan98.pythonanywhere.com/"
+MAIN_URL_2 = "https://naveedkhan98.pythonanywhere.com"
 
 #STATIC_URL = '/static/'
 #
