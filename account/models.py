@@ -48,6 +48,12 @@ class User(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
+    avatar = models.ImageField(
+        verbose_name='avatar',
+        upload_to='user/avatar/',
+        null=True,
+        default='/profile_icon.png'
+    )
     name = models.CharField(max_length=200)
     tc = models.BooleanField()
     is_active = models.BooleanField(default=True)
@@ -56,6 +62,8 @@ class User(AbstractBaseUser):
     otp = models.IntegerField(null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
+    is_in_session = models.BooleanField(default=False)
+    is_teacher = models.BooleanField(default=False)
 
     objects = UserManager()
 
