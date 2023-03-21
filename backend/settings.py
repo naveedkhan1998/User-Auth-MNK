@@ -162,8 +162,10 @@ MEDIA_URL = 'media/'
 OUTPUT_ROOT = os.path.join(BASE_DIR, "OUTPUTS/")
 OUTPUT_URL = 'outputs/'
 async_load = True
-MAIN_URL = "http://localhost:5000/"
-MAIN_URL_2 = "http://localhost:5000"
+MAIN_URL = "http://localhost:8000/"
+MAIN_URL_2 = "http://localhost:8000"
+#MAIN_URL = "https://naveedkhan98.pythonanywhere.com/"
+#MAIN_URL_2 = "https://naveedkhan98.pythonanywhere.com"
 
 #STATIC_URL = '/static/'
 #
@@ -179,7 +181,7 @@ mimetypes.add_type("text/javascript", ".js", True)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=5),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,

@@ -12,7 +12,7 @@ from .models import User,UserOtps
 from django.utils.encoding import smart_str,force_bytes,DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from backend.settings import BASE_DIR
+from backend.settings import BASE_DIR,MAIN_URL_2
 
 
 class UserRegistrationEmailSerializer(serializers.ModelSerializer):
@@ -102,14 +102,14 @@ class UserProfileSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_avatar(obj):
         try:
-            return obj.file.url
+            return MAIN_URL_2+obj.avatar.url
         except:
             return None
         
-    avatar = serializers.SerializerMethodField()
+    avatar = serializers.SerializerMethodField('get_avatar')
     class Meta:
         model = User
-        fields = ['id','email','name','avatar']
+        fields = ['id','email','name','avatar','is_admin','is_staff','is_in_session']
 
 class UserChangePasswordSerializer(serializers.ModelSerializer):
     password = serializers.CharField(max_length=255,style = {

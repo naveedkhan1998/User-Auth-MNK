@@ -62,6 +62,8 @@ class User(AbstractBaseUser):
     otp = models.IntegerField(null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
+    is_in_session = models.BooleanField(default=False)
+    is_teacher = models.BooleanField(default=False)
 
     objects = UserManager()
 
