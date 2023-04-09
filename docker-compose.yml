@@ -21,6 +21,10 @@ services:
       - MYSQL_USER=user_project
       - MYSQL_PASSWORD=user_project
       - MYSQL_ROOT_PASSWORD=user_project
+      - MYSQL_LOG_BIN=ON
+      - MYSQL_BINLOG_FORMAT=MIXED
+      - MYSQL_MAX_BINLOG_SIZE=100M
+      - MYSQL_MAX_BINLOG_FILES=10
     volumes:
       - /tmp/app/mysqld:/var/run/mysqld
       - mysql-data:/var/lib/mysql

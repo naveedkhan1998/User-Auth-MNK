@@ -34,8 +34,7 @@ class UserManager(BaseUserManager):
             password=password,
             name=name,
             tc=tc,
-            otp = otp,
-            is_email_verify=True
+            otp = otp
         )
         user.is_admin = True
         user.save(using=self._db)

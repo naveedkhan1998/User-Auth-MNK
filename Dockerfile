@@ -1,29 +1,48 @@
+FROM python:3.10-alpine as builder
+
+RUN apk update && apk add --no-cache \
+    gcc \
+    musl-dev \
+    postgresql-dev \
+    libffi-dev \
+    openssl-dev \
+    make \
+    linux-headers \
+    g++ \
+    git \
+    cargo \
+    wget \
+    mariadb-connector-c-dev \
+    mariadb-connector-c \
+    mariadb-dev
+
+WORKDIR /app
+
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir --upgrade pip setuptools \
+    && pip wheel --no-cache-dir --wheel-dir=/app/wheels -r requirements.txt
+
 FROM python:3.10-alpine
 
-ENV PYTHONNUMBUFFERED 1
-RUN apk update
-RUN apk add make
-RUN apk add musl-dev wget git build-base linux-headers g++ gcc libffi-dev openssl-dev cargo
-RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
+ENV PYTHONUNBUFFERED=1
 
-
-#mysql client
-RUN apk add --no-cache mariadb-connector-c-dev
-RUN apk add mariadb-connector-c
-RUN apk update && apk add mariadb-dev && pip3 install mysqlclient && apk del mariadb-dev
-
-RUN mkdir /app
 WORKDIR /app
-RUN pip3 install --upgrade pip setuptools
-RUN pip3 install psycopg2-binary
-RUN pip3 install gunicorn
-COPY ./requirements.txt /app/requirements.txt
-RUN pip3 install -r requirements.txt
-RUN apk add --no-cache libstdc++
-RUN pip3 install pyopenssl --upgrade
-RUN apk del musl-dev wget git build-base linux-headers g++ gcc libffi-dev openssl-dev cargo
-COPY . /app
+
+COPY requirements.txt .
+
+COPY --from=builder /app/wheels /wheels
+
+RUN apk add --no-cache \
+    libstdc++ \
+    mariadb-connector-c-dev \
+    mariadb-connector-c \
+    && pip install --no-cache-dir --upgrade pip setuptools \
+    && pip install --no-cache-dir --no-index --find-links=/wheels -r /app/requirements.txt \
+    && rm -rf /root/.cache
+
+COPY . .
 
 EXPOSE 8000
-RUN chmod +x /app/start.sh
+
 ENTRYPOINT ["./start.sh"]
