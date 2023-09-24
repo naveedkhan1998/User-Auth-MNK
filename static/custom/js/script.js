@@ -52,7 +52,7 @@ function showPopup(event) {
     body: JSON.stringify(formData),
   })
     .then(function (response) {
-      if (response.status === 200) {
+      if (response.status === 201) {
         // Successful response
         alert("Message sent successfully!");
       } else {
