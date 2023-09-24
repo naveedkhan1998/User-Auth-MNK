@@ -1,4 +1,4 @@
 from django.contrib import admin
-from .views import MessageView
+from .models import Message
 # Register your models here.
-admin.site.register(MessageView)
+admin.site.register(Message)

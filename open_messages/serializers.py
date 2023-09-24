@@ -1,9 +1,9 @@
 from rest_framework import serializers
 from rest_framework.fields import IntegerField, CharField, DateTimeField
-from .views import MessageView
+from .models import Message
 
 class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = MessageView
+        model = Message
         fields = '__all__'
