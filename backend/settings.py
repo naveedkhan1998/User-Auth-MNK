@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     "managment",
     'account',
     'home',
-    'messages',
+    'open_messages',
 ]
 
 MIDDLEWARE = [
