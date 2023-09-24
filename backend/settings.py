@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     "managment",
     'account',
     'home',
+    'messages',
 ]
 
 MIDDLEWARE = [

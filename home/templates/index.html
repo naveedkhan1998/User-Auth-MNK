@@ -1,107 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test</title>
-    <style>
-        body {
-            background: linear-gradient(to right, #079632,#1CB5E0);
-            background-size: 400% 400%;
-            animation : gradient 6s ease infinite;
-            height: 100vh;
-            overflow-x: hidden; 
-        }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
 
-        .section {
-            height: 100vh;
-            margin: 1%;
-            position: flex; 
-            top: 50%; 
-            left: 50%;
-            transform: translate(0%, -50%) scale(0.05); 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            text-align: center;
-            opacity: 0;
-            transition: opacity S3.2s ease, transform 1.2s ease;
-            border-radius: 50px;
-        }
+    <title>Benefits of Physical Activity</title>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact Us</a>
+      </nav>
+    </header>
+    <h1>Benefits of Physical Activity</h1>
+    <p>This content discusses the numerous benefits of physical activity:</p>
+    <button id="scrollToTopBtn" title="Go to top">&#8593;</button>
+    <div class="benefit">
+      <strong>Immediate Benefits:</strong>
+      <p>
+        Engaging in moderate-to-vigorous physical activity can lead to immediate
+        improvements in brain health, reducing anxiety in adults and enhancing
+        cognitive skills in children aged 6 to 13. It can also combat
+        depression, anxiety, and promote better sleep.
+      </p>
+    </div>
 
-        .section:nth-child(odd){
-            background: #b7d9c2;
-            background-size: 400% 400%;
-            height: 100vh;
-        }
-        .section:nth-child(even) {
-            background: #b7d9c2;
-            background-size: 400% 400%;
-            height: 100vh;
-        }
+    <div class="benefit">
+      <strong>Weight Management:</strong>
+      <p>
+        Physical activity plays a vital role in maintaining a healthy weight.
+        It's advised to work towards 150 minutes of moderate activity per week,
+        such as dancing or yard work, to maintain weight. To lose weight
+        effectively, one should combine physical activity with a balanced diet.
+      </p>
+    </div>
 
-        .section.show {
-            opacity: 1;
-            transform: scale(1);
-        }
+    <div class="benefit">
+      <strong>Reducing Health Risks:</strong>
+      <p>
+        Physical activity can reduce the risk of cardiovascular diseases like
+        heart disease and stroke, lower blood pressure, and improve cholesterol
+        levels. It also decreases the risk of type 2 diabetes, metabolic
+        syndrome, and certain infections, including COVID-19, the flu, and
+        pneumonia.
+      </p>
+    </div>
+    <div class="benefit">
+      <strong>Cancer Prevention:</strong>
+      <p>
+        Regular physical activity can lower the risk of developing various
+        cancers, such as bladder, breast, colon, endometrium, esophagus, kidney,
+        lung, and stomach cancers. It can also improve the quality of life for
+        cancer survivors.
+      </p>
+    </div>
 
-        @keyframes gradient {
-            0% {
-                background-position: 0% 25%;
-            }
-            25% {
-                background-position: 50% 75%;
-            }
-            50% {
-                background-position: 100% 75%;
-            }
-            75% {
-                background-position: 50% 25%;
-            }
-            100% {
-                background-position: 0% 25%;
-            }
-        }
-        @keyframes gradient-2 {
-            0% {
-                background-position: 0% 50%;
-            }
+    <div class="benefit">
+      <strong>Strengthening Bones and Muscles:</strong>
+      <p>
+        Muscle-strengthening activities, such as weight lifting, help maintain
+        or increase muscle mass and strength, which is especially important for
+        older adults. This can protect bones, joints, and muscles, enabling
+        individuals to perform daily activities.
+      </p>
+    </div>
 
-            50% {
-                background-position: 100% 50%;
-            }
+    <div class="benefit">
+      <strong>Improving Daily Functionality and Fall Prevention:</strong>
+      <p>
+        Physical activity reduces the risk of functional limitations, especially
+        in older adults, making it easier to perform daily tasks. It also lowers
+        the risk of hip fractures, which can be life-changing for older
+        individuals.
+      </p>
+    </div>
 
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="section">Section 1</div>
-    <div class="section">Section 2</div>
-    <div class="section">Section 3</div>
-    <div class="section">Section 4</div>
+    <div class="benefit">
+      <strong>Increasing Longevity:</strong>
+      <p>
+        Regular physical activity can significantly increase one's chances of
+        living longer. Even small increases in activity can prevent thousands of
+        deaths annually. More steps taken each day are associated with a lower
+        risk of premature death.
+      </p>
+    </div>
 
-    <script>
-        const sections = document.querySelectorAll('.section');
-
-        function checkInView() {
-            sections.forEach((section) => {
-                const sectionTop = section.getBoundingClientRect().top;
-                const windowHeight = window.innerHeight;
-                if (sectionTop < windowHeight * 0.60) {
-                    section.classList.add('show');
-                } else {
-                    section.classList.remove('show'); 
-                }
-            });
-        }
-
-        window.addEventListener('scroll', checkInView);
-        window.addEventListener('resize', checkInView);
-        checkInView();
-    </script>
-</body>
+    <div class="benefit">
+      <strong>Managing Chronic Health Conditions & Disabilities:</strong>
+      <p>
+        Physical activity is beneficial for managing chronic conditions and
+        disabilities. It can reduce pain, improve function and mood in
+        individuals with arthritis, help control blood sugar levels and lower
+        the risk of heart disease for those with type 2 diabetes, and promote
+        independence and daily living activities for people with disabilities.
+      </p>
+    </div>
+    <footer>
+      <p>
+        In summary, physical activity offers immediate and long-term benefits
+        for people of all ages, regardless of their physical condition or size.
+        It improves physical and mental health, reduces the risk of chronic
+        diseases, supports weight management, and enhances overall quality of
+        life.
+      </p>
+      <br />
+      <p><a href="contact.html#contact-section">Contact Us</a></p>
+      <br />
+      <br />
+      <br />
+    </footer>
+    <script src="script.js"></script>
+  </body>
 </html>
