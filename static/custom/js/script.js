@@ -44,24 +44,24 @@ function showPopup(event) {
     message: message,
   };
 
-  var jsonData = JSON.stringify(formData);
-
-  var xhr = new XMLHttpRequest();
-
-  xhr.open(
-    "POST",
-    "https://naveedkhan98.pythonanywhere.com/api/message/",
-    true
-  );
-  xhr.setRequestHeader("Content-Type", "application/json");
-
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === 4 && xhr.status === 200) {
-      alert("Message sent successfully!");
-    } else if (xhr.readyState === 4 && xhr.status !== 200) {
-      alert("Error sending message. Please try again later.");
-    }
-  };
-
-  xhr.send(jsonData);
+  fetch("https://naveedkhan98.pythonanywhere.com/api/message/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData),
+  })
+    .then(function (response) {
+      if (response.status === 200) {
+        // Successful response
+        alert("Message sent successfully!");
+      } else {
+        // Error response
+        alert("Error sending message. Please try again later.");
+      }
+    })
+    .catch(function (error) {
+      // Network error or other issues
+      alert("An error occurred while sending the message. Please try again later.");
+    });
 }
