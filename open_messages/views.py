@@ -29,7 +29,7 @@ class MessageView(APIView):
 
 
 class MessageList(APIView):
-    def delete(request, pk):
+    def delete(self,request, pk):
         obj = Message.objects.filter(pk=pk)
         if not obj.exists():
             return Response({"error": "Not Found!"}, status=status.HTTP_404_NOT_FOUND)
