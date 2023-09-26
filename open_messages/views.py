@@ -12,7 +12,7 @@ from rest_framework import status
 @permission_classes([AllowAny])
 class MessageView(APIView):
     def get(self, request, format=None):
-        data = Message.objects.all().order_by("created_at")[20:]
+        data = Message.objects.all().order_by("-created_at")[:15]
         serializer = MessageSerializer(data, many=True)
         return Response({"data": serializer.data}, status=status.HTTP_200_OK)
 
