@@ -35,8 +35,8 @@ class MessageList(APIView):
             return Response({"error": "Not Found!"}, status=status.HTTP_404_NOT_FOUND)
 
         else:
-            data = MessageSerializer(obj, many=False).data
+            #data = MessageSerializer(obj, many=False).data
             obj.delete()
             return Response(
-                {"msg": "Success", "data": data}, status=status.HTTP_202_ACCEPTED
+                {"msg": "Success"}, status=status.HTTP_202_ACCEPTED
             )
