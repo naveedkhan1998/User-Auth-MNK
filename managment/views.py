@@ -18,16 +18,12 @@ from .serializers import (
 from .models import Standard, Subject, Student, ClassRoom, ClassRoomAttendance
 import datetime
 from .utils import set_in_session
-from backend import settings
-from django.views.decorators.cache import cache_page
-from django.core.cache.backends.base import DEFAULT_TIMEOUT
 
 
-# Create your views here.
-CACHE_TTL = getattr(settings, "CACHE_TTL", DEFAULT_TIMEOUT)
 
 
-@cache_page(CACHE_TTL)
+
+
 @permission_classes([IsAuthenticated])
 class StandardView(APIView):
     renderer_classes = [UserRenderer]
@@ -105,7 +101,7 @@ class StandardView(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-@cache_page(CACHE_TTL)
+
 @permission_classes([IsAuthenticated])
 class StudentView(APIView):
     renderer_classes = [UserRenderer]
@@ -192,7 +188,7 @@ class StudentView(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-@cache_page(CACHE_TTL)
+
 @permission_classes([IsAuthenticated])
 class SubjectView(APIView):
     renderer_classes = [UserRenderer]
@@ -269,7 +265,7 @@ class SubjectView(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-@cache_page(CACHE_TTL)
+
 @permission_classes([IsAuthenticated])
 class ClassRoomView(APIView):
     renderer_classes = [UserRenderer]
@@ -337,7 +333,7 @@ class ClassRoomView(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-@cache_page(CACHE_TTL)
+
 @permission_classes([IsAuthenticated])
 class ClassRoomAttendanceView(APIView):
     renderer_classes = [UserRenderer]

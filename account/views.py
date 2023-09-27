@@ -15,13 +15,11 @@ from .renderers import UserRenderer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import api_view, permission_classes
-from backend import settings
-from django.views.decorators.cache import cache_page
-from django.core.cache.backends.base import DEFAULT_TIMEOUT
+
 
 
 # Create your views here.
-CACHE_TTL = getattr(settings, "CACHE_TTL", DEFAULT_TIMEOUT)
+
 
 
 def get_tokens_for_user(user):
@@ -32,7 +30,6 @@ def get_tokens_for_user(user):
         "access": str(refresh.access_token),
     }
 
-@cache_page(CACHE_TTL)
 @permission_classes([AllowAny])
 class UserRegistrationEmailView(APIView):
     renderer_classes = [UserRenderer]
@@ -43,7 +40,6 @@ class UserRegistrationEmailView(APIView):
             user = serializer.save()
             return Response({"msg": " opt sent"}, status=status.HTTP_201_CREATED)
 
-@cache_page(CACHE_TTL)
 class UserRegistrationView(APIView):
     renderer_classes = [UserRenderer]
 
@@ -58,7 +54,6 @@ class UserRegistrationView(APIView):
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@cache_page(CACHE_TTL)
 class UserLoginView(APIView):
     renderer_classes = [UserRenderer]
 
@@ -80,7 +75,6 @@ class UserLoginView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@cache_page(CACHE_TTL)
 @permission_classes([IsAuthenticated])
 class UserProfileView(APIView):
     renderer_classes = [UserRenderer]
@@ -89,7 +83,6 @@ class UserProfileView(APIView):
         serializer = UserProfileSerializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-@cache_page(CACHE_TTL)
 @permission_classes([IsAuthenticated])
 class UserChangePassword(APIView):
     renderer_classes = [UserRenderer]
@@ -105,7 +98,6 @@ class UserChangePassword(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@cache_page(CACHE_TTL)
 class SendPasswordResetEmailView(APIView):
     renderer_classes = [UserRenderer]
 
@@ -118,7 +110,6 @@ class SendPasswordResetEmailView(APIView):
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@cache_page(CACHE_TTL)
 class UserPasswordResetView(APIView):
     renderer_classes = [UserRenderer]
 
