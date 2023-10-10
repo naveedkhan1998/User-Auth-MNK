@@ -108,12 +108,18 @@ AUTH_USER_MODEL = "account.User"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "mydatabase",
-        "USER": "mydatabaseuser",
-        "PASSWORD": "mypassword",
-        "HOST": "localhost",
-        "PORT": "",
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": os.environ.get("MYSQL_DATABASE", "naveedkhan98$userproject"),
+        "USER": os.environ.get("MYSQL_USER", "naveedkhan98"),
+        "PASSWORD": os.environ.get("MYSQL_PASSWORD", "sefvah-xedVis-0xesju"),
+        "HOST": os.environ.get(
+            "MYSQL_DATABASE_HOST", "naveedkhan98.mysql.pythonanywhere-services.com"
+        ),
+        "default-character-set": "utf8",
+        "OPTIONS": {
+            "init_command": "SET default_storage_engine=INNODB",
+            "charset": "utf8mb4",
+        },
     }
 }
 
