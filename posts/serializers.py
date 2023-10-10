@@ -10,7 +10,7 @@ class PostsSerializer(serializers.ModelSerializer):
 
         
 class TransactionsSerializer(serializers.ModelSerializer):
-    posts = PostsSerializer()
+    post = PostsSerializer()
     buyer = UserProfileSerializer()
     class Meta:
         model = Transactions
