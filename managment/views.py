@@ -20,15 +20,38 @@ import datetime
 from .utils import set_in_session
 
 
-
-
-
-
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 class StandardView(APIView):
     renderer_classes = [UserRenderer]
 
-    def get(self, request, format=None):
+    def get(self, request, id=None, format=None):
+        if id is not None:
+            try:
+                obj = Standard.objects.get(id=id)
+                students = obj.student_set.all()
+                serializer_standard = StandardSerializer(obj)
+                serializer_student = StudentSerializer(students, many=True)
+                return Response(
+                    {
+                        "data": {
+                            "Standard": serializer_standard.data,
+                            "Students": serializer_student.data,
+                        },
+                        "msg": "sent_successfully",
+                    },
+                    status=status.HTTP_200_OK,
+                )
+            except Standard.DoesNotExist:
+                return Response(
+                    {
+                        "errors": {
+                            "integrity": "Object with the given id doesn't exist"
+                        },
+                        "msg": "ID not found",
+                    },
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+
         qs = Standard.objects.all()
         serializer = StandardSerializer(qs, many=True)
         return Response(
@@ -57,7 +80,7 @@ class StandardView(APIView):
                 status=status.HTTP_201_CREATED,
             )
 
-    def put(self, request, format=None):
+    def put(self, request, id, format=None):
         if not request.user.is_admin:
             return Response(
                 {
@@ -66,7 +89,7 @@ class StandardView(APIView):
                 },
                 status=status.HTTP_406_NOT_ACCEPTABLE,
             )
-        id = request.GET.get("id")
+        id = id
         qs = Standard.objects.filter(id=id)
         if qs.exists():
             serializer = StandardSerializer(data=request.data)
@@ -78,7 +101,7 @@ class StandardView(APIView):
                     status=status.HTTP_201_CREATED,
                 )
 
-    def delete(self, request, format=None):
+    def delete(self, request, id, format=None):
         if not request.user.is_admin:
             return Response(
                 {
@@ -87,7 +110,7 @@ class StandardView(APIView):
                 },
                 status=status.HTTP_406_NOT_ACCEPTABLE,
             )
-        id = request.GET.get("id")
+        id = id
         qs = Standard.objects.filter(id=id)
         if qs.exists():
             qs.delete()
