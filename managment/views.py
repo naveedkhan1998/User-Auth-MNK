@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.decorators import permission_classes
 from .renderers import UserRenderer
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -20,6 +21,7 @@ import datetime
 from .utils import set_in_session
 
 
+@api_view(["GET", "POST", "PUT", "DELETE"])
 @permission_classes([AllowAny])
 class StandardView(APIView):
     # Use class-level attribute for renderer_classes
@@ -83,7 +85,7 @@ class StandardView(APIView):
             return Response(
                 {
                     "new_object": {"id": obj.id, **serializer.data},
-                    "msg": "created_succesfully",
+                    "msg": "created_successfully",
                 },
                 status=status.HTTP_201_CREATED,
             )
@@ -93,33 +95,14 @@ class StandardView(APIView):
             return Response(
                 {
                     "errors": {"permissions": "Only Admin Has Access"},
-                    "msg": "only admins can create or delete",
+                    "msg": "only admins can update or delete",
                 },
                 status=status.HTTP_406_NOT_ACCEPTABLE,
             )
 
-        qs = Standard.objects.filter(id=id)
-        if qs.exists():
-            serializer = StandardSerializer(data=request.data)
-            if serializer.is_valid():
-                obj = serializer.update(qs[0], serializer.validated_data)
-                new_data = StandardSerializer(obj).data
-
-                # Use dictionary literals for better readability
-                return Response(
-                    {"new_object": new_data, "msg": "updated_succesfully"},
-                    status=status.HTTP_201_CREATED,
-                )
-
-            else:
-                return Response(
-                    {
-                        "errors": {"No Changes"},
-                        "msg": "No Changes done",
-                    },
-                    status=status.HTTP_404_NOT_FOUND,
-                )
-        else:
+        try:
+            obj = Standard.objects.get(id=id)
+        except Standard.DoesNotExist:
             return Response(
                 {
                     "errors": {"integrity": "Object with the given id doesn't exist"},
@@ -128,23 +111,44 @@ class StandardView(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
+        serializer = StandardSerializer(obj, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+
+            new_data = StandardSerializer(obj).data
+
+            return Response(
+                {
+                    "new_object": new_data,
+                    "msg": "updated_successfully",
+                },
+                status=status.HTTP_200_OK,
+            )
+        else:
+            return Response(
+                {
+                    "errors": serializer.errors,
+                    "msg": "Invalid data provided",
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
     def delete(self, request, id, format=None):
         if not request.user.is_admin:
             return Response(
                 {
                     "errors": {"permissions": "Only Admin Has Access"},
-                    "msg": "only admins can create or delete",
+                    "msg": "only admins can delete",
                 },
                 status=status.HTTP_406_NOT_ACCEPTABLE,
             )
 
-        qs = Standard.objects.filter(id=id)
-        if qs.exists():
-            qs.delete()
+        try:
+            obj = Standard.objects.get(id=id)
+            obj.delete()
 
-            # Use dictionary literals for better readability
             return Response({"msg": "deleted Successfully"}, status=status.HTTP_200_OK)
-        else:
+        except Standard.DoesNotExist:
             return Response(
                 {
                     "errors": {"integrity": "Object with the given id doesn't exist"},
