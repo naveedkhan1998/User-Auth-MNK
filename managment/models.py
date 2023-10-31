@@ -12,8 +12,10 @@ def calculate_percentage(self):
     return (present_count / total_students) * 100
 
  """
+
+
 class Standard(models.Model):
-    standard = models.IntegerField(default=1)
+    standard = models.IntegerField(default=1, unique=True)
     is_active = models.BooleanField(default=True)
     is_in_session = models.BooleanField(default=False)
 
