@@ -21,7 +21,7 @@ import datetime
 from .utils import set_in_session
 
 
-@api_view(["GET", "POST", "PUT", "DELETE"])
+#@api_view(["GET", "POST", "PUT", "DELETE"])
 @permission_classes([AllowAny])
 class StandardView(APIView):
     # Use class-level attribute for renderer_classes
