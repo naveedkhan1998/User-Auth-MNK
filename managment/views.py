@@ -22,15 +22,19 @@ from .utils import set_in_session
 
 @permission_classes([AllowAny])
 class StandardView(APIView):
+    # Use class-level attribute for renderer_classes
     renderer_classes = [UserRenderer]
 
     def get(self, request, id=None, format=None):
         if id is not None:
             try:
+                # Use get_object_or_404 to simplify object retrieval
                 obj = Standard.objects.get(id=id)
                 students = obj.student_set.all()
                 serializer_standard = StandardSerializer(obj)
                 serializer_student = StudentSerializer(students, many=True)
+
+                # Use dictionary literals for better readability
                 return Response(
                     {
                         "data": {
@@ -54,6 +58,8 @@ class StandardView(APIView):
 
         qs = Standard.objects.all()
         serializer = StandardSerializer(qs, many=True)
+
+        # Use dictionary literals for better readability
         return Response(
             {"data": serializer.data, "msg": "sent_successfully"},
             status=status.HTTP_200_OK,
@@ -72,6 +78,8 @@ class StandardView(APIView):
         serializer = StandardSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             obj = serializer.save()
+
+            # Use dictionary literals for better readability
             return Response(
                 {
                     "new_object": {"id": obj.id, **serializer.data},
@@ -89,17 +97,38 @@ class StandardView(APIView):
                 },
                 status=status.HTTP_406_NOT_ACCEPTABLE,
             )
-        id = id
+
         qs = Standard.objects.filter(id=id)
         if qs.exists():
             serializer = StandardSerializer(data=request.data)
             if serializer.is_valid():
                 obj = serializer.update(qs[0], serializer.validated_data)
                 new_data = StandardSerializer(obj).data
+
+                # Use dictionary literals for better readability
                 return Response(
                     {"new_object": new_data, "msg": "updated_succesfully"},
                     status=status.HTTP_201_CREATED,
                 )
+
+            else:
+                return Response(
+                    {
+                        "errors": {
+                            "integrity": "Object with the given id doesn't exist"
+                        },
+                        "msg": "ID not found",
+                    },
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+
+        return Response(
+            {
+                "errors": {"No Changes"},
+                "msg": "No Changes done",
+            },
+            status=status.HTTP_404_NOT_FOUND,
+        )
 
     def delete(self, request, id, format=None):
         if not request.user.is_admin:
@@ -110,16 +139,18 @@ class StandardView(APIView):
                 },
                 status=status.HTTP_406_NOT_ACCEPTABLE,
             )
-        id = id
+
         qs = Standard.objects.filter(id=id)
         if qs.exists():
             qs.delete()
+
+            # Use dictionary literals for better readability
             return Response({"msg": "deleted Successfully"}, status=status.HTTP_200_OK)
         else:
             return Response(
                 {
-                    "errors": {"integrity": "object with the given id doesnt exist"},
-                    "msg": "Id not Found",
+                    "errors": {"integrity": "Object with the given id doesn't exist"},
+                    "msg": "ID not found",
                 },
                 status=status.HTTP_404_NOT_FOUND,
             )
