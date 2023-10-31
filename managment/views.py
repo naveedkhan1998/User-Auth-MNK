@@ -114,21 +114,19 @@ class StandardView(APIView):
             else:
                 return Response(
                     {
-                        "errors": {
-                            "integrity": "Object with the given id doesn't exist"
-                        },
-                        "msg": "ID not found",
+                        "errors": {"No Changes"},
+                        "msg": "No Changes done",
                     },
                     status=status.HTTP_404_NOT_FOUND,
                 )
-
-        return Response(
-            {
-                "errors": {"No Changes"},
-                "msg": "No Changes done",
-            },
-            status=status.HTTP_404_NOT_FOUND,
-        )
+        else:
+            return Response(
+                {
+                    "errors": {"integrity": "Object with the given id doesn't exist"},
+                    "msg": "ID not found",
+                },
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
     def delete(self, request, id, format=None):
         if not request.user.is_admin:
