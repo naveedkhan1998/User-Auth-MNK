@@ -21,6 +21,8 @@ const apiUrl =
 
 // DOM elements
 document.addEventListener("DOMContentLoaded", function () {
+  const interface_ = document.getElementById("interface");
+  interface_.style.display = "none";
   const playListSelect = document.getElementById("playList");
   const actListSelect = document.getElementById("actList");
   const sceneListSelect = document.getElementById("sceneList");
@@ -160,6 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {
         populatePlayerList(selectedSceneName);
 
         renderPlay();
+        interface_.style.display = "block";
       })
       .catch((error) => console.error("Error:", error));
   });
