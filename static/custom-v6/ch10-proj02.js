@@ -1,28 +1,27 @@
-import { Play, Act, Scene, Speech } from "./play-module.js";
-
 /*
-     To get a specific play, add play name via query string, 
-	   e.g., url = url + '?name=hamlet';
-	 
-	 https://www.randyconnolly.com/funwebdev/3rd/api/shakespeare/play.php?name=hamlet
-	 https://www.randyconnolly.com/funwebdev/3rd/api/shakespeare/play.php?name=jcaesar
-     
-   */
+To get a specific play, add play name via query string, 
+e.g., url = url + '?name=hamlet';
+
+https://www.randyconnolly.com/funwebdev/3rd/api/shakespeare/play.php?name=hamlet
+https://www.randyconnolly.com/funwebdev/3rd/api/shakespeare/play.php?name=jcaesar
+
+*/
 
 /* note: you may get a CORS error if you test this locally (i.e., directly from a
-       local file). To work correctly, this needs to be tested on a local web server.  
-       Some possibilities: if using Visual Code, use Live Server extension; if Brackets,
-       use built-in Live Preview.
-    */
+  local file). To work correctly, this needs to be tested on a local web server.  
+  Some possibilities: if using Visual Code, use Live Server extension; if Brackets,
+  use built-in Live Preview.
+  */
 
 // Define the API endpoint URL
+
+import { Play, Act, Scene, Speech } from "./play-module.js";
+
 const apiUrl =
   "https://www.randyconnolly.com/funwebdev/3rd/api/shakespeare/play.php";
 
-// DOM elements
 document.addEventListener("DOMContentLoaded", function () {
   const interface_ = document.getElementById("interface");
-  interface_.style.display = "none";
   const playListSelect = document.getElementById("playList");
   const actListSelect = document.getElementById("actList");
   const sceneListSelect = document.getElementById("sceneList");
@@ -32,8 +31,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const btnHighlight = document.getElementById("btnHighlight");
 
   let selectedPlay = null;
-  let selectedActName = null; // Keep track of the selected act
-  let selectedSceneName = null; // Keep track of the selected scene
+  let selectedActName = null;
+  let selectedSceneName = null;
+  interface_.style.display = "none";
 
   function createPlay(playData) {
     const { title, short, persona, acts } = playData;
@@ -64,60 +64,45 @@ document.addEventListener("DOMContentLoaded", function () {
     playHere.appendChild(selectedPlay.render());
   }
 
-  function populateActList() {
-    actListSelect.innerHTML = "";
-
-    selectedPlay.acts.forEach((act) => {
-      const option = document.createElement("option");
-      option.value = act.name;
-      option.textContent = act.name;
-      actListSelect.appendChild(option);
+  function populateSelectList(selectElement, options) {
+    selectElement.innerHTML = "";
+    options.forEach((option) => {
+      const optionElement = document.createElement("option");
+      optionElement.value = option;
+      optionElement.textContent = option;
+      selectElement.appendChild(optionElement);
     });
+  }
 
-    // Select the first act automatically
-    if (selectedPlay.acts.length > 0) {
-      selectedActName = selectedPlay.acts[0].name;
+  function populateActList() {
+    const actNames = selectedPlay.acts.map((act) => act.name);
+    populateSelectList(actListSelect, actNames);
+    if (actNames.length > 0) {
+      selectedActName = actNames[0];
       actListSelect.value = selectedActName;
       selectAct(selectedActName);
     }
   }
 
   function populateSceneList(selectedActName) {
-    sceneListSelect.innerHTML = "";
-
     const scenesInSelectedAct = selectedPlay.acts.find(
       (act) => act.name === selectedActName
     ).scenes;
-
-    scenesInSelectedAct.forEach((scene) => {
-      const option = document.createElement("option");
-      option.value = scene.name;
-      option.textContent = scene.name;
-      sceneListSelect.appendChild(option);
-    });
-
-    // Select the first scene automatically
-    if (scenesInSelectedAct.length > 0) {
-      selectedSceneName = scenesInSelectedAct[0].name;
+    const sceneNames = scenesInSelectedAct.map((scene) => scene.name);
+    populateSelectList(sceneListSelect, sceneNames);
+    if (sceneNames.length > 0) {
+      selectedSceneName = sceneNames[0];
       sceneListSelect.value = selectedSceneName;
       selectScene(selectedSceneName);
     }
   }
 
   function populatePlayerList(selectedSceneName) {
-    playerListSelect.innerHTML = "";
-
     const scene = selectedPlay.selectedAct.scenes.find(
       (s) => s.name === selectedSceneName
     );
     const speakers = scene.getSpeakers();
-
-    speakers.forEach((speaker) => {
-      const option = document.createElement("option");
-      option.value = speaker;
-      option.textContent = speaker;
-      playerListSelect.appendChild(option);
-    });
+    populateSelectList(playerListSelect, speakers);
   }
 
   function selectAct(selectedActName) {
@@ -136,27 +121,22 @@ document.addEventListener("DOMContentLoaded", function () {
       );
       if (selectedScene) {
         selectedPlay.selectedScene = selectedScene;
+        populatePlayerList(selectedSceneName);
       }
     }
   }
 
-  playListSelect.addEventListener("change", function () {
-    const selectedPlayName = playListSelect.value;
-
+  function fetchPlayData(selectedPlayName) {
     fetch(`${apiUrl}?name=${selectedPlayName}`)
       .then((response) => response.json())
       .then((data) => {
         selectedPlay = createPlay(data);
 
-        // For initial setup
         selectedActName = data.acts[0].name;
         selectedSceneName = data.acts[0].scenes[0].name;
 
-        // Populate the act and scene lists with defaults
         populateActList();
         populateSceneList(selectedActName);
-
-        // Populate the player list based on the default values
         selectAct(selectedActName);
         selectScene(selectedSceneName);
         populatePlayerList(selectedSceneName);
@@ -165,17 +145,22 @@ document.addEventListener("DOMContentLoaded", function () {
         interface_.style.display = "block";
       })
       .catch((error) => console.error("Error:", error));
+  }
+
+  playListSelect.addEventListener("change", function () {
+    const selectedPlayName = playListSelect.value;
+    fetchPlayData(selectedPlayName);
   });
+
   actListSelect.addEventListener("change", function () {
-    let selectedActName = actListSelect.value;
-    selectedActName = selectedActName;
+    const selectedActName = actListSelect.value;
     selectAct(selectedActName);
     populateSceneList(selectedActName);
     renderPlay();
   });
 
   sceneListSelect.addEventListener("change", function () {
-    let selectedSceneName = sceneListSelect.value;
+    const selectedSceneName = sceneListSelect.value;
     selectScene(selectedSceneName);
     populatePlayerList(selectedSceneName);
     renderPlay();
@@ -186,16 +171,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const searchTerm = txtHighlight.value;
 
     if (selectedPlay && selectedPlayer !== "0") {
-      // Filter speeches for the selected player
       selectedPlay.selectedScene.filterSpeechesByPlayer(selectedPlayer);
 
-      // If a search term is entered, highlight the text
       if (searchTerm) {
         const regex = new RegExp(searchTerm, "gi");
         selectedPlay.selectedScene.highlightSpeeches(regex);
       }
 
-      // Re-render the play to reflect the filtered and highlighted speeches
       renderPlay();
     }
   });
