@@ -18,7 +18,7 @@ https://www.randyconnolly.com/funwebdev/3rd/api/shakespeare/play.php?name=jcaesa
 import { Play, Act, Scene, Speech } from "./play-module.js";
 
 const apiUrl =
-  "http://www.randyconnolly.com/funwebdev/3rd/api/shakespeare/play.php";
+  "https://www.randyconnolly.com/funwebdev/3rd/api/shakespeare/play.php";
 
 document.addEventListener("DOMContentLoaded", function () {
   const interface_ = document.getElementById("interface");
