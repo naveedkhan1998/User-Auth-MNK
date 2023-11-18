@@ -1,0 +1,184 @@
+@import url("https://fonts.googleapis.com/css2?family=Mooli&family=Slabo+27px&display=swap");
+
+body {
+  background: linear-gradient(to right, #f9ebe0, #d4a5a5);
+  background-size: cover;
+  height: 100vh;
+  overflow-x: hidden;
+  margin: 0;
+  font-family: "Slabo 27px", serif;
+}
+
+/* Style for the navbar */
+
+header {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 10px;
+  text-align: center;
+}
+
+nav {
+  text-align: right;
+  padding: 10px;
+  display: flex;
+  justify-content: flex-end;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(5px);
+  border-radius: 20px;
+}
+
+nav a {
+  color: #333;
+  text-decoration: none;
+  margin: 0 20px;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: #ffffff;
+}
+
+/* Style for the benefits container */
+.benefits-container {
+  max-height: 100vh;
+  overflow-y: auto;
+  border: 10px solid #ccc;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+/* Style for individual benefit divs */
+.benefit {
+  height: 80vh;
+  margin: 3%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 3.2s ease, transform 1.2s ease;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.benefit:nth-child(odd) {
+  background: rgba(249, 235, 224, 0.6);
+}
+
+.benefit:nth-child(even) {
+  background: rgba(212, 165, 165, 0.6);
+}
+
+.benefit.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.benefit:hover {
+  transform: scale(1.02);
+}
+
+/* Additional style for the benefits content */
+.benefit-title {
+  font-weight: bold;
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.benefit-description {
+  font-size: 1em;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 20px;
+  color: #333;
+  font-size: 2.5rem;
+}
+
+h2 {
+  text-align: center;
+  margin-top: 20px;
+  color: #333;
+  font-size: 1.7rem;
+}
+
+p {
+  margin: 20px 0;
+  text-align: center;
+  color: #555;
+  font-size: 1.2rem;
+}
+
+#scrollToTopBtn {
+  display: none;
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #d4a5a5;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 15px;
+  text-align: center;
+  font-size: 20px;
+  font-family: "Slabo 27px", serif;
+  transition: background-color 0.3s;
+  z-index: 999;
+}
+
+#scrollToTopBtn:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+/* Form formatting */
+
+form {
+  margin-top: 20px;
+  padding: 30px;
+  border-radius: 5px;
+  background-color: #f9ebe0;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+label {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+input[type="text"],
+input[type="email"],
+textarea {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+button[type="submit"] {
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: #555;
+}
+
+/* Adjust for smaller screens */
+@media (max-width: 768px) {
+  .benefit {
+    height: auto; 
+  }
+}

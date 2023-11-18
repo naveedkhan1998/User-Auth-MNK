@@ -1,6 +1,6 @@
 venv/
-db.sqlite3
 __pycache__
 backend.code-workspace
 .env
 migrations
+Dockerfile

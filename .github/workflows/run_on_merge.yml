@@ -1,0 +1,35 @@
+name: Set Environment Variables and Run Script
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    env:
+      PYTHONANYWHERE_TOKEN: "659066164c8a310fc7be6fbf9a89f340f9c04149"
+      PYTHONANYWHERE_USERNAME: "naveedkhan98"
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install Dependencies
+        run: |
+          pip install -r deployreq.txt 
+
+      - name: Display Environment Variables
+        run: |
+          echo "PYTHONANYWHERE_TOKEN is \"$PYTHONANYWHERE_TOKEN\""
+          echo "PYTHONANYWHERE_USERNAME is \"$PYTHONANYWHERE_USERNAME\""
+
+      - name: Run Custom Script
+        run: python auto_deploy.py

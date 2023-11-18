@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://naveedkhan98.pythonanywhere.com/static/custom/css/styles.css" />
+    <title>Contact Page</title>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="https://naveedkhan98.pythonanywhere.com/static/custom/index.html">Home</a>
+        <a href="https://naveedkhan98.pythonanywhere.com/static/custom/about.html">About Us</a>
+        <a href="https://naveedkhan98.pythonanywhere.com/static/custom/contact.html">Contact Us</a>
+      </nav>
+    </header>
+
+    <div class="benefit">
+      <h1>Welcome to Our Contact Page</h1>
+      <h2>Contact Us</h2>
+      <p>Email: contact@example.com</p>
+      <p>Phone: +1 (123) 456-7890</p>
+      <p>Address: 123 Main Street, City, Country</p>
+    </div>
+    <div class="benefit">
+      <h2>Send us a Message</h2>
+      <form method="post" onsubmit="showPopup(event)">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required />
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" rows="4" required></textarea>
+        <button type="submit">Send Message</button>
+      </form>
+    </div>
+
+    <button id="scrollToTopBtn" onclick="scrollToTop()">↑</button>
+    <br />
+    <p><a href="https://naveedkhan98.pythonanywhere.com/static/custom/contact.html#contact-section">Contact Us</a></p>
+      <br />
+      <br />
+      <br />
+    <script src="https://naveedkhan98.pythonanywhere.com/static/custom/js/script.js"></script>
+  </body>
+</html>

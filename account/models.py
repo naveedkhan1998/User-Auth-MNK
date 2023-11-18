@@ -23,7 +23,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email,name,tc,otp, password=None,
+    def create_superuser(self, email,name,tc,otp=12345, password=None,
     password2=None):
         """
         Creates and saves a superuser with the given email, date of
@@ -35,7 +35,7 @@ class UserManager(BaseUserManager):
             name=name,
             tc=tc,
             otp = otp,
-            is_email_verify=True
+            #is_email_verify=True
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -48,6 +48,12 @@ class User(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
+    avatar = models.ImageField(
+        verbose_name='avatar',
+        upload_to='user/avatar/',
+        null=True,
+        default='/profile_icon.png'
+    )
     name = models.CharField(max_length=200)
     tc = models.BooleanField()
     is_active = models.BooleanField(default=True)
@@ -56,6 +62,8 @@ class User(AbstractBaseUser):
     otp = models.IntegerField(null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
+    is_in_session = models.BooleanField(default=False)
+    is_teacher = models.BooleanField(default=False)
 
     objects = UserManager()
 

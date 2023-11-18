@@ -1,122 +1,78 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>User-Auth-MNK</title>
-    <meta charset="UTF-8">
-    <style>
-      body {
-        background-color: #f5f5f5;
-        color: #333;
-        font-family: 'Roboto', sans-serif;
-        font-size: 16px;
-        line-height: 1.5;
-        margin: 0;
-        padding: 0;
-      }
-
-      .container {
-        max-width: 960px;
-        margin: 0 auto;
-        padding: 30px;
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-      }
-
-      h1 {
-        font-size: 36px;
-        text-align: center;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        margin: 0;
-      }
-
-      p {
-        margin-top: 20px;
-        text-align: center;
-        font-size: 20px;
-      }
-
-      button {
-        margin-top: 30px;
-        padding: 10px 20px;
-        background-color: #3f51b5;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease-in-out;
-      }
-
-      button:hover {
-        background-color: #2c3e50;
-      }
-
-      #endpoints {
-        margin-top: 50px;
-        text-align: center;
-        font-size: 20px;
-        line-height: 1.5;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background-color: #f5f5f5;
-        box-shadow: 0px -5px 10px rgba(0, 0, 0, 0.1);
-        padding: 20px 0;
-      }
-
-      ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
-
-      li {
-        margin-top: 20px;
-        animation: slide-in 0.5s ease-in-out;
-      }
-
-      @keyframes slide-in {
-        from {
-          transform: translateX(-100%);
-          opacity: 0;
-        }
-        to {
-          transform: translateX(0);
-          opacity: 1;
-        }
-      }
-    </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://naveedkhan98.pythonanywhere.com/static/custom-v2/styles.css" />
+    <title>Benefits Us</title>
   </head>
   <body>
-    <div class="container">
-      <h1>Welcome to the User-Auth-MNK Backend Server.</h1>
-      <p>This server provides several API endpoints to interact with the data.</p>
-      <button onclick="showEndpoints()">Show Endpoints</button>
-    </div>
-    <div id="endpoints"></div>
-    <script>
-      const endpoints = [
-        "/api/user/login/",
-        "/api/user/register/",
-        "api/user/profile/",
-        "/api/user/changepassword/",
-        "/api/user/send-reset-password-email/",
-        "/api/user/send-reset-password-email/"
-      ];
+    <header>
+      <nav>
+        <a href="https://naveedkhan98.pythonanywhere.com/static/custom-v2/index.html">Home</a>
+        <a href="https://naveedkhan98.pythonanywhere.com/static/custom-v2/benefits.html">Benefits</a>
+        <a href="https://naveedkhan98.pythonanywhere.com/static/custom-v2/contact.html">Contact Us</a>
+      </nav>
+    </header>
 
-      function showEndpoints() {
-        const endpointsDiv = document.getElementById('endpoints');
-        endpointsDiv.innerHTML = '<h2>API Endpoints:</h2><ul>';
-        endpoints.forEach(endpoint => {
-          endpointsDiv.innerHTML += `<li>${endpoint}</li>`;
-        });
-        endpointsDiv.innerHTML += '</ul>';
-      }
-    </script>
+    <h1>Welcome to the Western University Campus Recreation Center</h1>
+    <div class="benefit">
+      <h2>State-of-the-Art Facilities</h2>
+      <p>
+        The Western University Campus Recreation Center is a cutting-edge
+        facility dedicated to enhancing the health and wellness of the student
+        community. The center boasts an impressive array of modern amenities
+        designed to cater to your fitness and recreational needs.
+      </p>
+      <p>
+        The state-of-the-art gym features top-of-the-line exercise equipment,
+        including cardio machines, weightlifting stations, and group fitness
+        studios. Spacious courts are available for various sports like
+        basketball, volleyball, and racquetball, ensuring there's something for
+        everyone.
+      </p>
+    </div>
+
+    <div class="benefit">
+      <h2>Exciting Activities for All Students</h2>
+      <p>
+        As a current student, you have the privilege of free access to the
+        Western University Campus Recreation Center. A wide range of activities
+        is offered to cater to your interests and fitness levels, creating a
+        vibrant and inclusive environment.
+      </p>
+      <p>
+        You can break a sweat in the well-equipped fitness center, where
+        certified trainers are available to help you achieve your fitness goals.
+        Join in the fun with intramural sports leagues, or simply enjoy a
+        friendly game of table tennis in the recreational area. For those
+        seeking relaxation, the indoor swimming pool provides the perfect
+        escape.
+      </p>
+      <p>
+        The Western University Campus Recreation Center is committed to
+        fostering a welcoming atmosphere that encourages community engagement
+        and personal growth. Whether you're a fitness enthusiast or just looking
+        for a place to unwind, the center is your hub for a healthy and active
+        student life.
+      </p>
+    </div>
+    <br />
+    <div class="image-container">
+      <figure>
+        <img src="https://naveedkhan98.pythonanywhere.com/static/custom-v2/images/pool.jpg" />
+        <figcaption>An image of Western recreational center pool.</figcaption>
+      </figure>
+      <figure>
+        <img src="https://naveedkhan98.pythonanywhere.com/static/custom-v2/images/rec-exterior.jpg" />
+        <figcaption>An image of Western recreational center.</figcaption>
+      </figure>
+    </div>
+    <br />
+    <br />
+    <br />
+    <p><button href="https://naveedkhan98.pythonanywhere.com/static/custom-v2/contact.html#contact-section">Contact Us</button></p>
+
+    <a href="#" id="scrollToTopBtn">^</a>
   </body>
 </html>
