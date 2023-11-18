@@ -3,7 +3,7 @@ name: Set Environment Variables and Run Script
 on:
   push:
     branches:
-      - dev
+      - main
 
 jobs:
   run-script:
