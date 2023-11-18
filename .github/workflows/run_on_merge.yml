@@ -22,9 +22,15 @@ jobs:
         with:
           python-version: 3.8
 
-      - name: Run Custom Script
+      - name: Install Dependencies
         run: |
-          echo "PYTHONANYWHERE_TOKEN is $PYTHONANYWHERE_TOKEN"
-          echo "PYTHONANYWHERE_USERNAME is $PYTHONANYWHERE_USERNAME"
-          
-          python auto_deploy.py
+          python -m pip install --upgrade pip
+          pip install -r deployreq.txt 
+
+      - name: Display Environment Variables
+        run: |
+          echo "PYTHONANYWHERE_TOKEN is \"$PYTHONANYWHERE_TOKEN\""
+          echo "PYTHONANYWHERE_USERNAME is \"$PYTHONANYWHERE_USERNAME\""
+
+      - name: Run Custom Script
+        run: python auto_deploy.py
