@@ -1,37 +1,64 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Your One Time Password</title>
-    <style>
-      /* Add CSS styles here */
-      body {
-        font-family: Arial, sans-serif;
-        font-size: 16px;
-        line-height: 1.5;
-        color: #333;
-        background-color: #f5f5f5;
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your One-Time Password</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #eee;
+      background-color: #1a1a1a;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      max-width: 500px;
+      padding: 30px;
+      background-color: #292b2c;
+      border-radius: 15px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      animation: scaleIn 0.5s ease-out;
+    }
+    h1 {
+      margin-bottom: 20px;
+      color: #ff8c00;
+    }
+    .otp {
+      font-size: 48px;
+      font-weight: bold;
+      color: #4caf50;
+    }
+    p {
+      margin-bottom: 15px;
+      color: #ccc;
+    }
+
+    @keyframes scaleIn {
+      from {
+        transform: scale(0.8);
+        opacity: 0;
       }
-      .container {
-        max-width: 600px;
-        margin: 0 auto;
-        padding: 20px;
-        background-color: #fff;
-        border: 1px solid #ccc;
+      to {
+        transform: scale(1);
+        opacity: 1;
       }
-      .otp {
-        font-size: 28px;
-        font-weight: bold;
-        color: #ff5722;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1>Your One Time Password</h1>
-      <p>Hello, {{ name }}!</p>
-      <p>Your OTP is <span class="otp">{{ otp }}</span>.</p>
-      <p>Please use this OTP to complete your registration.</p>
-    </div>
-  </body>
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Your One-Time Password</h1>
+    <p>Hello, {{ name }}!</p>
+    <p>Your OTP is <span class="otp">{{ otp }}</span></p>
+    <p>Please use this OTP to complete your registration.</p>
+  </div>
+</body>
 </html>
