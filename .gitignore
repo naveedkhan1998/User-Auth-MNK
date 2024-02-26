@@ -4,3 +4,4 @@ backend.code-workspace
 .env
 migrations
 Dockerfile
+mydatabase

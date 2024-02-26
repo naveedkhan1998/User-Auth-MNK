@@ -12,6 +12,8 @@ urlpatterns = (
         path("api/message/", include("open_messages.urls")),
         path("managment/", include("managment.urls")),
         path("posts/", include("posts.urls")),
+        path("portfolio/", include("portfolio.urls")),
+        path("home/", include("home.urls")),
         path("", TemplateView.as_view(template_name="index.html")),
     ]
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

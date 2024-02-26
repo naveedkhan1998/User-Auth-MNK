@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "home",
     "open_messages",
     "posts",
+    "portfolio",
 ]
 
 MIDDLEWARE = [
@@ -105,7 +106,7 @@ AUTH_USER_MODEL = "account.User"
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
+""" 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
@@ -121,13 +122,13 @@ DATABASES = {
             "charset": "utf8mb4",
         },
     }
-}
-""" DATABASES = {
+} """
+DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": "mydatabase",
     }
-} """
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -146,6 +147,12 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+GOOGLE_OAUTH2_CLIENT_ID = (
+    "784896158603-23kjm5iiii1vhl2n9rpd417cq42b2hnk.apps.googleusercontent.com"
+)
+GOOGLE_OAUTH2_CLIENT_SECRET = "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"
+GOOGLE_OAUTH2_PROJECT_ID = "http://localhost"
 
 
 # Internationalization

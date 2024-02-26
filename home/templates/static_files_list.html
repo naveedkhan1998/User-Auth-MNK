@@ -1,0 +1,18 @@
+<!-- templates/static_files_list.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Static Files List</title>
+</head>
+<body>
+    <h1>List of Static Files</h1>
+    <ul>
+        {% load static %}
+        <!-- Replace 'your_static_file' with the actual path of your static file -->
+        <li><a href="{% static 'your_static_file' %}">Your Static File</a></li>
+        <!-- Add more items as needed -->
+    </ul>
+</body>
+</html>

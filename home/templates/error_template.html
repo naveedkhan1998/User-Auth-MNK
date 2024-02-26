@@ -1,0 +1,65 @@
+<!-- templates/base_template.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Portfolio{% endblock %}</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+            border-radius: 8px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #343a40;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #6c757d;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-weight: bold;
+            font-size: 1.5em;
+            margin-bottom: 30px;
+        }
+
+        /* Add more styles for a more visually appealing design */
+
+        /* Responsive Styles */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{% block heading %}Error{% endblock %}</h1>
+        <p class="error-message">{{ error_message }}</p>
+    </div>
+</body>
+</html>
