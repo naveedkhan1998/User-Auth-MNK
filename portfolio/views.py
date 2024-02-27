@@ -12,13 +12,11 @@ from backend.settings import BASE_DIR
 @permission_classes([AllowAny])
 def project_list(request):
     allowed_domain = "https://mnaveedk.com"
-    if request.META.get("HTTP_ORIGIN") == allowed_domain:
-        projects = Project.objects.all()
-        serializer = ProjectSerializer(
-            projects, many=True, context={"request": request}
-        )
-        return Response(serializer.data)
-    else:
-        error_message = "Unauthorized access"
-        path_to_html = str(BASE_DIR) + "/home/templates/email_otp.html"
-        return render(request, 'error_template.html', {'error_message': error_message}, status=403)
+    # if request.META.get("HTTP_ORIGIN") == allowed_domain:
+    projects = Project.objects.all()
+    serializer = ProjectSerializer(projects, many=True, context={"request": request})
+    return Response(serializer.data)
+    # else:
+    # error_message = "Unauthorized access"
+    # path_to_html = str(BASE_DIR) + "/home/templates/email_otp.html"
+    # return render(request, 'error_template.html', {'error_message': error_message}, status=403)
