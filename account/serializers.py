@@ -173,7 +173,7 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
             token = PasswordResetTokenGenerator().make_token(user)
             # print('Password token', token)
             link = (
-                "https://naveedkhan1998.github.io/user-auth-react/#/api/user/reset/"
+                "https://user-auth-react.vercel.app/api/user/reset/"
                 + uid
                 + "/"
                 + token
