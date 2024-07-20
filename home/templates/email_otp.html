@@ -1,64 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your One-Time Password</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      font-size: 16px;
-      line-height: 1.6;
-      color: #eee;
-      background-color: #1a1a1a;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .container {
-      max-width: 500px;
-      padding: 30px;
-      background-color: #292b2c;
-      border-radius: 15px;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-      text-align: center;
-      animation: scaleIn 0.5s ease-out;
-    }
-    h1 {
-      margin-bottom: 20px;
-      color: #ff8c00;
-    }
-    .otp {
-      font-size: 48px;
-      font-weight: bold;
-      color: #4caf50;
-    }
-    p {
-      margin-bottom: 15px;
-      color: #ccc;
-    }
-
-    @keyframes scaleIn {
-      from {
-        transform: scale(0.8);
-        opacity: 0;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Your One-Time Password</title>
+    <!-- [if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <![endif] -->
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+      
+      body,
+      table,
+      td,
+      a {
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
       }
-      to {
-        transform: scale(1);
-        opacity: 1;
+      table,
+      td {
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
       }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Your One-Time Password</h1>
-    <p>Hello, {{ name }}!</p>
-    <p>Your OTP is <span class="otp">{{ otp }}</span></p>
-    <p>Please use this OTP to complete your registration.</p>
-  </div>
-</body>
+      img {
+        -ms-interpolation-mode: bicubic;
+        border: 0;
+        height: auto;
+        line-height: 100%;
+        outline: none;
+        text-decoration: none;
+      }
+      table {
+        border-collapse: collapse !important;
+      }
+      body {
+        height: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        font-family: 'Poppins', Arial, sans-serif;
+      }
+      a[x-apple-data-detectors] {
+        color: inherit !important;
+        text-decoration: none !important;
+        font-size: inherit !important;
+        font-family: inherit !important;
+        font-weight: inherit !important;
+        line-height: inherit !important;
+      }
+      @media screen and (max-width: 525px) {
+        .wrapper {
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+        .responsive-table {
+          width: 100% !important;
+        }
+        .padding {
+          padding: 10px 5% 15px 5% !important;
+        }
+        .section-padding {
+          padding: 0 15px 50px 15px !important;
+        }
+      }
+      .container {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+      .content {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #333333;
+      }
+      .header {
+        background: linear-gradient(135deg, #6e48aa 0%, #9d50bb 100%);
+        padding: 40px 30px;
+        text-align: center;
+      }
+      .header h1 {
+        color: #ffffff;
+        font-size: 32px;
+        font-weight: 700;
+        margin: 0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .body {
+        padding: 40px 30px;
+        text-align: center;
+        background-color: #f8f9fa;
+      }
+      .otp-container {
+        background-color: #ffffff;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 20px 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      }
+      .otp {
+        font-size: 42px;
+        font-weight: bold;
+        color: #6e48aa;
+        letter-spacing: 5px;
+        margin: 10px 0;
+      }
+      .footer {
+        background-color: #f1f3f5;
+        padding: 30px;
+        text-align: center;
+        font-size: 14px;
+        color: #666666;
+      }
+      .button {
+        display: inline-block;
+        padding: 12px 24px;
+        background-color: #6e48aa;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 30px;
+        font-weight: 600;
+        margin-top: 20px;
+        transition: background-color 0.3s ease;
+      }
+      .button:hover {
+        background-color: #9d50bb;
+      }
+    </style>
+  </head>
+  <body style="margin: 0 !important; padding: 0 !important; background-color: #f0f2f5;">
+    <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: 'Poppins', Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">Your One-Time Password for secure account verification</div>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr>
+        <td align="center" class="section-padding" style="padding: 70px 15px 70px 15px;">
+          <table border="0" cellpadding="0" cellspacing="0" width="100%" class="responsive-table" style="max-width: 600px;">
+            <tr>
+              <td>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td>
+                      <div class="container">
+                        <div class="content">
+                          <div class="header">
+                            <h1>Verify Your Account</h1>
+                          </div>
+                          <div class="body">
+                            <p>Hello, {{ name }}!</p>
+                            <p>You're almost there! Use the following One-Time Password (OTP) to complete your account verification:</p>
+                            <div class="otp-container">
+                              <div class="otp">{{ otp }}</div>
+                            </div>
+                            <p>This code will expire in 10 minutes for your security.</p>
+                            <a href="#" class="button">Verify Account</a>
+                          </div>
+                          <div class="footer">
+                            <p>If you didn't request this OTP, please ignore this email or contact our support team if you have any concerns.</p>
+                            <p>&copy; 2024 Your Naveed Khan. All rights reserved.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
 </html>
