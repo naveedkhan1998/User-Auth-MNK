@@ -7,6 +7,7 @@ from .models import Posts, Transactions
 from .serializers import PostsSerializer, TransactionsSerializer
 from rest_framework import status
 from .models import Item
+from django.db import models
 from .serializers import ItemSerializer
 from django.shortcuts import get_object_or_404
 
@@ -42,6 +43,23 @@ class TransactionsList(APIView):
 @permission_classes([AllowAny])
 class ItemListCreateView(APIView):
     def get(self, request, *args, **kwargs):
+        barcode = request.query_params.get("barcode", None)
+
+        if barcode:
+            # Look for an item with this barcode or any of its aliases
+            item = Item.objects.filter(
+                models.Q(barcode=barcode) | models.Q(aliases__contains=[barcode])
+            ).first()
+
+            if item:
+                serializer = ItemSerializer(item)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(
+                    {"detail": "Item not found"}, status=status.HTTP_404_NOT_FOUND
+                )
+
+        # Otherwise, return all items
         items = Item.objects.all()
         serializer = ItemSerializer(items, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
