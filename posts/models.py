@@ -1,6 +1,6 @@
 from django.db import models
 from account.models import User
-
+import uuid
 # Create your models here.
 
 
@@ -23,3 +23,12 @@ class Transactions(models.Model):
 
     def __str__(self):
         return f"ID:{self.pk} TimeStamp:{self.created_at}"
+
+class Item(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    barcode = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=255)
+    deals = models.JSONField(default=list)  # Store the list of deals as JSON
+
+    def __str__(self):
+        return self.name
