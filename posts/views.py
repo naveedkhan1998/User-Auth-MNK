@@ -8,6 +8,8 @@ from .serializers import PostsSerializer, TransactionsSerializer
 from rest_framework import status
 from .models import Item
 from .serializers import ItemSerializer
+from django.shortcuts import get_object_or_404
+
 
 @permission_classes([AllowAny])
 class PostsList(APIView):
@@ -21,7 +23,8 @@ class PostsList(APIView):
             return Response(
                 {"msg": "Success", "data": data}, status=status.HTTP_202_ACCEPTED
             )
-        
+
+
 @permission_classes([AllowAny])
 class TransactionsList(APIView):
     def get(self, requess):
@@ -34,6 +37,8 @@ class TransactionsList(APIView):
             return Response(
                 {"msg": "Success", "data": data}, status=status.HTTP_202_ACCEPTED
             )
+
+
 @permission_classes([AllowAny])
 class ItemListCreateView(APIView):
     def get(self, request, *args, **kwargs):
@@ -47,3 +52,20 @@ class ItemListCreateView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, *args, **kwargs):
+        item_id = kwargs.get("pk")
+        item = get_object_or_404(Item, id=item_id)
+        serializer = ItemSerializer(
+            item, data=request.data, partial=True
+        )  # partial=True allows updating specific fields
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, *args, **kwargs):
+        item_id = kwargs.get("pk")
+        item = get_object_or_404(Item, id=item_id)
+        item.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
