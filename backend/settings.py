@@ -36,7 +36,7 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp-relay.brevo.com"
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get("EMAIL_USER", "7c1f9f001@smtp-brevo.com")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASSWORD", "ImZxUtFWyJ2pdbnz")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASSWORD", "xsmtpsib-d78a26802c8b22d7bbba351a2d9427e46a1ee33e7eec12ba9420c685d00d15f6-12qVCrXYUJFWgk49")
 EMAIL_USE_TLS = True
 
 # Application definition
