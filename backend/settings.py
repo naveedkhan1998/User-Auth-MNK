@@ -33,10 +33,10 @@ ALLOWED_HOSTS = ["*"]
 
 # email config
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST = "smtp-relay.brevo.com"
 EMAIL_PORT = 587
-EMAIL_HOST_USER = os.environ.get("EMAIL_USER", "dtemplarsarsh@gmail.com")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASSWORD", "xykpaavfxtniiwui")
+EMAIL_HOST_USER = os.environ.get("EMAIL_USER", "7c1f9f001@smtp-brevo.com")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASSWORD", "ImZxUtFWyJ2pdbnz")
 EMAIL_USE_TLS = True
 
 # Application definition
