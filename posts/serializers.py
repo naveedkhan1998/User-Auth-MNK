@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Posts, Transactions, Item
+from .models import Posts, Transactions, Item, Inventory
 from account.serializers import UserProfileSerializer
 
 
@@ -24,3 +24,10 @@ class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = ["id", "barcode", "aliases", "name", "deals"]
+
+
+class InventorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Inventory
+        fields = ["id", "name", "items", "created_by", "created_at"]
+        read_only_fields = ["id", "created_at"]

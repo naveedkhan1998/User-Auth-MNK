@@ -3,14 +3,20 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
-from .models import Posts, Transactions
-from .serializers import PostsSerializer, TransactionsSerializer
+from .models import Posts, Transactions, Inventory
+from .serializers import PostsSerializer, TransactionsSerializer, InventorySerializer
 from rest_framework import status
 from .models import Item
 from .serializers import ItemSerializer
 from django.shortcuts import get_object_or_404
 import difflib
 from django.db.models import Q
+from rest_framework.viewsets import ModelViewSet
+
+
+class InventoryViewSet(ModelViewSet):
+    queryset = Inventory.objects.all()
+    serializer_class = InventorySerializer
 
 
 @permission_classes([AllowAny])

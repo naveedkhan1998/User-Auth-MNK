@@ -38,3 +38,12 @@ class Item(models.Model):
 
     def __str__(self):
         return self.name
+
+class Inventory(models.Model):
+    name = models.CharField(max_length=100, default="Tickets Inventory")  # Inventory name
+    items = models.JSONField()  # Store the ticketsData JSON
+    created_by = models.CharField(max_length=100)  # Just a string for the creator's name
+    created_at = models.DateTimeField(auto_now_add=True)  # Auto-set on creation
+
+    def __str__(self):
+        return f"{self.name} created by {self.created_by}"
