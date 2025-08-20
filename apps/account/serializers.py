@@ -1,13 +1,18 @@
 from rest_framework import serializers
 import random
 import datetime
+from django.utils.translation import gettext_lazy as _
 import pytz
 from .utils import Util
+from django.contrib.auth import authenticate
 from .models import User, UserOtps
-from django.utils.encoding import smart_str, force_bytes, DjangoUnicodeDecodeError
+from django.utils.encoding import smart_str, force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.conf import settings
+from config import const
+from config.settings.local import BASE_DIR
 
 
 class UserRegistrationEmailSerializer(serializers.ModelSerializer):
@@ -20,42 +25,51 @@ class UserRegistrationEmailSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         email = attrs.get("email")
-        query_1 = User.objects.filter(email=attrs.get("email"))
-        if query_1.exists():
+        user_qs = User.objects.filter(email=email)
+        if user_qs.exists():
             raise serializers.ValidationError("User Already Exists!")
 
-        query_2 = UserOtps.objects.filter(email=attrs.get("email"))
-        if query_2.exists():
-            query_2 = query_2.last()
-            if query_2.attempts == 0:
-                query_2.delete()
+        user_otp_qs = UserOtps.objects.filter(email=email)
+        if user_otp_qs.exists():
+            user_otp = user_otp_qs.last()
+            if user_otp.attempts == 0:
+                user_otp.delete()
             if pytz.UTC.localize(
                 datetime.datetime.now()
-            ) - query_2.created_at > datetime.timedelta(minutes=5):
-                query_2.delete()
+            ) - user_otp.created_at > datetime.timedelta(minutes=5):
+                user_otp.delete()
             else:
                 raise serializers.ValidationError("OTP Already Sent")
         return attrs
 
     def create(self, validated_data):
         otp = ""
-        for i in range(6):
+        for _ in range(6):
             otp += str(random.randint(0, 9))
         otp = int(otp)
         subject = "Email OTP"
         to = validated_data.get("email")
-        path_to_html = str(settings.BASE_DIR) + "/home/templates/email_otp.html"
+        path_to_html = str(settings.BASE_DIR) + "apps/home/templates/email_otp.html"
         Util.send_html_email(subject, to, path_to_html, otp)
         return UserOtps.objects.create(email=validated_data.get("email"), otp=otp)
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
 
-    password2 = serializers.CharField(style={"input_type": "password"}, write_only=True)
+    password = serializers.CharField(
+        write_only=True, required=False, style={"input_type": "password"}
+    )
+    password2 = serializers.CharField(
+        write_only=True, required=False, style={"input_type": "password"}
+    )
+    tc = serializers.BooleanField(required=False)
+    auth_provider = serializers.CharField(
+        write_only=True, required=False, default=const.AUTH_PROVIDERS.get("email")
+    )
 
     class Meta:
         model = User
-        fields = ["email", "name", "password", "password2", "tc", "otp"]
+        fields = ["email", "name", "password", "password2", "tc", "auth_provider"]
         extra_kwargs = {"password": {"write_only": True}}
 
     def validate(self, attrs):
@@ -63,56 +77,118 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         password2 = attrs.get("password2")
         otp = attrs.get("otp")
         email = attrs.get("email")
+        tc = attrs.get("tc")
+        auth_provider = attrs.get("auth_provider", const.AUTH_PROVIDERS.get("email"))
 
         otp_query = UserOtps.objects.filter(email=email)
-        if not otp_query.exists():
-            raise serializers.ValidationError("OTP for email doesn't exsist.")
-        else:
-            otp_obj = otp_query.last()
-            if pytz.UTC.localize(
-                datetime.datetime.now()
-            ) - otp_obj.created_at > datetime.timedelta(minutes=5):
-                otp_query.delete()
+
+        if auth_provider == const.AUTH_PROVIDERS.get("email"):
+            # Direct email registration
+            if not password or not password2:
                 raise serializers.ValidationError(
-                    "OTP expired!!Please redo the registration process."
+                    _("Password fields are required for email registration.")
+                )
+            if password != password2:
+                raise serializers.ValidationError(_("Passwords don't match."))
+            validate_password(password)
+            if tc is not True:
+                raise serializers.ValidationError(
+                    _("You must accept the terms and conditions.")
                 )
 
-            if otp_obj.otp != otp:
-                if otp_obj.attempts == 1:
+            if not otp_query.exists():
+                raise serializers.ValidationError("OTP for email doesn't exsist.")
+            else:
+                otp_obj = otp_query.last()
+                if pytz.UTC.localize(
+                    datetime.datetime.now()
+                ) - otp_obj.created_at > datetime.timedelta(minutes=5):
                     otp_query.delete()
                     raise serializers.ValidationError(
-                        "Too many wrong attemps!!Please redo the registration process."
+                        "OTP expired!!Please redo the registration process."
                     )
-                otp_obj.attempts -= 1
-                otp_obj.save()
-                raise serializers.ValidationError(
-                    f"Incorrect OTP,{otp_obj.attempts} Attempts Remaining"
-                )
-            else:
-                otp_query.delete()
 
-        if password != password2:
-            raise serializers.ValidationError("Passwords don't match")
+                if otp_obj.otp != otp:
+                    if otp_obj.attempts == 1:
+                        otp_query.delete()
+                        raise serializers.ValidationError(
+                            "Too many wrong attemps!!Please redo the registration process."
+                        )
+                    otp_obj.attempts -= 1
+                    otp_obj.save()
+                    raise serializers.ValidationError(
+                        f"Incorrect OTP,{otp_obj.attempts} Attempts Remaining"
+                    )
+                else:
+                    otp_query.delete()
+        else:
+            # OAuth registration
+            if User.objects.filter(email=email).exists():
+                raise serializers.ValidationError(
+                    _("User with this email already exists.")
+                )
+            attrs["tc"] = True  # Assuming terms are accepted via OAuth
+
         return attrs
 
-    def create(self, validate_data):
-        return User.objects.create_user(**validate_data)
+    def create(self, validated_data):
+        password = validated_data.pop("password", None)
+        validated_data.pop("password2", None)
+        auth_provider = validated_data.pop(
+            "auth_provider", const.AUTH_PROVIDERS.get("email")
+        )
+
+        user = User(
+            email=validated_data["email"],
+            name=validated_data["name"],
+            tc=validated_data.get("tc", True),
+            auth_provider=auth_provider,
+            is_email_verify=auth_provider != const.AUTH_PROVIDERS.get("email"),
+        )
+
+        if password:
+            user.set_password(password)
+        else:
+            user.set_unusable_password()
+
+        user.save()
+        return user
 
 
-class UserLoginSerializer(serializers.ModelSerializer):
+class UserLoginSerializer(serializers.Serializer):
     email = serializers.EmailField(max_length=255)
+    password = serializers.CharField(write_only=True, style={"input_type": "password"})
 
     class Meta:
-        model = User
         fields = ["email", "password"]
+
+    def validate(self, attrs):
+        email = attrs.get("email")
+        password = attrs.get("password")
+
+        user = authenticate(username=email, password=password)
+
+        if user:
+            if not user.is_active:
+                raise serializers.ValidationError(_("User account is disabled."))
+            attrs["user"] = user
+            return attrs
+        else:
+            if User.objects.filter(email=email).exists():
+                user = User.objects.get(email=email)
+                if user.auth_provider != const.AUTH_PROVIDERS.get("email"):
+                    raise serializers.ValidationError(
+                        _(f"Please continue your login using {user.auth_provider}.")
+                    )
+            raise serializers.ValidationError(_("Invalid email or password."))
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_avatar(obj):
         try:
-            return settings.MAIN_URL_2 + obj.avatar.url
-        except:
+            return obj.avatar.url
+        except (AttributeError, ValueError):
             return None
 
     avatar = serializers.SerializerMethodField("get_avatar")
@@ -125,32 +201,54 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "name",
             "avatar",
             "is_admin",
-            "is_teacher",
-            "is_in_session",
+            "auth_provider",
         ]
 
 
-class UserChangePasswordSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(
-        max_length=255, style={"input_type": "password"}, write_only=True
+class UserChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(
+        write_only=True, required=False, style={"input_type": "password"}
     )
-    password2 = serializers.CharField(
-        max_length=255, style={"input_type": "password"}, write_only=True
+    new_password = serializers.CharField(
+        write_only=True, style={"input_type": "password"}
+    )
+    new_password2 = serializers.CharField(
+        write_only=True, style={"input_type": "password"}
     )
 
     class Meta:
-        model = User
-        fields = ["password", "password2"]
+        fields = ["old_password", "new_password", "new_password2"]
 
     def validate(self, attrs):
-        password = attrs.get("password")
-        password2 = attrs.get("password2")
         user = self.context.get("user")
-        if password != password2:
-            raise serializers.ValidationError("Passwords don't match")
-        user.set_password(password)
-        user.save()
+        old_password = attrs.get("old_password")
+        new_password = attrs.get("new_password")
+        new_password2 = attrs.get("new_password2")
+
+        if new_password != new_password2:
+            raise serializers.ValidationError(_("New passwords don't match."))
+
+        if user.auth_provider == const.AUTH_PROVIDERS.get("email"):
+            # For direct login users
+            if not user.check_password(old_password):
+                raise serializers.ValidationError(_("Old password is incorrect."))
+        else:
+            # For OAuth users
+            if user.has_usable_password():
+                if not user.check_password(old_password):
+                    raise serializers.ValidationError(_("Old password is incorrect."))
+            elif old_password:
+                raise serializers.ValidationError(_("No existing password to verify."))
+
+        validate_password(new_password, user=user)
         return attrs
+
+    def save(self, **kwargs):
+        user = self.context.get("user")
+        new_password = self.validated_data.get("new_password")
+        user.set_password(new_password)
+        user.save()
+        return user
 
 
 class SendPasswordResetEmailSerializer(serializers.Serializer):
@@ -161,64 +259,78 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         email = attrs.get("email")
-        if User.objects.filter(email=email).exists():
-            user = User.objects.get(email=email)
-            uid = urlsafe_base64_encode(force_bytes(user.id))
-            # print('Encoded UID ',uid)
-            token = PasswordResetTokenGenerator().make_token(user)
-            # print('Password token', token)
-            link = (
-                "https://user-auth-react.vercel.app/api/user/reset/"
-                + uid
-                + "/"
-                + token
-                + "/"
+        if not User.objects.filter(email=email).exists():
+            raise serializers.ValidationError(
+                _("There is no user registered with this email address.")
             )
-            ##print('Link reset',link)
-            # body = 'Click Following Link to reset your password '+link
-            # data = {
-            #    'subject':'Password Reset link',
-            #    'body':body,
-            #    'to_email':user.email
-            # }
-            # Util.send_email(data)
-            subject = "Reset LINK"
-            to = user.email
-            # path_to_html = STATIC_ROOT+"templates/email_otp.html"
-            path_to_html = (
-                str(settings.BASE_DIR) + "/home/templates/password_reset.html"
+
+        user = User.objects.get(email=email)
+        if user.auth_provider != const.AUTH_PROVIDERS.get("email"):
+            raise serializers.ValidationError(
+                _(
+                    f"Password reset not allowed for {user.auth_provider} sign-in method."
+                )
             )
-            Util.send_html_email(subject, to, path_to_html, link)
-            return attrs
-        raise serializers.ValidationError("You are not registered user.")
+
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = PasswordResetTokenGenerator().make_token(user)
+        link = (
+            "https://user-auth-react.vercel.app/api/user/reset/"
+            + uid
+            + "/"
+            + token
+            + "/"
+        )
+        subject = "Reset LINK"
+        to = user.email
+        path_to_html = str(BASE_DIR) + "apps/home/templates/password_reset.html"
+        Util.send_html_email(subject, to, path_to_html, link)
+        return attrs
 
 
 class UserPasswordResetSerializer(serializers.Serializer):
-    password = serializers.CharField(
-        max_length=255, style={"input_type": "password"}, write_only=True
+    new_password = serializers.CharField(
+        write_only=True, style={"input_type": "password"}
     )
-    password2 = serializers.CharField(
-        max_length=255, style={"input_type": "password"}, write_only=True
+    new_password2 = serializers.CharField(
+        write_only=True, style={"input_type": "password"}
     )
 
     class Meta:
-        fields = ["password", "password2"]
+        fields = ["new_password", "new_password2"]
 
     def validate(self, attrs):
+        uid = self.context.get("uid")
+        token = self.context.get("token")
+        new_password = attrs.get("new_password")
+        new_password2 = attrs.get("new_password2")
+
+        if new_password != new_password2:
+            raise serializers.ValidationError(_("Passwords don't match."))
+
         try:
-            password = attrs.get("password")
-            password2 = attrs.get("password2")
-            uid = self.context.get("uid")
-            token = self.context.get("token")
-            if password != password2:
-                raise serializers.ValidationError("Passwords don't match")
-            id = smart_str(urlsafe_base64_decode(uid))
-            user = User.objects.get(id=id)
-            if not PasswordResetTokenGenerator().check_token(user, token):
-                raise serializers.ValidationError("Token is not Valid or Expired")
-            user.set_password(password)
-            user.save()
-            return attrs
-        except DjangoUnicodeDecodeError:
-            PasswordResetTokenGenerator().check_token(user, token)
-            raise serializers.ValidationError("Token is not Valid or Expired")
+            user_id = smart_str(urlsafe_base64_decode(uid))
+            user = User.objects.get(pk=user_id)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist) as e:
+            raise serializers.ValidationError(_("Invalid user.")) from e
+
+        if user.auth_provider != const.AUTH_PROVIDERS.get("email"):
+            raise serializers.ValidationError(
+                _(
+                    f"Password reset not allowed for {user.auth_provider} sign-in method."
+                )
+            )
+
+        if not PasswordResetTokenGenerator().check_token(user, token):
+            raise serializers.ValidationError(_("Invalid or expired token."))
+
+        validate_password(new_password, user=user)
+        attrs["user"] = user
+        return attrs
+
+    def save(self, **kwargs):
+        user = self.validated_data["user"]
+        new_password = self.validated_data.get("new_password")
+        user.set_password(new_password)
+        user.save()
+        return user
