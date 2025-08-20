@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os
-from pickle import TRUE
 import mimetypes
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -52,12 +51,13 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
-    "managment",
-    "account",
-    "home",
-    "open_messages",
-    "posts",
-    "portfolio",
+    # apps
+    "apps.managment",
+    "apps.account",
+    "apps.home",
+    "apps.open_messages",
+    "apps.posts",
+    "apps.portfolio",
 ]
 
 MIDDLEWARE = [

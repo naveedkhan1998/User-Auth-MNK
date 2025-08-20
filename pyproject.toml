@@ -1,8 +1,11 @@
 [project]
 name = "user-auth-mnk"
 version = "0.1.0"
-description = "Add your description here"
+description = "Naveeds Personal Backend server"
 readme = "README.md"
+authors = [
+    { name = "Mohammad Naveed Khan", email = "naveedkhan13041998@gmail.com" },
+]
 requires-python = ">=3.10"
 dependencies = [
     "asgiref==3.8.1",

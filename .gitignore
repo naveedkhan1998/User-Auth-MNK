@@ -7,3 +7,4 @@ mydatabase
 .github
 .vscode
 .venv
+gcpCredentials.json

@@ -12,6 +12,6 @@ sys.path.append('/var/www/User-Auth-MNK')
 sys.path.append('/var/www/User-Auth-MNK/venv/lib/python3.10/site-packages')
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 
 application = get_wsgi_application()

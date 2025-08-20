@@ -1,7 +1,7 @@
 # views.py
 from django.contrib.staticfiles.views import serve
 from django.views.generic import TemplateView
-from backend.settings import BASE_DIR
+from config.settings import BASE_DIR
 
 class StaticFilesListView(TemplateView):
     template_name = str(BASE_DIR) + "/home/templates/static_files_list.html"
