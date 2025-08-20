@@ -6,3 +6,4 @@ Dockerfile
 mydatabase
 .github
 .vscode
+.venv

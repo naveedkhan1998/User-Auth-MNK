@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.fields import IntegerField, CharField, DateTimeField
 from account.serializers import UserProfileSerializer
 from .models import Standard,Subject,Student,ClassRoom,ClassRoomAttendance
-from backend.settings import MAIN_URL_2
+from config.settings import MAIN_URL_2
 
 
 class StandardSerializer(serializers.ModelSerializer):

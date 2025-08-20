@@ -5,7 +5,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from .models import Project
 from .serializers import ProjectSerializer
-from backend.settings import BASE_DIR
+from config.settings import BASE_DIR
 
 
 @api_view(["GET"])
