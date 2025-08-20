@@ -1,18 +1,13 @@
-from ast import Pass
-from dataclasses import field
-import imp
-from unittest.util import _MAX_LENGTH
-from xml.dom import ValidationErr
 from rest_framework import serializers
 import random
 import datetime
 import pytz
-from account.utils import Util
+from .utils import Util
 from .models import User, UserOtps
 from django.utils.encoding import smart_str, force_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from config.settings import BASE_DIR, MAIN_URL_2
+from django.conf import settings
 
 
 class UserRegistrationEmailSerializer(serializers.ModelSerializer):
@@ -49,7 +44,7 @@ class UserRegistrationEmailSerializer(serializers.ModelSerializer):
         otp = int(otp)
         subject = "Email OTP"
         to = validated_data.get("email")
-        path_to_html = str(BASE_DIR) + "/home/templates/email_otp.html"
+        path_to_html = str(settings.BASE_DIR) + "/home/templates/email_otp.html"
         Util.send_html_email(subject, to, path_to_html, otp)
         return UserOtps.objects.create(email=validated_data.get("email"), otp=otp)
 
@@ -116,7 +111,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_avatar(obj):
         try:
-            return MAIN_URL_2 + obj.avatar.url
+            return settings.MAIN_URL_2 + obj.avatar.url
         except:
             return None
 
@@ -190,7 +185,9 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
             subject = "Reset LINK"
             to = user.email
             # path_to_html = STATIC_ROOT+"templates/email_otp.html"
-            path_to_html = str(BASE_DIR) + "/home/templates/password_reset.html"
+            path_to_html = (
+                str(settings.BASE_DIR) + "/home/templates/password_reset.html"
+            )
             Util.send_html_email(subject, to, path_to_html, link)
             return attrs
         raise serializers.ValidationError("You are not registered user.")
@@ -222,6 +219,6 @@ class UserPasswordResetSerializer(serializers.Serializer):
             user.set_password(password)
             user.save()
             return attrs
-        except DjangoUnicodeDecodeError as identifier:
+        except DjangoUnicodeDecodeError:
             PasswordResetTokenGenerator().check_token(user, token)
             raise serializers.ValidationError("Token is not Valid or Expired")

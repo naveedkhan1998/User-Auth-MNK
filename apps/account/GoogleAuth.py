@@ -25,9 +25,7 @@ def google_raw_login_get_credentials() -> GoogleRawLoginCredentials:
         raise ImproperlyConfigured("GOOGLE_OAUTH2_PROJECT_ID missing in env.")
 
     credentials = GoogleRawLoginCredentials(
-        client_id=client_id,
-        client_secret=client_secret,
-        project_id=project_id
+        client_id=client_id, client_secret=client_secret, project_id=project_id
     )
 
     return credentials

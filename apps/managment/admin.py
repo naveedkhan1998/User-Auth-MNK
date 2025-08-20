@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Student,Standard,Subject,ClassRoom,ClassRoomAttendance
+from .models import Student, Standard, Subject, ClassRoom, ClassRoomAttendance
+
 # Register your models here.
 admin.site.register(Standard)
 admin.site.register(Subject)

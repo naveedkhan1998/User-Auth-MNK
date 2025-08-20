@@ -14,12 +14,10 @@ from django.contrib.auth import authenticate
 from .renderers import UserRenderer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.decorators import api_view, permission_classes
-
+from rest_framework.decorators import permission_classes
 
 
 # Create your views here.
-
 
 
 def get_tokens_for_user(user):
@@ -30,6 +28,7 @@ def get_tokens_for_user(user):
         "access": str(refresh.access_token),
     }
 
+
 @permission_classes([AllowAny])
 class UserRegistrationEmailView(APIView):
     renderer_classes = [UserRenderer]
@@ -39,6 +38,7 @@ class UserRegistrationEmailView(APIView):
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
             return Response({"msg": " opt sent"}, status=status.HTTP_201_CREATED)
+
 
 class UserRegistrationView(APIView):
     renderer_classes = [UserRenderer]
@@ -53,6 +53,7 @@ class UserRegistrationView(APIView):
                 status=status.HTTP_201_CREATED,
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class UserLoginView(APIView):
     renderer_classes = [UserRenderer]
@@ -75,6 +76,7 @@ class UserLoginView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 @permission_classes([IsAuthenticated])
 class UserProfileView(APIView):
     renderer_classes = [UserRenderer]
@@ -82,6 +84,7 @@ class UserProfileView(APIView):
     def get(self, request, format=None):
         serializer = UserProfileSerializer(request.user)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 @permission_classes([IsAuthenticated])
 class UserChangePassword(APIView):
@@ -98,6 +101,7 @@ class UserChangePassword(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class SendPasswordResetEmailView(APIView):
     renderer_classes = [UserRenderer]
 
@@ -109,6 +113,7 @@ class SendPasswordResetEmailView(APIView):
                 status=status.HTTP_200_OK,
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class UserPasswordResetView(APIView):
     renderer_classes = [UserRenderer]

@@ -9,89 +9,150 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('managment', '0001_initial'),
+        ("managment", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ClassRoom',
+            name="ClassRoom",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('is_active', models.BooleanField(default=True)),
-                ('is_in_session', models.BooleanField(default=False)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("is_active", models.BooleanField(default=True)),
+                ("is_in_session", models.BooleanField(default=False)),
             ],
         ),
         migrations.CreateModel(
-            name='Standard',
+            name="Standard",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('standard', models.IntegerField(default=1)),
-                ('is_active', models.BooleanField(default=True)),
-                ('is_in_session', models.BooleanField(default=False)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("standard", models.IntegerField(default=1)),
+                ("is_active", models.BooleanField(default=True)),
+                ("is_in_session", models.BooleanField(default=False)),
             ],
         ),
         migrations.AddField(
-            model_name='student',
-            name='avatar',
-            field=models.ImageField(default='/profile_icon.png', null=True, upload_to='student/avatar/', verbose_name='avatar'),
+            model_name="student",
+            name="avatar",
+            field=models.ImageField(
+                default="/profile_icon.png",
+                null=True,
+                upload_to="student/avatar/",
+                verbose_name="avatar",
+            ),
         ),
         migrations.AddField(
-            model_name='student',
-            name='is_in_session',
+            model_name="student",
+            name="is_in_session",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='student',
-            name='parents',
+            model_name="student",
+            name="parents",
             field=models.ManyToManyField(blank=True, to=settings.AUTH_USER_MODEL),
         ),
         migrations.AlterField(
-            model_name='student',
-            name='name',
+            model_name="student",
+            name="name",
             field=models.CharField(max_length=255),
         ),
         migrations.CreateModel(
-            name='Subject',
+            name="Subject",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('subject_name', models.CharField(default='MATH', max_length=255)),
-                ('is_active', models.BooleanField(default=True)),
-                ('is_in_session', models.BooleanField(default=False)),
-                ('teachers', models.ManyToManyField(to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("subject_name", models.CharField(default="MATH", max_length=255)),
+                ("is_active", models.BooleanField(default=True)),
+                ("is_in_session", models.BooleanField(default=False)),
+                ("teachers", models.ManyToManyField(to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.CreateModel(
-            name='ClassRoomAttendance',
+            name="ClassRoomAttendance",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('attendance_percentage', models.FloatField(default=0)),
-                ('created_on', models.DateTimeField(auto_now_add=True)),
-                ('finished_on', models.DateTimeField(blank=True, null=True)),
-                ('is_active', models.BooleanField(default=True)),
-                ('is_in_session', models.BooleanField(default=True)),
-                ('classroom', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='managment.classroom')),
-                ('students_abscent', models.ManyToManyField(related_name='abscentses', to='managment.student')),
-                ('students_present', models.ManyToManyField(related_name='presentes', to='managment.student')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("attendance_percentage", models.FloatField(default=0)),
+                ("created_on", models.DateTimeField(auto_now_add=True)),
+                ("finished_on", models.DateTimeField(blank=True, null=True)),
+                ("is_active", models.BooleanField(default=True)),
+                ("is_in_session", models.BooleanField(default=True)),
+                (
+                    "classroom",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="managment.classroom",
+                    ),
+                ),
+                (
+                    "students_abscent",
+                    models.ManyToManyField(
+                        related_name="abscentses", to="managment.student"
+                    ),
+                ),
+                (
+                    "students_present",
+                    models.ManyToManyField(
+                        related_name="presentes", to="managment.student"
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='classroom',
-            name='standard',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='managment.standard'),
+            model_name="classroom",
+            name="standard",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="managment.standard"
+            ),
         ),
         migrations.AddField(
-            model_name='classroom',
-            name='subject',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='managment.subject'),
+            model_name="classroom",
+            name="subject",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="managment.subject"
+            ),
         ),
         migrations.AddField(
-            model_name='classroom',
-            name='teacher',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="classroom",
+            name="teacher",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+            ),
         ),
         migrations.AlterField(
-            model_name='student',
-            name='standard',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='managment.standard'),
+            model_name="student",
+            name="standard",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="managment.standard"
+            ),
         ),
     ]
