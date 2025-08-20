@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from rest_framework.fields import IntegerField
-from account.serializers import UserProfileSerializer
+from apps.account.serializers import UserProfileSerializer
 from .models import Standard, Subject, Student, ClassRoom, ClassRoomAttendance
-from config.settings import MAIN_URL_2
+from django.conf import settings
 
 
 class StandardSerializer(serializers.ModelSerializer):
@@ -17,7 +17,7 @@ class StudentSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_avatar(obj):
         try:
-            return MAIN_URL_2 + obj.avatar.url
+            return settings.MAIN_URL_2 + obj.avatar.url
         except:
             return None
 

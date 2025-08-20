@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Posts, Transactions, Item, Inventory
-from account.serializers import UserProfileSerializer
+from apps.account.serializers import UserProfileSerializer
 
 
 class PostsSerializer(serializers.ModelSerializer):

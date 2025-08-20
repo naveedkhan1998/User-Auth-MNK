@@ -63,7 +63,7 @@ SIMPLE_JWT.update(
 # Production: Use GCS for static and media files
 
 # Common Settings
-GS_BUCKET_NAME = "realtime-app-bucket"
+GS_BUCKET_NAME = "mnk-user-auth-bucket"
 
 # Handle GCP credentials more gracefully
 GS_CREDENTIALS = None

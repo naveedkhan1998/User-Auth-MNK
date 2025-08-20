@@ -264,6 +264,18 @@ wheels = [
 ]
 
 [[package]]
+name = "django-daisy"
+version = "1.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/38/b9/101f48ad7658908e472de24a9e6cc42ee72cd66e1577518ac6740842d739/django_daisy-1.1.0.tar.gz", hash = "sha256:7e03f09a2d4dbbcb9d0de2d0c9c5bdb890cc023f4a677ea70abf5d07877c8efe", size = 2582182, upload-time = "2025-08-12T10:34:11.999Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b4/65/0c781dc04ab76227328dff4df93262a126077601662a86ec3da58757e018/django_daisy-1.1.0-py3-none-any.whl", hash = "sha256:48767008a3b94017396675d0f9e0ca280aa2365d8ed0f0fee5f9c9b14bb27c8b", size = 2410405, upload-time = "2025-08-12T10:34:10.1Z" },
+]
+
+[[package]]
 name = "django-dotenv"
 version = "1.4.2"
 source = { registry = "https://pypi.org/simple" }
@@ -319,6 +331,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/ff/d6/2e50e378fff0408d558f36c4acffc090f9a641fd6e084af9e54d45307efa/django_storages-1.14.6.tar.gz", hash = "sha256:7a25ce8f4214f69ac9c7ce87e2603887f7ae99326c316bc8d2d75375e09341c9", size = 87587, upload-time = "2025-04-02T02:34:55.103Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/1f/21/3cedee63417bc5553eed0c204be478071c9ab208e5e259e97287590194f1/django_storages-1.14.6-py3-none-any.whl", hash = "sha256:11b7b6200e1cb5ffcd9962bd3673a39c7d6a6109e8096f0e03d46fab3d3aabd9", size = 33095, upload-time = "2025-04-02T02:34:53.291Z" },
+]
+
+[[package]]
+name = "django-unfold"
+version = "0.64.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/36/e1/83920569ec2edf34966f0fb69ba117b594077804add3d75c22e8b9f7d20e/django_unfold-0.64.2.tar.gz", hash = "sha256:f90805e5ebb9af671554fd392af4b81bfdbdedc28b6cd64f1d8c2ae5e14a2d36", size = 1070311, upload-time = "2025-08-12T09:42:52.332Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c3/4a/48b3471f73146caa7ddccf8fd7486d65576f0a6af3d4cd8366f14255cb48/django_unfold-0.64.2-py3-none-any.whl", hash = "sha256:433aaddd071bce0e0c1886c69a41a69f7ab4d30d9dce80ab79f6f2d7ba4c380a", size = 1178278, upload-time = "2025-08-12T09:42:51.069Z" },
 ]
 
 [[package]]
@@ -914,11 +938,13 @@ dependencies = [
     { name = "django" },
     { name = "django-allauth" },
     { name = "django-cors-headers" },
+    { name = "django-daisy" },
     { name = "django-dotenv" },
     { name = "django-heroku" },
     { name = "django-image-compressor" },
     { name = "django-jazzmin" },
     { name = "django-storages" },
+    { name = "django-unfold" },
     { name = "djangorestframework" },
     { name = "djangorestframework-simplejwt" },
     { name = "google-auth" },
@@ -965,11 +991,13 @@ requires-dist = [
     { name = "django", specifier = "==5.0.7" },
     { name = "django-allauth", specifier = "==0.63.6" },
     { name = "django-cors-headers", specifier = "==4.4.0" },
+    { name = "django-daisy", specifier = ">=1.1.0" },
     { name = "django-dotenv", specifier = "==1.4.2" },
     { name = "django-heroku", specifier = "==0.3.1" },
     { name = "django-image-compressor", specifier = "==0.3.6" },
     { name = "django-jazzmin", specifier = "==3.0.0" },
     { name = "django-storages", specifier = ">=1.14.6" },
+    { name = "django-unfold", specifier = ">=0.64.2" },
     { name = "djangorestframework", specifier = "==3.15.2" },
     { name = "djangorestframework-simplejwt", specifier = "==5.3.1" },
     { name = "google-auth", specifier = ">=2.40.3" },

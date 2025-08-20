@@ -8,12 +8,12 @@ from django.conf import settings
 urlpatterns = (
     [
         path("admin/", admin.site.urls),
-        path("api/user/", include("account.urls")),
-        path("api/message/", include("open_messages.urls")),
-        path("managment/", include("managment.urls")),
-        path("posts/", include("posts.urls")),
-        path("portfolio/", include("portfolio.urls")),
-        path("home/", include("home.urls")),
+        path("api/user/", include("apps.account.urls")),
+        path("api/message/", include("apps.open_messages.urls")),
+        path("managment/", include("apps.managment.urls")),
+        path("posts/", include("apps.posts.urls")),
+        path("portfolio/", include("apps.portfolio.urls")),
+        path("home/", include("apps.home.urls")),
         path("", TemplateView.as_view(template_name="index.html")),
     ]
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
