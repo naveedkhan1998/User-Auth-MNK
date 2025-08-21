@@ -10,7 +10,7 @@ urlpatterns = (
         path("admin/", admin.site.urls),
         path("api/user/", include("apps.account.urls")),
         path("api/message/", include("apps.open_messages.urls")),
-        path("managment/", include("apps.managment.urls")),
+        path("management/", include("apps.managment.urls")),
         path("posts/", include("apps.posts.urls")),
         path("portfolio/", include("apps.portfolio.urls")),
         path("home/", include("apps.home.urls")),

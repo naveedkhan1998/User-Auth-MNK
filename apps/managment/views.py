@@ -162,7 +162,7 @@ class StudentView(APIView):
     renderer_classes = [UserRenderer]
 
     def get(self, request, format=None):
-        if request.user.is_teacher or request.user.is_admin:  # teacher or admin
+        if request.user.is_admin:  # admin
             id = request.GET.get("standard")
             qs = Student.objects.filter(standard__id=id)
             serializer = StudentSerializer(qs, many=True)
