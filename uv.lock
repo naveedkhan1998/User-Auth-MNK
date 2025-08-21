@@ -257,16 +257,16 @@ wheels = [
 
 [[package]]
 name = "django"
-version = "4.2"
+version = "5.0.7"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "asgiref" },
     { name = "sqlparse" },
     { name = "tzdata", marker = "sys_platform == 'win32'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/9a/bb/48aa3e0850923096dff2766d21a6004d6e1a3317f0bd400ba81f586754e1/Django-4.2.tar.gz", hash = "sha256:c36e2ab12824e2ac36afa8b2515a70c53c7742f0d6eaefa7311ec379558db997", size = 10415665, upload-time = "2023-04-03T08:36:16.829Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/6d/cc/5384bf3daa6c857ccb731388bd59d15932157953c1ea05ebccc7591af492/Django-5.0.7.tar.gz", hash = "sha256:bd4505cae0b9bd642313e8fb71810893df5dc2ffcacaa67a33af2d5cd61888f2", size = 10642686, upload-time = "2024-07-09T14:07:08.806Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d9/40/6012f98b14b64b4d3dc47b0c2f116fccbd0795ab35515d0c40dac73b81b8/Django-4.2-py3-none-any.whl", hash = "sha256:ad33ed68db9398f5dfb33282704925bce044bef4261cd4fb59e4e7f9ae505a78", size = 7988617, upload-time = "2023-04-03T08:36:11.797Z" },
+    { url = "https://files.pythonhosted.org/packages/b7/fc/bff93df9b0bc23d66411cc54e7cd10195b81d61d25591317038d9823e99e/Django-5.0.7-py3-none-any.whl", hash = "sha256:f216510ace3de5de01329463a315a629f33480e893a9024fc93d8c32c22913da", size = 8184411, upload-time = "2024-07-09T14:07:00.731Z" },
 ]
 
 [[package]]
@@ -1219,7 +1219,7 @@ requires-dist = [
     { name = "cssutils", specifier = "==2.11.1" },
     { name = "defusedxml", specifier = "==0.7.1" },
     { name = "dj-database-url", specifier = "==2.2.0" },
-    { name = "django", specifier = "==4.2" },
+    { name = "django", specifier = "==5.0.7" },
     { name = "django-allauth", specifier = "==0.63.6" },
     { name = "django-cleanup", specifier = ">=9.0.0" },
     { name = "django-cors-headers", specifier = "==4.4.0" },
