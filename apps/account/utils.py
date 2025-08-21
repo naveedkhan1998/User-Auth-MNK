@@ -11,7 +11,7 @@ class Util:
     def send_html_email(subject, to, path_to_html, value):
         html_content = render_to_string(path_to_html, {"otp": value, "name": to})
         text_content = strip_tags(html_content)
-        from_email = os.environ.get("EMAIL_FROM")
+        from_email = os.getenv("EMAIL_FROM")
 
         # Use the inline_styler to inline the CSS styles
         html_content_with_inline_styles = transform(html_content)

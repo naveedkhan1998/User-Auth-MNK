@@ -11,7 +11,7 @@ from .base import *  # noqa: F403, F401
 from .base import BASE_DIR, SIMPLE_JWT  # noqa: F401
 
 # Security settings
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
 if not SECRET_KEY:
     raise ValueError("SECRET_KEY environment variable is required in production")
 
@@ -22,10 +22,10 @@ ALLOWED_HOSTS = [
     "https://naveedkhan98.pythonanywhere.com",
     "naveedkhan98.pythonanywhere.com",
     "*.mnaveedk.com",
-    os.environ.get("ALLOWED_HOST", ""),
+    os.getenv("ALLOWED_HOST", ""),
 ]
 
-HOST = os.environ.get("HOST", "https://*.mnaveedk.com")
+HOST = os.getenv("HOST", "https://*.mnaveedk.com")
 
 
 # Security settings for production
@@ -115,14 +115,14 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
         # Read DB credentials from environment; require them in production
-        "NAME": os.environ.get("MYSQL_DATABASE")
-        or os.environ.get(
+        "NAME": os.getenv("MYSQL_DATABASE")
+        or os.getenv(
             "MYSQL_DB_NAME",
         ),
-        "USER": os.environ.get("MYSQL_USER"),
-        "PASSWORD": os.environ.get("MYSQL_PASSWORD"),
-        "HOST": os.environ.get("MYSQL_DATABASE_HOST")
-        or os.environ.get(
+        "USER": os.getenv("MYSQL_USER"),
+        "PASSWORD": os.getenv("MYSQL_PASSWORD"),
+        "HOST": os.getenv("MYSQL_DATABASE_HOST")
+        or os.getenv(
             "MYSQL_HOST",
         ),
         "default-character-set": "utf8",
