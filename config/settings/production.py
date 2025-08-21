@@ -19,6 +19,7 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
     "https://*.mnaveedk.com",
+    "https://naveedkhan98.pythonanywhere.com",
     os.environ.get("ALLOWED_HOST", ""),
 ]
 
