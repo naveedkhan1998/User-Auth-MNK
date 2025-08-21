@@ -86,9 +86,9 @@ elif local_gcp_path.exists():
         local_gcp_path
     )
 
-STATIC_ROOT = "/app/static/"
+STATIC_ROOT = "/static/"
 STATIC_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/static/"
-MEDIA_ROOT = "/app/media/"
+MEDIA_ROOT = "/media/"
 MEDIA_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/media/"
 OUTPUT_ROOT = BASE_DIR / "OUTPUTS"
 OUTPUT_URL = "outputs/"
@@ -101,7 +101,7 @@ STORAGES = {
             "location": "media",  # Specify media files subdirectory
         },
     },
-    "static": {
+    "staticfiles": {
         "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
         "OPTIONS": {
             "bucket_name": GS_BUCKET_NAME,
