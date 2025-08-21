@@ -49,7 +49,7 @@ class UserRegistrationEmailSerializer(serializers.ModelSerializer):
         otp = int(otp)
         subject = "Email OTP"
         to = validated_data.get("email")
-        path_to_html = str(settings.BASE_DIR) + "apps/home/templates/email_otp.html"
+        path_to_html = str(settings.BASE_DIR) + "/apps/home/templates/email_otp.html"
         Util.send_html_email(subject, to, path_to_html, otp)
         return UserOtps.objects.create(email=validated_data.get("email"), otp=otp)
 
@@ -66,16 +66,26 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     auth_provider = serializers.CharField(
         write_only=True, required=False, default=const.AUTH_PROVIDERS.get("email")
     )
+    otp = serializers.CharField(write_only=True, required=False)
 
     class Meta:
         model = User
-        fields = ["email", "name", "password", "password2", "tc", "auth_provider"]
+        fields = [
+            "email",
+            "name",
+            "password",
+            "password2",
+            "tc",
+            "auth_provider",
+            "otp",
+        ]
         extra_kwargs = {"password": {"write_only": True}}
 
     def validate(self, attrs):
         password = attrs.get("password")
         password2 = attrs.get("password2")
-        otp = attrs.get("otp")
+        otp = int(attrs.get("otp"))
+
         email = attrs.get("email")
         tc = attrs.get("tc")
         auth_provider = attrs.get("auth_provider", const.AUTH_PROVIDERS.get("email"))
@@ -275,7 +285,7 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         token = PasswordResetTokenGenerator().make_token(user)
         link = (
-            "https://user-auth-react.vercel.app/api/user/reset/"
+            f"{settings.FRONTEND_URL}api/user/reset/"
             + uid
             + "/"
             + token
@@ -283,7 +293,7 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
         )
         subject = "Reset LINK"
         to = user.email
-        path_to_html = str(BASE_DIR) + "apps/home/templates/password_reset.html"
+        path_to_html = str(BASE_DIR) + "/apps/home/templates/password_reset.html"
         Util.send_html_email(subject, to, path_to_html, link)
         return attrs
 

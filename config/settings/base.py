@@ -141,6 +141,7 @@ USE_TZ = True
 
 MAIN_URL = "https://naveedkhan98.pythonanywhere.com/"
 MAIN_URL_2 = "https://naveedkhan98.pythonanywhere.com"
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000/")
 
 # STATIC_URL = '/static/'
 #

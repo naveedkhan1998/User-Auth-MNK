@@ -15,7 +15,11 @@
   </noscript>
   <![endif] -->
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700');
+      
+      * {
+        box-sizing: border-box;
+      }
       
       body,
       table,
@@ -23,11 +27,13 @@
       a {
         -webkit-text-size-adjust: 100%;
         -ms-text-size-adjust: 100%;
+        text-size-adjust: 100%;
       }
       table,
       td {
         mso-table-lspace: 0pt;
         mso-table-rspace: 0pt;
+        table-layout: fixed;
       }
       img {
         -ms-interpolation-mode: bicubic;
@@ -36,6 +42,7 @@
         line-height: 100%;
         outline: none;
         text-decoration: none;
+        max-width: 100%;
       }
       table {
         border-collapse: collapse !important;
@@ -45,7 +52,8 @@
         margin: 0 !important;
         padding: 0 !important;
         width: 100% !important;
-        font-family: 'Poppins', Arial, sans-serif;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background-color: #f8fafc;
       }
       a[x-apple-data-detectors] {
         color: inherit !important;
@@ -55,7 +63,21 @@
         font-weight: inherit !important;
         line-height: inherit !important;
       }
-      @media screen and (max-width: 525px) {
+      
+      /* Modern Design System */
+      :root {
+        --primary-color: #2563eb;
+        --primary-dark: #1d4ed8;
+        --secondary-color: #f1f5f9;
+        --accent-color: #06b6d4;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --border-color: #e2e8f0;
+        --success-color: #10b981;
+        --warning-color: #f59e0b;
+      }
+      
+      @media screen and (max-width: 600px) {
         .wrapper {
           width: 100% !important;
           max-width: 100% !important;
@@ -64,119 +86,277 @@
           width: 100% !important;
         }
         .padding {
-          padding: 10px 5% 15px 5% !important;
+          padding: 20px 16px !important;
         }
         .section-padding {
-          padding: 0 15px 50px 15px !important;
+          padding: 20px 16px 40px 16px !important;
+        }
+        .header h1 {
+          font-size: 28px !important;
+        }
+        .otp {
+          font-size: 36px !important;
+          letter-spacing: 3px !important;
         }
       }
+      
+      .email-wrapper {
+        background-color: #f8fafc;
+        padding: 40px 20px;
+      }
+      
       .container {
         width: 100%;
         max-width: 600px;
         margin: 0 auto;
         background-color: #ffffff;
-        border-radius: 20px;
+        border-radius: 16px;
         overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        border: 1px solid var(--border-color);
       }
-      .content {
-        font-size: 16px;
-        line-height: 1.6;
-        color: #333333;
-      }
+      
       .header {
-        background: linear-gradient(135deg, #6e48aa 0%, #9d50bb 100%);
-        padding: 40px 30px;
+        background: var(--primary-color);
+        background: -webkit-linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+        background: -moz-linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+        padding: 48px 40px;
         text-align: center;
+        position: relative;
       }
+      
+      .header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+      }
+      
+      .logo {
+        position: relative;
+        z-index: 1;
+        width: 64px;
+        height: 64px;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: 700;
+        color: #ffffff;
+      }
+      
       .header h1 {
+        position: relative;
+        z-index: 1;
         color: #ffffff;
         font-size: 32px;
         font-weight: 700;
         margin: 0;
+        line-height: 1.2;
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
+      
+      .header p {
+        position: relative;
+        z-index: 1;
+        color: rgba(255, 255, 255, 0.9);
+        margin: 8px 0 0 0;
+        font-size: 16px;
+        font-weight: 400;
+      }
+      
       .body {
-        padding: 40px 30px;
-        text-align: center;
-        background-color: #f8f9fa;
-      }
-      .otp-container {
+        padding: 48px 40px;
         background-color: #ffffff;
-        border-radius: 12px;
-        padding: 20px;
-        margin: 20px 0;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
       }
+      
+      .content {
+        text-align: center;
+        color: var(--text-primary);
+        line-height: 1.6;
+      }
+      
+      .greeting {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0 0 24px 0;
+      }
+      
+      .message {
+        font-size: 16px;
+        color: var(--text-secondary);
+        margin: 0 0 32px 0;
+        line-height: 1.6;
+      }
+      
+      .otp-container {
+        background: #f8fafc;
+        background: -webkit-linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        background: -moz-linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border: 2px solid var(--border-color);
+        border-radius: 16px;
+        padding: 32px 24px;
+        margin: 32px 0;
+        position: relative;
+      }
+      
+      .otp-label {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-secondary);
+        margin: 0 0 12px 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
       .otp {
         font-size: 42px;
-        font-weight: bold;
-        color: #6e48aa;
-        letter-spacing: 5px;
-        margin: 10px 0;
+        font-weight: 700;
+        color: var(--primary-color);
+        letter-spacing: 8px;
+        margin: 0;
+        font-family: 'Inter', monospace;
+        text-shadow: 0 2px 4px rgba(37, 99, 235, 0.1);
       }
-      .footer {
-        background-color: #f1f3f5;
-        padding: 30px;
-        text-align: center;
+      
+      .otp-note {
         font-size: 14px;
-        color: #666666;
+        color: var(--text-secondary);
+        margin: 16px 0 0 0;
+        font-style: italic;
       }
+      
       .button {
         display: inline-block;
-        padding: 12px 24px;
-        background-color: #6e48aa;
+        padding: 16px 32px;
+        background: var(--primary-color);
+        background: -webkit-linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        background: -moz-linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
         color: #ffffff;
         text-decoration: none;
-        border-radius: 30px;
+        border-radius: 12px;
         font-weight: 600;
-        margin-top: 20px;
-        transition: background-color 0.3s ease;
+        font-size: 16px;
+        margin: 24px 0 0 0;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        -webkit-transition: all 0.3s ease;
+        -moz-transition: all 0.3s ease;
+        -o-transition: all 0.3s ease;
+        transition: all 0.3s ease;
       }
+      
       .button:hover {
-        background-color: #9d50bb;
+        -webkit-transform: translateY(-2px);
+        -moz-transform: translateY(-2px);
+        -ms-transform: translateY(-2px);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+      }
+      
+      .footer {
+        background-color: var(--secondary-color);
+        padding: 32px 40px;
+        text-align: center;
+        border-top: 1px solid var(--border-color);
+      }
+      
+      .footer-content {
+        font-size: 14px;
+        color: var(--text-secondary);
+        line-height: 1.5;
+      }
+      
+      .footer-content p {
+        margin: 0 0 8px 0;
+      }
+      
+      .footer-content p:last-child {
+        margin: 0;
+      }
+      
+      .brand {
+        font-weight: 600;
+        color: var(--primary-color);
+      }
+      
+      .security-note {
+        background: #fef3c7;
+        border: 1px solid #fbbf24;
+        border-radius: 8px;
+        padding: 16px;
+        margin: 24px 0;
+        font-size: 14px;
+        color: #92400e;
+        text-align: left;
+      }
+      
+      .security-note strong {
+        color: #78350f;
       }
     </style>
   </head>
-  <body style="margin: 0 !important; padding: 0 !important; background-color: #f0f2f5;">
-    <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: 'Poppins', Arial, sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">Your One-Time Password for secure account verification</div>
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <tr>
-        <td align="center" class="section-padding" style="padding: 70px 15px 70px 15px;">
-          <table border="0" cellpadding="0" cellspacing="0" width="100%" class="responsive-table" style="max-width: 600px;">
-            <tr>
-              <td>
-                <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td>
-                      <div class="container">
-                        <div class="content">
-                          <div class="header">
-                            <h1>Verify Your Account</h1>
-                          </div>
-                          <div class="body">
-                            <p>Hello, {{ name }}!</p>
-                            <p>You're almost there! Use the following One-Time Password (OTP) to complete your account verification:</p>
-                            <div class="otp-container">
-                              <div class="otp">{{ otp }}</div>
-                            </div>
-                            <p>This code will expire in 10 minutes for your security.</p>
-                            <a href="#" class="button">Verify Account</a>
-                          </div>
-                          <div class="footer">
-                            <p>If you didn't request this OTP, please ignore this email or contact our support team if you have any concerns.</p>
-                            <p>&copy; 2024 Your Naveed Khan. All rights reserved.</p>
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
+  <body>
+    <div style="display: none; font-size: 1px; color: #fefefe; line-height: 1px; font-family: 'Inter', sans-serif; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden;">
+      Your secure verification code for account access
+    </div>
+    
+    <div class="email-wrapper">
+      <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+          <td align="center">
+            <div class="container">
+              <!-- Header -->
+              <div class="header">
+                <div class="logo">NK</div>
+                <h1>Email Verification</h1>
+                <p>Secure access to your account</p>
+              </div>
+              
+              <!-- Body -->
+              <div class="body">
+                <div class="content">
+                  <p class="greeting">Hello {{ name }}!</p>
+                  <p class="message">
+                    You're almost there! We've generated a secure one-time password to verify your identity. 
+                    Enter the code below to complete your account verification.
+                  </p>
+                  
+                  <div class="otp-container">
+                    <p class="otp-label">Your Verification Code</p>
+                    <p class="otp">{{ otp }}</p>
+                    <p class="otp-note">This code expires in 10 minutes</p>
+                  </div>
+                  
+                  <div class="security-note">
+                    <strong>Security Notice:</strong> If you didn't request this verification code, 
+                    please ignore this email or contact our support team immediately.
+                  </div>
+                  
+                  <a href="#" class="button">Verify Account</a>
+                </div>
+              </div>
+              
+              <!-- Footer -->
+              <div class="footer">
+                <div class="footer-content">
+                  <p>This email was sent by <span class="brand">Naveed Khan</span></p>
+                  <p>&copy; 2024 All rights reserved.</p>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
   </body>
 </html>

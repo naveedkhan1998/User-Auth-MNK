@@ -1,6 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Mooli&family=Slabo+27px&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Mooli&family=Slabo+27px");
 
 body {
+  background: #f9ebe0; /* Fallback for older browsers */
+  background: -webkit-linear-gradient(to right, #f9ebe0, #d4a5a5);
+  background: -moz-linear-gradient(to right, #f9ebe0, #d4a5a5);
   background: linear-gradient(to right, #f9ebe0, #d4a5a5);
   background-size: cover;
   height: 100vh;
@@ -32,6 +35,9 @@ nav a {
   color: #333; /* Dark text color for better readability */
   text-decoration: none;
   margin: 0 20px;
+  -webkit-transition: color 0.3s;
+  -moz-transition: color 0.3s;
+  -o-transition: color 0.3s;
   transition: color 0.3s;
 }
 
@@ -59,6 +65,9 @@ nav a:hover {
   font-size: 2rem; /* Reduced font size for better readability */
   text-align: center;
   opacity: 0;
+  -webkit-transition: opacity 3.2s ease, transform 1.2s ease;
+  -moz-transition: opacity 3.2s ease, transform 1.2s ease;
+  -o-transition: opacity 3.2s ease, transform 1.2s ease;
   transition: opacity 3.2s ease, transform 1.2s ease;
   border-radius: 20px; /* Reduced border radius */
   background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
@@ -85,10 +94,16 @@ nav a:hover {
 
 .benefit.show {
   opacity: 1;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
   transform: scale(1);
 }
 
 .benefit:hover {
+  -webkit-transform: scale(1.02);
+  -moz-transform: scale(1.02);
+  -ms-transform: scale(1.02);
   transform: scale(1.02);
 }
 
@@ -143,6 +158,9 @@ p {
   text-align: center;
   font-size: 20px;
   font-family: "Slabo 27px", serif; /* Use the same font as the rest of the page */
+  -webkit-transition: background-color 0.3s;
+  -moz-transition: background-color 0.3s;
+  -o-transition: background-color 0.3s;
   transition: background-color 0.3s;
 }
 
