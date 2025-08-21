@@ -31,7 +31,7 @@ SECRET_KEY = "django-insecure-3e5av)!)m@!8o)95ha%lp08x#f(-9s)-o)!6u$3_2hwv)&rb3r
 # email config
 EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
 EMAIL_HOST = os.getenv("EMAIL_HOST")
-EMAIL_PORT = int(os.getenv("EMAIL_PORT"))
+EMAIL_PORT = 587
 EMAIL_HOST_USER = os.getenv("EMAIL_USER")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
 EMAIL_USE_TLS = True
