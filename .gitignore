@@ -8,3 +8,5 @@ mydatabase
 .vscode
 .venv
 gcpCredentials.json
+media
+static
