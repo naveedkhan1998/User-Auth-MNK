@@ -5,9 +5,12 @@ from .models import Project, Image
 
 class ProjectAdminForm(forms.ModelForm):
     """Custom form for Project admin with multiple image upload capability"""
+    class MultiFileInput(forms.ClearableFileInput):
+        allow_multiple_selected = True
+
     additional_images = forms.FileField(
         required=False,
-        widget=forms.ClearableFileInput(attrs={'multiple': True}),
+        widget=MultiFileInput(attrs={'multiple': True}),
         help_text="Upload multiple images at once. These will be added to the project's images."
     )
 
