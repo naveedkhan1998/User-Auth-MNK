@@ -19,13 +19,16 @@ class Image(models.Model):
         img.save(output, format="JPEG", quality=70)
         output.seek(0)
 
+        # Get the actual size of the compressed image data
+        content_size = len(output.getvalue())
+
         # Set the content of the compressed image to the file field
         self.file = InMemoryUploadedFile(
             output,
             "ImageField",
             f"{self.file.name.split('.')[0]}.jpg",
             "image/jpeg",
-            sys.getsizeof(output),
+            content_size,
             None,
         )
 
