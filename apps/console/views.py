@@ -90,6 +90,23 @@ class FileManagerView(StaffOnlyMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         base_dir = _static_root()
         current_relative = (self.request.GET.get("path") or "").strip()
+        
+        # Check if base directory exists (may not in production with cloud storage)
+        if not base_dir.exists():
+            messages.error(
+                self.request, 
+                "File manager is not available. Static files are served from cloud storage. "
+                "Use the Django admin or cloud console to manage files."
+            )
+            context.update({
+                "base_dir_path": str(base_dir),
+                "current_relative": "",
+                "breadcrumbs": [],
+                "entries": [],
+                "error": "directory_not_found"
+            })
+            return context
+        
         current_dir = _resolve_path(base_dir, current_relative)
 
         if not current_dir.exists() or not current_dir.is_dir():
@@ -520,6 +537,7 @@ class MessageDetailView(StaffOnlyMixin, TemplateView):
 
 
 def _static_root() -> Path:
+    """Get the static root directory without trying to create it."""
     static_root = getattr(settings, "STATIC_ROOT", None)
     if static_root:
         base_dir = Path(static_root)
@@ -528,7 +546,8 @@ def _static_root() -> Path:
         base_dir = (
             Path(static_dirs[0]) if static_dirs else Path(settings.BASE_DIR) / "static"
         )
-    base_dir.mkdir(parents=True, exist_ok=True)
+    # Don't try to create the directory - it may not exist in production with cloud storage
+    # Just return the path and let the view handle if it doesn't exist
     return base_dir.resolve()
 
 

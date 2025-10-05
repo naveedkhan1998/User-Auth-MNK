@@ -86,9 +86,10 @@ elif local_gcp_path.exists():
         local_gcp_path
     )
 
-STATIC_ROOT = "/static/"
+# For collectstatic - files will be uploaded to GCS from here
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/static/"
-MEDIA_ROOT = "/media/"
+MEDIA_ROOT = BASE_DIR / "mediafiles"
 MEDIA_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/media/"
 OUTPUT_ROOT = BASE_DIR / "OUTPUTS"
 OUTPUT_URL = "outputs/"
