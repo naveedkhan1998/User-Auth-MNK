@@ -276,24 +276,38 @@ class ProjectCreateView(StaffOnlyMixin, TemplateView):
     def post(self, request, *args, **kwargs):
         form = ProjectForm(request.POST)
         image_form = ProjectImageUploadForm(request.POST, request.FILES)
-        if form.is_valid() and image_form.is_valid():
+        
+        if form.is_valid():
             project = form.save()
-            files = request.FILES.getlist("images")
+            
+            # Handle multiple file uploads
+            uploaded_files = request.FILES.getlist('images')
             added = 0
-            for uploaded in files:
-                if uploaded:
-                    image = Image.objects.create(file=uploaded)
+            
+            for uploaded_file in uploaded_files:
+                try:
+                    # Create Image instance and save
+                    image = Image(file=uploaded_file)
+                    image.save()  # This triggers compression in the model's save method
                     project.images.add(image)
                     added += 1
+                except Exception as e:
+                    messages.warning(
+                        request,
+                        f"Could not upload {uploaded_file.name}: {str(e)}"
+                    )
+            
             if added:
                 messages.success(
                     request,
-                    f"Project created with {added} image{'s' if added != 1 else ''}.",
+                    f"Project created with {added} image{'s' if added != 1 else ''}."
                 )
             else:
-                messages.success(request, "Project created.")
+                messages.success(request, "Project created successfully.")
+            
             return redirect("console:project-detail", pk=project.pk)
 
+        # If form is invalid
         messages.error(request, "Please correct the errors below.")
         context = self.get_context_data(form=form, image_form=image_form)
         return render(request, self.template_name, context, status=400)
@@ -347,31 +361,47 @@ class ProjectImageUploadView(StaffOnlyMixin, View):
 
     def post(self, request, pk):
         project = get_object_or_404(Project, pk=pk)
-        form = ProjectImageUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            files = request.FILES.getlist("images")
-            added = 0
-            for uploaded in files:
-                if uploaded:
-                    image = Image.objects.create(file=uploaded)
-                    project.images.add(image)
-                    added += 1
-            if added:
-                messages.success(
-                    request, f"Added {added} image{'s' if added != 1 else ''}."
-                )
-            else:
-                messages.info(request, "No images were uploaded.")
+        image_form = ProjectImageUploadForm(request.POST, request.FILES)
+        
+        # Get all uploaded files
+        uploaded_files = request.FILES.getlist('images')
+        
+        if not uploaded_files:
+            messages.warning(request, "No images were selected.")
             return redirect("console:project-detail", pk=project.pk)
-
-        messages.error(request, "There was a problem with the uploaded files.")
-        context = {
-            "project": project,
-            "form": ProjectForm(instance=project),
-            "image_form": form,
-            "delete_form": ProjectDeleteForm(),
-        }
-        return render(request, self.template_name, context, status=400)
+        
+        added = 0
+        errors = []
+        
+        for uploaded_file in uploaded_files:
+            try:
+                # Validate file type
+                if not uploaded_file.content_type.startswith('image/'):
+                    errors.append(f"{uploaded_file.name} is not a valid image file")
+                    continue
+                
+                # Create and save image
+                image = Image(file=uploaded_file)
+                image.save()  # This triggers compression
+                project.images.add(image)
+                added += 1
+            except Exception as e:
+                errors.append(f"Could not upload {uploaded_file.name}: {str(e)}")
+        
+        # Provide feedback
+        if added:
+            messages.success(
+                request, 
+                f"Successfully added {added} image{'s' if added != 1 else ''}."
+            )
+        
+        for error in errors:
+            messages.warning(request, error)
+        
+        if not added and not errors:
+            messages.info(request, "No images were uploaded.")
+        
+        return redirect("console:project-detail", pk=project.pk)
 
 
 class ProjectImageDeleteView(StaffOnlyMixin, View):

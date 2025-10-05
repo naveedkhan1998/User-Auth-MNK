@@ -7,7 +7,7 @@
 {% block console_content %}
   <div class="space-y-8">
     <div class="flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
-      <a href="{% url 'console:project-list' %}" class="inline-flex items-center gap-2 rounded-2xl border border-slate-300/70 px-3 py-1.5 font-semibold text-slate-600 transition hover:border-brand-500 hover:text-brand-600 dark:border-slate-700 dark:text-slate-300 dark:hover:border-brand-500 dark:hover:text-brand-400">? Back to projects</a>
+      <a href="{% url 'console:project-list' %}" class="inline-flex items-center gap-2 rounded-2xl border border-slate-300/70 px-3 py-1.5 font-semibold text-slate-600 transition hover:border-brand-500 hover:text-brand-600 dark:border-slate-700 dark:text-slate-300 dark:hover:border-brand-500 dark:hover:text-brand-400">← Back to projects</a>
     </div>
 
     <form method="post" enctype="multipart/form-data" class="grid gap-6 lg:grid-cols-3">
@@ -17,11 +17,24 @@
           <p class="text-xs font-semibold uppercase tracking-[0.4em] text-sky-500">New project</p>
           <h1 class="mt-3 text-3xl font-semibold text-slate-900 dark:text-slate-100">Project details</h1>
           <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">Describe the work, provide supporting links, and surface the technologies featured.</p>
-          {{ form.non_field_errors }}
+          
+          {% if form.non_field_errors %}
+            <div class="mt-4 rounded-2xl border border-red-400/60 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-500/60 dark:bg-red-950/60 dark:text-red-200">
+              {% for error in form.non_field_errors %}
+                {{ error }}
+              {% endfor %}
+            </div>
+          {% endif %}
+          
           <div class="mt-8 space-y-6">
             {% for field in form %}
               <div class="space-y-2">
-                {{ field.label_tag }}
+                <label for="{{ field.id_for_label }}" class="block text-sm font-semibold text-slate-700 dark:text-slate-200">
+                  {{ field.label }}
+                  {% if field.field.required %}
+                    <span class="text-red-500">*</span>
+                  {% endif %}
+                </label>
                 {{ field }}
                 {% if field.help_text %}
                   <p class="text-xs text-slate-500 dark:text-slate-400">{{ field.help_text }}</p>
@@ -38,13 +51,25 @@
           </div>
         </div>
       </div>
+      
       <div class="space-y-6">
         <div class="rounded-3xl border border-slate-200/70 bg-white/80 p-6 shadow-md backdrop-blur dark:border-slate-700/60 dark:bg-slate-950/70">
-          <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">Initial images</h2>
-          <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">Optional: upload hero visuals now or add them later from the project detail view.</p>
+          <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">Project images</h2>
+          <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">Upload hero visuals now or add them later from the project detail view.</p>
+          
           <div class="mt-6 space-y-4">
-            {{ image_form.images.label_tag }}
-            {{ image_form.images }}
+            <label for="{{ image_form.images.id_for_label }}" class="block text-sm font-semibold text-slate-700 dark:text-slate-200">
+              {{ image_form.images.label }}
+            </label>
+            
+            <div class="relative">
+              {{ image_form.images }}
+            </div>
+            
+            {% if image_form.images.help_text %}
+              <p class="text-xs text-slate-500 dark:text-slate-400">{{ image_form.images.help_text }}</p>
+            {% endif %}
+            
             {% if image_form.images.errors %}
               <div class="rounded-2xl border border-red-400/60 bg-red-50 px-3 py-2 text-xs text-red-700 dark:border-red-500/60 dark:bg-red-950/60 dark:text-red-200">
                 {% for error in image_form.images.errors %}
@@ -52,11 +77,20 @@
                 {% endfor %}
               </div>
             {% endif %}
-            <p class="text-xs text-slate-500 dark:text-slate-400">You can select multiple files. JPEG/PNG preferred.</p>
+            
+            <div class="rounded-2xl border border-slate-200/60 bg-slate-50/60 px-4 py-3 text-xs text-slate-600 dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-300">
+              <strong>Tip:</strong> Hold Ctrl (Windows) or Cmd (Mac) to select multiple images at once. Images are automatically compressed upon upload.
+            </div>
           </div>
         </div>
-        <div class="rounded-3xl border border-dashed border-slate-300/70 bg-white/60 p-6 text-sm text-slate-500 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-400">Projects support many images. They are compressed server-side when saved.</div>
-        <button type="submit" class="inline-flex w-full items-center justify-center rounded-2xl bg-brand-500 px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 dark:focus:ring-offset-slate-950">Save project</button>
+        
+        <div class="rounded-3xl border border-dashed border-slate-300/70 bg-white/60 p-6 text-sm text-slate-500 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-400">
+          <strong class="text-slate-700 dark:text-slate-200">Note:</strong> Projects support multiple images. The first image uploaded will be used as the thumbnail in list views.
+        </div>
+        
+        <button type="submit" class="inline-flex w-full items-center justify-center rounded-2xl bg-brand-500 px-5 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 dark:focus:ring-offset-slate-950">
+          Create project
+        </button>
       </div>
     </form>
   </div>
