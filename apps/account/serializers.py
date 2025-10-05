@@ -49,9 +49,22 @@ class UserRegistrationEmailSerializer(serializers.ModelSerializer):
         otp = int(otp)
         subject = "Email OTP"
         to = validated_data.get("email")
-        path_to_html = str(settings.BASE_DIR) + "/templates/emails/email_otp.html"
-        Util.send_html_email(subject, to, path_to_html, otp)
-        return UserOtps.objects.create(email=validated_data.get("email"), otp=otp)
+        # Use Django template path, not absolute file path
+        template_path = "emails/email_otp.html"
+        
+        # Try to send email, but continue even if it fails
+        email_sent = Util.send_html_email(subject, to, template_path, otp)
+        
+        # Create the OTP record regardless of email status
+        otp_instance = UserOtps.objects.create(email=validated_data.get("email"), otp=otp)
+        
+        # Log if email failed (for debugging)
+        if not email_sent:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.warning(f"OTP created for {to} but email delivery failed. OTP: {otp}")
+        
+        return otp_instance
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -293,8 +306,19 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
         )
         subject = "Reset LINK"
         to = user.email
-        path_to_html = str(BASE_DIR) + "/templates/emails/password_reset.html"
-        Util.send_html_email(subject, to, path_to_html, link)
+        # Use Django template path, not absolute file path
+        template_path = "emails/password_reset.html"
+        
+        # Try to send email, but don't fail if it errors
+        email_sent = Util.send_html_email(subject, to, template_path, link)
+        
+        if not email_sent:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.warning(f"Password reset token created for {to} but email delivery failed")
+            # In production, you might want to raise an error here:
+            # raise serializers.ValidationError({"email": "Unable to send reset email. Please try again later."})
+        
         return attrs
 
 
