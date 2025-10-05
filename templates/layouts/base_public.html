@@ -2,10 +2,10 @@
 
 {# Public-facing layout for homepage, landing pages, etc. #}
 
-{% block body_class %}{{ block.super }}{% endblock %}
+{% block body_class %}min-h-screen bg-gradient-to-br from-white via-slate-50 to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950{% endblock %}
 
 {% block content %}
-    <div class="{% block page_wrapper_class %}{% endblock %}">
+    <div class="animate-fade-in {% block page_wrapper_class %}{% endblock %}">
         {% block page_content %}
             {# Override this in child templates #}
         {% endblock %}

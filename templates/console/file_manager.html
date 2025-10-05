@@ -4,26 +4,28 @@
 {% block console_section %}Static Assets{% endblock %}
 {% block console_heading %}File Manager{% endblock %}
 
+
+
 {% block console_description %}
-  <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">
-    Manage your static files. {% if storage_type == 'GCS' %}Files are stored in <strong>Google Cloud Storage</strong>.{% else %}Files are stored <strong>locally</strong> on the server.{% endif %}
+  <p class="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+    Manage your static files. {% if storage_type == 'GCS' %}Files are stored in <strong class="text-slate-800 dark:text-slate-200">Google Cloud Storage</strong>.{% else %}Files are stored <strong class="text-slate-800 dark:text-slate-200">locally</strong> on the server.{% endif %}
   </p>
-  <dl class="mt-4 grid gap-3 text-xs sm:grid-cols-4">
-    <div class="flex items-center gap-2">
-      <dt class="font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-300">Storage:</dt>
-      <dd class="rounded-full {% if storage_type == 'GCS' %}bg-blue-500/20 text-blue-600{% else %}bg-green-500/20 text-green-600{% endif %} px-2 py-0.5 font-semibold">{{ storage_type }}</dd>
+  <dl class="mt-5 grid gap-4 text-xs sm:grid-cols-4">
+    <div class="flex items-center gap-2.5">
+      <dt class="font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Storage:</dt>
+      <dd class="rounded-full {% if storage_type == 'GCS' %}bg-blue-500/15 text-blue-700 dark:text-blue-400{% else %}bg-green-500/15 text-green-700 dark:text-green-400{% endif %} px-3 py-1 font-bold shadow-sm">{{ storage_type }}</dd>
     </div>
-    <div class="flex items-center gap-2">
-      <dt class="font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-300">Location:</dt>
-      <dd class="font-mono text-slate-700 dark:text-slate-200">static{% if current_path %}/{{ current_path }}{% endif %}</dd>
+    <div class="flex items-center gap-2.5">
+      <dt class="font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Location:</dt>
+      <dd class="font-mono text-xs text-slate-700 dark:text-slate-200">static{% if current_path %}/{{ current_path }}{% endif %}</dd>
     </div>
-    <div class="flex items-center gap-2">
-      <dt class="font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-300">Entries:</dt>
-      <dd class="text-slate-700 dark:text-slate-200">{{ entries|length }}</dd>
+    <div class="flex items-center gap-2.5">
+      <dt class="font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Entries:</dt>
+      <dd class="font-semibold text-slate-800 dark:text-slate-100">{{ entries|length }}</dd>
     </div>
-    <div class="flex items-center gap-2">
-      <dt class="font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-300">Access:</dt>
-      <dd class="rounded-full bg-brand-500/20 px-2 py-0.5 font-semibold text-brand-600">Staff only</dd>
+    <div class="flex items-center gap-2.5">
+      <dt class="font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Access:</dt>
+      <dd class="rounded-full bg-brand-500/15 px-3 py-1 font-bold text-brand-700 shadow-sm dark:text-brand-400">Staff only</dd>
     </div>
   </dl>
 {% endblock %}

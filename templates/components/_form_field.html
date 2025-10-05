@@ -1,36 +1,50 @@
-{# Reusable Form Field Component #}
+{# Reusable Form Field Component with modern styling #}
 
 {% load static %}
 
-<div class="{% block field_wrapper_class %}space-y-2{% endblock %}">
+<div class="{% block field_wrapper_class %}group space-y-2{% endblock %}">
     {# Field Label #}
     {% if field.label %}
         <label for="{{ field.id_for_label }}" 
-               class="block text-sm font-semibold text-slate-700 dark:text-slate-200">
-            {{ field.label }}
-            {% if field.field.required %}
-                <span class="text-red-500" aria-label="required">*</span>
-            {% endif %}
+               class="block text-sm font-bold text-slate-700 transition-colors duration-200 group-focus-within:text-brand-600 dark:text-slate-300 dark:group-focus-within:text-brand-400">
+            <span class="flex items-center gap-2">
+                {{ field.label }}
+                {% if field.field.required %}
+                    <span class="flex h-5 w-5 items-center justify-center rounded-full bg-red-100 text-xs font-bold text-red-600 dark:bg-red-950 dark:text-red-400" aria-label="required">*</span>
+                {% endif %}
+            </span>
         </label>
     {% endif %}
     
     {# Help Text #}
     {% if field.help_text %}
-        <p class="text-xs text-slate-500 dark:text-slate-400">
-            {{ field.help_text }}
+        <p class="flex items-start gap-2 text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+            <svg class="mt-0.5 h-3.5 w-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+            </svg>
+            <span>{{ field.help_text }}</span>
         </p>
     {% endif %}
     
-    {# Field Input #}
-    {{ field }}
+    {# Field Input with wrapper for animations #}
+    <div class="relative">
+        {{ field }}
+        {# Focus indicator #}
+        <div class="pointer-events-none absolute inset-0 rounded-xl border-2 border-transparent transition-colors duration-200 group-focus-within:border-brand-500/20"></div>
+    </div>
     
     {# Field Errors #}
     {% if field.errors %}
-        <div class="rounded-2xl border border-red-400/60 bg-red-50 px-3 py-2 text-xs text-red-700 dark:border-red-500/60 dark:bg-red-950/60 dark:text-red-200" 
+        <div class="animate-slide-down flex items-start gap-2.5 rounded-xl border border-red-300/50 bg-gradient-to-br from-red-50 to-red-100/50 px-4 py-3 text-xs shadow-sm dark:border-red-800/50 dark:from-red-950/70 dark:to-red-900/50" 
              role="alert">
-            {% for error in field.errors %}
-                <p>{{ error }}</p>
-            {% endfor %}
+            <svg class="mt-0.5 h-4 w-4 flex-shrink-0 text-red-600 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+            </svg>
+            <div class="flex-1 font-semibold text-red-700 dark:text-red-200">
+                {% for error in field.errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
         </div>
     {% endif %}
 </div>

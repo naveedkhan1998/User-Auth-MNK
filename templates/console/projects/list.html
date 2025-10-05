@@ -24,12 +24,6 @@
   </div>
 {% endblock %}
 
-{% block console_breadcrumbs %}
-  <div class="mb-6">
-    {% include 'components/breadcrumbs.html' with breadcrumbs=breadcrumbs_list %}
-  </div>
-{% endblock %}
-
 {% block console_content %}
   <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
     {% for project in projects %}
