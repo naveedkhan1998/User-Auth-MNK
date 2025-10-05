@@ -31,9 +31,16 @@
           extend: {
             colors: {
               brand: {
+                50: '#f0f9ff',
                 100: '#e0f2fe',
+                200: '#bae6fd',
+                300: '#7dd3fc',
+                400: '#38bdf8',
                 500: '#0ea5e9',
-                600: '#0284c7'
+                600: '#0284c7',
+                700: '#0369a1',
+                800: '#075985',
+                900: '#0c4a6e'
               }
             }
           }
@@ -43,71 +50,30 @@
     {% block extra_head %}
     {% endblock %}
   </head>
-  <body class="bg-slate-50  text-slate-900 antialiased transition-colors selection:bg-sky-200 selection:text-slate-900 dark:bg-slate-950 dark:text-slate-100">
-    <header class="sticky top-0 z-40 border-b border-slate-200/70 bg-white/80 backdrop-blur dark:border-slate-800/60 dark:bg-slate-950/70">
-      <div class="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4">
-        <a href="{% url 'landing' %}" class="text-sm font-semibold tracking-[0.2em] text-slate-700 transition hover:text-brand-600 dark:text-slate-200">MNK PLATFORM</a>
-        <nav class="hidden items-center gap-6 text-sm font-medium text-slate-500 md:flex dark:text-slate-400">
-          <a class="transition hover:text-slate-800 dark:hover:text-slate-100" href="{% url 'landing' %}#overview">Overview</a>
-          {% if request.user.is_authenticated and request.user.is_staff %}
-            <a class="transition hover:text-slate-800 dark:hover:text-slate-100" href="{% url 'landing' %}#apis">APIs</a>
-            <a class="transition hover:text-slate-800 dark:hover:text-slate-100" href="{% url 'landing' %}#operations">Operations</a>
-            <a class="transition hover:text-slate-800 dark:hover:text-slate-100" href="{% url 'console:project-list' %}">Projects</a>
-            <a class="transition hover:text-slate-800 dark:hover:text-slate-100" href="{% url 'console:message-list' %}">Messages</a>
-            <a class="transition hover:text-slate-800 dark:hover:text-slate-100" href="{% url 'swagger-ui' %}">API Docs</a>
-            <a class="transition hover:text-slate-800 dark:hover:text-slate-100" href="{% url 'console:file-manager' %}">Static Console</a>
-            <a class="transition hover:text-slate-800 dark:hover:text-slate-100" href="{% url 'admin:index' %}">Admin</a>
-          {% endif %}
-        </nav>
-        <div class="flex items-center gap-3">
-          <button id="theme-toggle" type="button" class="rounded-full border border-slate-300/70 bg-white/70 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-slate-600 transition hover:border-brand-500 hover:text-brand-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"><span id="theme-toggle-label">Dark</span></button>
-          {% if request.user.is_authenticated %}
-            <span class="rounded-full border border-slate-200/80 bg-white/70 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:border-slate-700 dark:bg-slate-900/70 dark:text-slate-200">{{ request.user.get_username }}</span>
-            <form method="post" action="{% url 'console:logout' %}" class="m-0">
-              {% csrf_token %}
-              <button type="submit" class="rounded-full border border-slate-300/70 bg-white/60 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-slate-600 transition hover:border-red-400 hover:text-red-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-red-400 dark:hover:text-red-400">Sign out</button>
-            </form>
-          {% else %}
-            <a class="rounded-full border border-brand-500 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-brand-600 transition hover:bg-brand-500 hover:text-white" href="{% url 'console:login' %}">Sign in</a>
-          {% endif %}
-        </div>
-      </div>
-    </header>
+  <body class="bg-slate-50 text-slate-900 antialiased transition-colors selection:bg-sky-200 selection:text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+    {% include 'components/header.html' %}
+    
     {% if messages %}
-      <div class="mx-auto w-full max-w-6xl space-y-3 px-4 pt-4">
+      <div class="mx-auto w-full max-w-7xl space-y-3 px-4 pt-4 sm:px-6 lg:px-8">
         {% for message in messages %}
-          {% if 'error' in message.tags %}
-            <div class="rounded-2xl border border-red-400/60 bg-red-50 px-4 py-3 text-sm text-red-700 shadow-sm dark:border-red-500/60 dark:bg-red-950/70 dark:text-red-200">{{ message }}</div>
-          {% elif 'warning' in message.tags %}
-            <div class="rounded-2xl border border-amber-400/60 bg-amber-50 px-4 py-3 text-sm text-amber-700 shadow-sm dark:border-amber-500/60 dark:bg-amber-950/70 dark:text-amber-200">{{ message }}</div>
-          {% elif 'success' in message.tags %}
-            <div class="rounded-2xl border border-emerald-400/60 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 shadow-sm dark:border-emerald-500/60 dark:bg-emerald-950/70 dark:text-emerald-200">{{ message }}</div>
-          {% else %}
-            <div class="rounded-2xl border border-slate-200/70 bg-white/80 px-4 py-3 text-sm text-slate-700 shadow-sm dark:border-slate-700/60 dark:bg-slate-900/80 dark:text-slate-200">{{ message }}</div>
-          {% endif %}
+          {% include 'components/alert.html' with message=message %}
         {% endfor %}
       </div>
     {% endif %}
+    
     <main class="min-h-[calc(100dvh-10rem)] w-full">
       {% block content %}
       {% endblock %}
     </main>
-    <footer class="border-t border-slate-200/70 bg-white/80 py-6 backdrop-blur dark:border-slate-800/60 dark:bg-slate-950/70">
-      <div class="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3 px-4 text-sm text-slate-500 dark:text-slate-400">
-        <span>&copy; {% now 'Y' %}MNK Platform</span>
-        <div class="flex items-center gap-4">
-          <a class="transition hover:text-brand-600" href="mailto:naveedkhan98@gmail.com">Contact</a>
-          <a class="transition hover:text-brand-600" href="https://github.com/naveedkhan98" target="_blank" rel="noopener">GitHub</a>
-        </div>
-      </div>
-    </footer>
+    
+    {% include 'components/footer.html' %}
+    
     <script>
       ;(function () {
         const toggle = document.getElementById('theme-toggle')
         const label = document.getElementById('theme-toggle-label')
-        if (!toggle || !label) {
-          return
-        }
+        if (!toggle || !label) return
+        
         const apply = (mode) => {
           if (mode === 'dark') {
             document.documentElement.classList.add('dark')
@@ -116,8 +82,10 @@
           }
           label.textContent = mode === 'dark' ? 'Light' : 'Dark'
         }
+        
         const current = document.documentElement.classList.contains('dark') ? 'dark' : 'light'
         apply(current)
+        
         toggle.addEventListener('click', () => {
           const next = document.documentElement.classList.contains('dark') ? 'light' : 'dark'
           apply(next)
@@ -133,3 +101,4 @@
     {% endblock %}
   </body>
 </html>
+  

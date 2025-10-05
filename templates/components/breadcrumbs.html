@@ -1,0 +1,19 @@
+{% if breadcrumbs %}
+  <nav class="flex items-center gap-2 text-sm" aria-label="Breadcrumb">
+    <a href="{% url 'landing' %}" class="text-slate-500 transition hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400">
+      Home
+    </a>
+    {% for crumb in breadcrumbs %}
+      <svg class="h-4 w-4 text-slate-400 dark:text-slate-600" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+      </svg>
+      {% if crumb.url %}
+        <a href="{{ crumb.url }}" class="text-slate-500 transition hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400">
+          {{ crumb.label }}
+        </a>
+      {% else %}
+        <span class="font-medium text-slate-900 dark:text-slate-100">{{ crumb.label }}</span>
+      {% endif %}
+    {% endfor %}
+  </nav>
+{% endif %}
