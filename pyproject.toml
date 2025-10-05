@@ -33,6 +33,7 @@ dependencies = [
     "django-storages>=1.14.6",
     "djangorestframework==3.15.2",
     "djangorestframework-simplejwt==5.3.1",
+    "drf-spectacular==0.27.2",
     "google-auth>=2.40.3",
     "google-cloud-storage>=3.3.0",
     "idna==3.7",
@@ -60,3 +61,4 @@ dependencies = [
     "urllib3==2.2.2",
     "whitenoise==6.7.0",
 ]
+

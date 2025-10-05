@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
+    "drf_spectacular",
     "corsheaders",
     # apps
     "apps.managment",
@@ -96,8 +97,10 @@ TEMPLATES = [
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.SessionAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     #'DEFAULT_RENDERER_CLASSES':('rest_framework.renderers.JSONRenderer',),
 }
 
@@ -196,3 +199,11 @@ GOOGLE_OAUTH_CALLBACK_URL = os.getenv("GOOGLE_OAUTH_CALLBACK_URL")
 LOGIN_URL = "console:login"
 LOGIN_REDIRECT_URL = "console:file-manager"
 LOGOUT_REDIRECT_URL = "console:login"
+
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "MNK Service API",
+    "DESCRIPTION": "OpenAPI schema for MNK service endpoints.",
+    "VERSION": "1.0.0",
+    "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
+}

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import mimetypes
 import shutil
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from urllib.parse import urlencode
 
@@ -13,14 +13,26 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.exceptions import SuspiciousFileOperation
+from django.db.models import Q
 from django.http import FileResponse, Http404
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils._os import safe_join
 from django.views.generic import TemplateView, View
 
-from .forms import CreateDirectoryForm, DeleteEntryForm, UploadFileForm
+from apps.open_messages.models import Message
+from apps.portfolio.models import Image, Project
+
+from .forms import (
+    CreateDirectoryForm,
+    DeleteEntryForm,
+    MessageFilterForm,
+    ProjectDeleteForm,
+    ProjectForm,
+    ProjectImageUploadForm,
+    UploadFileForm,
+)
 
 
 class StaffAuthenticationForm(AuthenticationForm):
@@ -238,6 +250,223 @@ class DownloadFileView(StaffOnlyMixin, View):
             filename=file_path.name,
             content_type=content_type or "application/octet-stream",
         )
+
+
+class ProjectListView(StaffOnlyMixin, TemplateView):
+    template_name = "console/projects/list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        projects = list(
+            Project.objects.prefetch_related("images").order_by("-created_at")
+        )
+        context.update({"projects": projects, "project_count": len(projects)})
+        return context
+
+
+class ProjectCreateView(StaffOnlyMixin, TemplateView):
+    template_name = "console/projects/create.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.setdefault("form", ProjectForm())
+        context.setdefault("image_form", ProjectImageUploadForm())
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form = ProjectForm(request.POST)
+        image_form = ProjectImageUploadForm(request.POST, request.FILES)
+        if form.is_valid() and image_form.is_valid():
+            project = form.save()
+            files = request.FILES.getlist("images")
+            added = 0
+            for uploaded in files:
+                if uploaded:
+                    image = Image.objects.create(file=uploaded)
+                    project.images.add(image)
+                    added += 1
+            if added:
+                messages.success(
+                    request,
+                    f"Project created with {added} image{'s' if added != 1 else ''}.",
+                )
+            else:
+                messages.success(request, "Project created.")
+            return redirect("console:project-detail", pk=project.pk)
+
+        messages.error(request, "Please correct the errors below.")
+        context = self.get_context_data(form=form, image_form=image_form)
+        return render(request, self.template_name, context, status=400)
+
+
+class ProjectDetailView(StaffOnlyMixin, TemplateView):
+    template_name = "console/projects/detail.html"
+
+    def get_project(self):
+        return get_object_or_404(
+            Project.objects.prefetch_related("images"), pk=self.kwargs["pk"]
+        )
+
+    def get_context_data(self, **kwargs):
+        project = self.get_project()
+        context = super().get_context_data(**kwargs)
+        context.update(
+            {
+                "project": project,
+                "form": kwargs.get("form", ProjectForm(instance=project)),
+                "image_form": kwargs.get("image_form", ProjectImageUploadForm()),
+                "delete_form": kwargs.get("delete_form", ProjectDeleteForm()),
+            }
+        )
+        return context
+
+
+class ProjectUpdateView(StaffOnlyMixin, View):
+    template_name = "console/projects/detail.html"
+
+    def post(self, request, pk):
+        project = get_object_or_404(Project, pk=pk)
+        form = ProjectForm(request.POST, instance=project)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Project updated.")
+            return redirect("console:project-detail", pk=project.pk)
+
+        messages.error(request, "Please correct the errors below.")
+        context = {
+            "project": project,
+            "form": form,
+            "image_form": ProjectImageUploadForm(),
+            "delete_form": ProjectDeleteForm(),
+        }
+        return render(request, self.template_name, context, status=400)
+
+
+class ProjectImageUploadView(StaffOnlyMixin, View):
+    template_name = "console/projects/detail.html"
+
+    def post(self, request, pk):
+        project = get_object_or_404(Project, pk=pk)
+        form = ProjectImageUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            files = request.FILES.getlist("images")
+            added = 0
+            for uploaded in files:
+                if uploaded:
+                    image = Image.objects.create(file=uploaded)
+                    project.images.add(image)
+                    added += 1
+            if added:
+                messages.success(
+                    request, f"Added {added} image{'s' if added != 1 else ''}."
+                )
+            else:
+                messages.info(request, "No images were uploaded.")
+            return redirect("console:project-detail", pk=project.pk)
+
+        messages.error(request, "There was a problem with the uploaded files.")
+        context = {
+            "project": project,
+            "form": ProjectForm(instance=project),
+            "image_form": form,
+            "delete_form": ProjectDeleteForm(),
+        }
+        return render(request, self.template_name, context, status=400)
+
+
+class ProjectImageDeleteView(StaffOnlyMixin, View):
+    def post(self, request, pk, image_pk):
+        project = get_object_or_404(Project, pk=pk)
+        image = get_object_or_404(Image, pk=image_pk)
+        project.images.remove(image)
+
+        if not image.project_set.exists():
+            image.file.delete(save=False)
+            image.delete()
+        messages.success(request, "Image removed.")
+        return redirect("console:project-detail", pk=project.pk)
+
+
+class ProjectDeleteView(StaffOnlyMixin, View):
+    template_name = "console/projects/detail.html"
+
+    def post(self, request, pk):
+        project = get_object_or_404(Project, pk=pk)
+        form = ProjectDeleteForm(request.POST)
+        if form.is_valid():
+            images = list(project.images.all())
+            project.delete()
+            for image in images:
+                if not image.project_set.exists():
+                    image.file.delete(save=False)
+                    image.delete()
+            messages.success(request, "Project deleted.")
+            return redirect("console:project-list")
+
+        messages.error(request, "Please confirm deletion before proceeding.")
+        context = {
+            "project": project,
+            "form": ProjectForm(instance=project),
+            "image_form": ProjectImageUploadForm(),
+            "delete_form": form,
+        }
+        return render(request, self.template_name, context, status=400)
+
+
+class MessageListView(StaffOnlyMixin, TemplateView):
+    template_name = "console/messages/list.html"
+
+    def get_queryset(self, form: MessageFilterForm):
+        queryset = Message.objects.all().order_by("-created_at")
+        if not form.is_valid():
+            return queryset
+
+        query = form.cleaned_data.get("query")
+        timeframe = form.cleaned_data.get("timeframe")
+
+        if query:
+            queryset = queryset.filter(
+                Q(name__icontains=query)
+                | Q(email__icontains=query)
+                | Q(message__icontains=query)
+            )
+
+        if timeframe:
+            try:
+                days = int(timeframe)
+            except (TypeError, ValueError):
+                days = None
+            if days:
+                since = timezone.now() - timedelta(days=days)
+                queryset = queryset.filter(created_at__gte=since)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        form = MessageFilterForm(self.request.GET or None)
+        queryset = self.get_queryset(form)
+        if not form.is_valid():
+            form = MessageFilterForm()
+
+        messages_list = list(queryset)
+        context = super().get_context_data(**kwargs)
+        context.update(
+            {
+                "messages_list": messages_list,
+                "filter_form": form,
+                "message_count": len(messages_list),
+            }
+        )
+        return context
+
+
+class MessageDetailView(StaffOnlyMixin, TemplateView):
+    template_name = "console/messages/detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        message_obj = get_object_or_404(Message, pk=self.kwargs["pk"])
+        context.update({"message_obj": message_obj})
+        return context
 
 
 def _static_root() -> Path:
