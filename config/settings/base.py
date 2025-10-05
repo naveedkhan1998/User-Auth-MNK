@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "apps.open_messages",
     "apps.posts",
     "apps.portfolio",
+    "apps.console",
 ]
 
 MIDDLEWARE = [
@@ -80,7 +81,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -191,3 +192,7 @@ PASSWORD_RESET_TIMEOUT = 900
 GOOGLE_OAUTH_CLIENT_ID = os.getenv("GOOGLE_OAUTH_CLIENT_ID")
 GOOGLE_OAUTH_CLIENT_SECRET = os.getenv("GOOGLE_OAUTH_CLIENT_SECRET")
 GOOGLE_OAUTH_CALLBACK_URL = os.getenv("GOOGLE_OAUTH_CALLBACK_URL")
+
+LOGIN_URL = "console:login"
+LOGIN_REDIRECT_URL = "console:file-manager"
+LOGOUT_REDIRECT_URL = "console:login"
