@@ -49,7 +49,7 @@ class UserRegistrationEmailSerializer(serializers.ModelSerializer):
         otp = int(otp)
         subject = "Email OTP"
         to = validated_data.get("email")
-        path_to_html = str(settings.BASE_DIR) + "/apps/home/templates/email_otp.html"
+        path_to_html = str(settings.BASE_DIR) + "/templates/emails/email_otp.html"
         Util.send_html_email(subject, to, path_to_html, otp)
         return UserOtps.objects.create(email=validated_data.get("email"), otp=otp)
 
@@ -293,7 +293,7 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
         )
         subject = "Reset LINK"
         to = user.email
-        path_to_html = str(BASE_DIR) + "/apps/home/templates/password_reset.html"
+        path_to_html = str(BASE_DIR) + "/templates/emails/password_reset.html"
         Util.send_html_email(subject, to, path_to_html, link)
         return attrs
 

@@ -25,7 +25,7 @@ urlpatterns = (
         path("api/schema.yaml", SpectacularYAMLView.as_view(permission_classes=[IsAdminUser]), name="schema-yaml"),
         path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema", permission_classes=[IsAdminUser]), name="swagger-ui"),
         path("api/redoc/", SpectacularRedocView.as_view(url_name="schema", permission_classes=[IsAdminUser]), name="redoc"),
-        path("", TemplateView.as_view(template_name="index.html"), name="landing"),
+        path("", TemplateView.as_view(template_name="home/index.html"), name="landing"),
     ]
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

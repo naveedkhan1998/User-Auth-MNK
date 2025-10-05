@@ -16,5 +16,5 @@ def project_list(request):
     return Response(serializer.data)
     # else:
     # error_message = "Unauthorized access"
-    # path_to_html = str(BASE_DIR) + "/home/templates/email_otp.html"
+    # path_to_html = str(BASE_DIR) + "/templates/emails/email_otp.html"
     # return render(request, 'error_template.html', {'error_message': error_message}, status=403)
