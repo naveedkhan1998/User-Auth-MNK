@@ -1,0 +1,36 @@
+{# Reusable Form Field Component #}
+
+{% load static %}
+
+<div class="{% block field_wrapper_class %}space-y-2{% endblock %}">
+    {# Field Label #}
+    {% if field.label %}
+        <label for="{{ field.id_for_label }}" 
+               class="block text-sm font-semibold text-slate-700 dark:text-slate-200">
+            {{ field.label }}
+            {% if field.field.required %}
+                <span class="text-red-500" aria-label="required">*</span>
+            {% endif %}
+        </label>
+    {% endif %}
+    
+    {# Help Text #}
+    {% if field.help_text %}
+        <p class="text-xs text-slate-500 dark:text-slate-400">
+            {{ field.help_text }}
+        </p>
+    {% endif %}
+    
+    {# Field Input #}
+    {{ field }}
+    
+    {# Field Errors #}
+    {% if field.errors %}
+        <div class="rounded-2xl border border-red-400/60 bg-red-50 px-3 py-2 text-xs text-red-700 dark:border-red-500/60 dark:bg-red-950/60 dark:text-red-200" 
+             role="alert">
+            {% for error in field.errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>

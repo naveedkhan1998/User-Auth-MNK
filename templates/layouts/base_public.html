@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{# Public-facing layout for homepage, landing pages, etc. #}
+
+{% block body_class %}{{ block.super }}{% endblock %}
+
+{% block content %}
+    <div class="{% block page_wrapper_class %}{% endblock %}">
+        {% block page_content %}
+            {# Override this in child templates #}
+        {% endblock %}
+    </div>
+{% endblock %}

@@ -84,7 +84,7 @@ class ConsoleLogoutView(LogoutView):
 
 
 class FileManagerView(StaffOnlyMixin, TemplateView):
-    template_name = "console/file_manager.html"
+    template_name = "console/file_manager/index.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -107,7 +107,7 @@ class FileManagerView(StaffOnlyMixin, TemplateView):
             entries.append(
                 {
                     "name": entry.name,
-                    "path": "" if entry == base_dir else _to_relative(entry, base_dir),
+                    "rel_path": "" if entry == base_dir else _to_relative(entry, base_dir),
                     "is_dir": entry.is_dir(),
                     "size": None if entry.is_dir() else stat.st_size,
                     "modified": timezone.localtime(
@@ -234,6 +234,26 @@ class DeleteEntryView(StaffOnlyMixin, View):
 class DownloadFileView(StaffOnlyMixin, View):
     def get(self, request):
         relative_path = (request.GET.get("path") or "").strip()
+        if not relative_path:
+            raise Http404
+
+        base_dir = _static_root()
+        file_path = _resolve_path(base_dir, relative_path)
+
+        if not file_path.exists() or not file_path.is_file():
+            raise Http404
+
+        content_type, _ = mimetypes.guess_type(file_path.name)
+        return FileResponse(
+            file_path.open("rb"),
+            as_attachment=True,
+            filename=file_path.name,
+            content_type=content_type or "application/octet-stream",
+        )
+    
+    def post(self, request):
+        # Support POST method with 'target' parameter from forms
+        relative_path = (request.POST.get("target") or "").strip()
         if not relative_path:
             raise Http404
 

@@ -1,0 +1,34 @@
+{# Card component for consistent content containers #}
+<div class="rounded-3xl border border-slate-200/70 bg-white/80 shadow-xl backdrop-blur dark:border-slate-700/60 dark:bg-slate-950/80 {{ class|default:'' }}">
+  {% if title or actions %}
+    <div class="flex items-center justify-between border-b border-slate-200/70 px-8 py-6 dark:border-slate-700/60">
+      {% if title %}
+        <div>
+          {% if subtitle %}
+            <p class="text-xs font-semibold uppercase tracking-[0.4em] text-brand-500">{{ subtitle }}</p>
+          {% endif %}
+          <h2 class="mt-2 text-2xl font-semibold text-slate-900 dark:text-slate-100">{{ title }}</h2>
+          {% if description %}
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">{{ description }}</p>
+          {% endif %}
+        </div>
+      {% endif %}
+      
+      {% if actions %}
+        <div class="flex items-center gap-3">
+          {{ actions }}
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+  
+  <div class="p-8">
+    {{ content }}
+  </div>
+  
+  {% if footer %}
+    <div class="border-t border-slate-200/70 px-8 py-4 dark:border-slate-700/60">
+      {{ footer }}
+    </div>
+  {% endif %}
+</div>
