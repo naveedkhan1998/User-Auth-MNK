@@ -33,6 +33,7 @@ from .forms import (
     ProjectImageUploadForm,
     UploadFileForm,
 )
+from .storage_backends import get_storage_backend
 
 
 class StaffAuthenticationForm(AuthenticationForm):
@@ -88,67 +89,46 @@ class FileManagerView(StaffOnlyMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        base_dir = _static_root()
-        current_relative = (self.request.GET.get("path") or "").strip()
+        storage = get_storage_backend()
+        current_path = (self.request.GET.get("path") or "").strip()
         
-        # Check if base directory exists (may not in production with cloud storage)
-        if not base_dir.exists():
-            messages.error(
-                self.request, 
-                "File manager is not available. Static files are served from cloud storage. "
-                "Use the Django admin or cloud console to manage files."
-            )
-            context.update({
-                "base_dir_path": str(base_dir),
-                "current_relative": "",
-                "breadcrumbs": [],
-                "entries": [],
-                "error": "directory_not_found"
-            })
-            return context
+        # Get entries from storage backend (works for both local and GCS)
+        try:
+            entries = storage.list_entries(current_path)
+        except Exception as e:
+            messages.error(self.request, f"Error listing files: {str(e)}")
+            entries = []
+            current_path = ""
         
-        current_dir = _resolve_path(base_dir, current_relative)
-
-        if not current_dir.exists() or not current_dir.is_dir():
-            messages.warning(
-                self.request, "Folder not found. Showing the static root instead."
-            )
-            current_relative = ""
-            current_dir = base_dir
-
-        entries = []
-        for entry in sorted(
-            current_dir.iterdir(), key=lambda p: (not p.is_dir(), p.name.lower())
-        ):
-            stat = entry.stat()
-            entries.append(
-                {
-                    "name": entry.name,
-                    "rel_path": "" if entry == base_dir else _to_relative(entry, base_dir),
-                    "is_dir": entry.is_dir(),
-                    "size": None if entry.is_dir() else stat.st_size,
-                    "modified": timezone.localtime(
-                        datetime.fromtimestamp(
-                            stat.st_mtime, tz=timezone.get_current_timezone()
-                        )
-                    ),
-                }
-            )
-
-        breadcrumbs = _build_breadcrumbs(current_relative)
-        parent_path = _parent_path(current_relative)
+        # Build breadcrumbs
+        breadcrumbs = _build_breadcrumbs(current_path)
+        parent_path = storage.get_parent_path(current_path)
+        
+        # Determine storage type for UI
+        storage_type = "GCS" if "GCS" in type(storage).__name__ else "Local"
 
         context.update(
             {
-                "current_path": current_relative,
-                "entries": entries,
+                "current_path": current_path,
+                "entries": [
+                    {
+                        "name": e.name,
+                        "rel_path": e.rel_path,
+                        "is_dir": e.is_dir,
+                        "size": e.size,
+                        "modified": e.modified,
+                        "url": e.url,
+                    }
+                    for e in entries
+                ],
                 "breadcrumbs": breadcrumbs,
                 "parent_path": parent_path,
+                "storage_type": storage_type,
                 "upload_form": UploadFileForm(
-                    initial={"current_path": current_relative}
+                    initial={"current_path": current_path}
                 ),
                 "mkdir_form": CreateDirectoryForm(
-                    initial={"current_path": current_relative}
+                    initial={"current_path": current_path}
                 ),
             }
         )
@@ -161,24 +141,26 @@ class FileUploadView(StaffOnlyMixin, View):
         if form.is_valid():
             current_path = form.cleaned_data["current_path"] or ""
             uploaded_file = form.cleaned_data["file"]
-            base_dir = _static_root()
-            destination_dir = _resolve_path(base_dir, current_path)
-            destination_dir.mkdir(parents=True, exist_ok=True)
-
+            storage = get_storage_backend()
+            
             file_name = Path(uploaded_file.name).name
             if not file_name:
                 messages.error(request, "Could not determine a valid file name.")
                 return _redirect_to_manager(current_path)
 
-            destination_path = destination_dir / file_name
-            if destination_path.exists():
-                messages.warning(request, f"Replacing existing file {file_name}.")
-
-            with destination_path.open("wb+") as target:
-                for chunk in uploaded_file.chunks():
-                    target.write(chunk)
-
-            messages.success(request, f"Uploaded {file_name}.")
+            # Build the target path
+            target_path = f"{current_path}/{file_name}".strip("/") if current_path else file_name
+            
+            # Read file content
+            file_content = uploaded_file.read()
+            content_type = uploaded_file.content_type or "application/octet-stream"
+            
+            try:
+                storage.upload_file(target_path, file_content, content_type)
+                messages.success(request, f"Uploaded {file_name}.")
+            except Exception as e:
+                messages.error(request, f"Error uploading file: {str(e)}")
+            
             return _redirect_to_manager(current_path)
 
         _add_form_errors(request, form)
@@ -191,6 +173,7 @@ class CreateDirectoryView(StaffOnlyMixin, View):
         if form.is_valid():
             current_path = form.cleaned_data["current_path"] or ""
             folder_name = form.cleaned_data["directory_name"].strip()
+            
             if not folder_name:
                 messages.error(request, "Folder name cannot be empty.")
                 return _redirect_to_manager(current_path)
@@ -201,15 +184,16 @@ class CreateDirectoryView(StaffOnlyMixin, View):
                 messages.error(request, "Folder name is invalid.")
                 return _redirect_to_manager(current_path)
 
-            base_dir = _static_root()
-            destination_dir = _resolve_path(base_dir, current_path)
-            new_folder = destination_dir / folder_name
-
-            if new_folder.exists():
-                messages.warning(request, f"{folder_name} already exists.")
-            else:
-                new_folder.mkdir(parents=True, exist_ok=False)
+            storage = get_storage_backend()
+            target_path = f"{current_path}/{folder_name}".strip("/") if current_path else folder_name
+            
+            try:
+                storage.create_directory(target_path)
                 messages.success(request, f"Created folder {folder_name}.")
+            except FileExistsError:
+                messages.warning(request, f"{folder_name} already exists.")
+            except Exception as e:
+                messages.error(request, f"Error creating folder: {str(e)}")
 
             return _redirect_to_manager(current_path)
 
@@ -223,24 +207,18 @@ class DeleteEntryView(StaffOnlyMixin, View):
         if form.is_valid():
             current_path = form.cleaned_data["current_path"] or ""
             target_relative = form.cleaned_data["target"]
-            base_dir = _static_root()
-            target_path = _resolve_path(base_dir, target_relative)
-
-            if target_path == base_dir:
-                messages.error(request, "Cannot delete the static root folder.")
+            
+            if not target_relative:
+                messages.error(request, "Cannot delete the root folder.")
                 return _redirect_to_manager(current_path)
-
+            
+            storage = get_storage_backend()
+            
             try:
-                if target_path.is_dir():
-                    shutil.rmtree(target_path)
-                    messages.success(request, f"Deleted folder {target_path.name}.")
-                elif target_path.exists():
-                    target_path.unlink()
-                    messages.success(request, f"Deleted file {target_path.name}.")
-                else:
-                    messages.warning(request, "The selected item no longer exists.")
-            except OSError as exc:
-                messages.error(request, f"Unable to delete {target_path.name}: {exc}")
+                storage.delete(target_relative)
+                messages.success(request, f"Deleted {Path(target_relative).name}.")
+            except Exception as exc:
+                messages.error(request, f"Unable to delete: {exc}")
 
             return _redirect_to_manager(current_path)
 
@@ -253,40 +231,34 @@ class DownloadFileView(StaffOnlyMixin, View):
         relative_path = (request.GET.get("path") or "").strip()
         if not relative_path:
             raise Http404
-
-        base_dir = _static_root()
-        file_path = _resolve_path(base_dir, relative_path)
-
-        if not file_path.exists() or not file_path.is_file():
-            raise Http404
-
-        content_type, _ = mimetypes.guess_type(file_path.name)
-        return FileResponse(
-            file_path.open("rb"),
-            as_attachment=True,
-            filename=file_path.name,
-            content_type=content_type or "application/octet-stream",
-        )
+        
+        storage = get_storage_backend()
+        
+        try:
+            content, content_type = storage.download_file(relative_path)
+            from django.http import HttpResponse
+            response = HttpResponse(content, content_type=content_type)
+            response["Content-Disposition"] = f'attachment; filename="{Path(relative_path).name}"'
+            return response
+        except Exception as e:
+            raise Http404(f"File not found: {e}")
     
     def post(self, request):
         # Support POST method with 'target' parameter from forms
         relative_path = (request.POST.get("target") or "").strip()
         if not relative_path:
             raise Http404
-
-        base_dir = _static_root()
-        file_path = _resolve_path(base_dir, relative_path)
-
-        if not file_path.exists() or not file_path.is_file():
-            raise Http404
-
-        content_type, _ = mimetypes.guess_type(file_path.name)
-        return FileResponse(
-            file_path.open("rb"),
-            as_attachment=True,
-            filename=file_path.name,
-            content_type=content_type or "application/octet-stream",
-        )
+        
+        storage = get_storage_backend()
+        
+        try:
+            content, content_type = storage.download_file(relative_path)
+            from django.http import HttpResponse
+            response = HttpResponse(content, content_type=content_type)
+            response["Content-Disposition"] = f'attachment; filename="{Path(relative_path).name}"'
+            return response
+        except Exception as e:
+            raise Http404(f"File not found: {e}")
 
 
 class ProjectListView(StaffOnlyMixin, TemplateView):
