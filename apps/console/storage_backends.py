@@ -233,13 +233,16 @@ class GCSStorageBackend:
             
             name = rel_path.split("/")[-1]
             if name:
+                # blob.updated is already timezone-aware (UTC), so just localize it
+                modified_time = timezone.localtime(blob.updated) if blob.updated else timezone.now()
+                
                 entries.append(
                     FileEntry(
                         name=name,
                         rel_path=rel_path,
                         is_dir=False,
                         size=blob.size,
-                        modified=timezone.make_aware(blob.updated) if blob.updated else timezone.now(),
+                        modified=modified_time,
                         url=blob.public_url if blob.public_url else blob.generate_signed_url(
                             expiration=3600,  # 1 hour
                             method="GET"
