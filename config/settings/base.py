@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "corsheaders",
     # apps
-    "apps.core",
+    "apps.core.apps.CoreConfig",  # Use explicit AppConfig
     "apps.managment",
     "apps.account",
     "apps.home",
