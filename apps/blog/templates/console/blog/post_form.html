@@ -1,5 +1,8 @@
-{% extends 'layouts/base_console.html' %} {% block console_title %} {% if object.pk %} Edit {% else %} Create {% endif %}Blog Post {% endblock %} {% block console_section %} Content Management {%
-endblock %} {% block console_heading %} {% if object.pk %} Edit: {{ object.title }} {% else %} Create New Blog Post {% endif %} {% endblock %} {% block console_description %}
+{% extends 'layouts/base_console.html' %} {% block console_title %} 
+{% if object.pk %} Edit {% else %} Create {% endif %}Blog Post {% endblock %} 
+{% block console_section %} Content Management {%endblock %} 
+{% block console_heading %} {% if object.pk %} Edit: {{ object.title }} {% else %} Create New Blog Post {% endif %} {% endblock %} 
+{% block console_description %}
 <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">
   {% if object.pk %} Update the blog post details and MDX content below. {% else %} Fill in the details to create a new blog post with MDX content. {% endif %}
 </p>
