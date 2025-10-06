@@ -1,11 +1,10 @@
 # views.py
 from django.contrib.staticfiles.views import serve
 from django.views.generic import TemplateView
-from django.conf import settings
 
 
 class StaticFilesListView(TemplateView):
-    template_name = str(settings.BASE_DIR) + "/home/templates/static_files_list.html"
+    template_name = "home/static_files_list.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

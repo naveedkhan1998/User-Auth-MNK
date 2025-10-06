@@ -1,0 +1,16 @@
+﻿{% extends "base.html" %}
+{% block title %}Static File Index{% endblock %}
+
+{% block content %}
+  <section class="mx-auto max-w-3xl space-y-4 px-6 py-12">
+    <header class="space-y-2 text-center">
+      <h1 class="text-3xl font-semibold text-slate-900 dark:text-slate-100">Static Files</h1>
+      <p class="text-sm text-slate-600 dark:text-slate-400">
+        Hook this view up to your preferred file inspection logic to show static assets.
+      </p>
+    </header>
+    <div class="rounded-xl border border-slate-200 bg-white p-6 text-center text-sm text-slate-500 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400">
+      Provide context variables in <code>StaticFilesListView.get_context_data</code> to render file information here.
+    </div>
+  </section>
+{% endblock %}

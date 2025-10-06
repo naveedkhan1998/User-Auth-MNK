@@ -18,7 +18,7 @@ class Util:
         Args:
             subject: Email subject line
             to: Recipient email address
-            template_path: Django template path (e.g., 'emails/email_otp.html')
+            template_path: Django template path (e.g., 'account/emails/email_otp.html')
             value: Value to pass to template (OTP or reset link)
 
         Returns:

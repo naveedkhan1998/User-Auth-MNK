@@ -49,7 +49,7 @@ class UserRegistrationEmailSerializer(serializers.ModelSerializer):
         subject = "Email OTP"
         to = validated_data.get("email")
         # Use Django template path, not absolute file path
-        template_path = "emails/email_otp.html"
+        template_path = "account/emails/email_otp.html"
 
         # Try to send email, but continue even if it fails
         email_sent = Util.send_html_email(subject, to, template_path, otp)
@@ -305,7 +305,7 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
         subject = "Reset LINK"
         to = user.email
         # Use Django template path, not absolute file path
-        template_path = "emails/password_reset.html"
+        template_path = "account/emails/password_reset.html"
 
         # Try to send email, but don't fail if it errors
         email_sent = Util.send_html_email(subject, to, template_path, link)
