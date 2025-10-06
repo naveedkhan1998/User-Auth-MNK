@@ -5,18 +5,19 @@ from .models import Project, Image
 
 class ProjectAdminForm(forms.ModelForm):
     """Custom form for Project admin with multiple image upload capability"""
+
     class MultiFileInput(forms.ClearableFileInput):
         allow_multiple_selected = True
 
     additional_images = forms.FileField(
         required=False,
-        widget=MultiFileInput(attrs={'multiple': True}),
-        help_text="Upload multiple images at once. These will be added to the project's images."
+        widget=MultiFileInput(attrs={"multiple": True}),
+        help_text="Upload multiple images at once. These will be added to the project's images.",
     )
 
     class Meta:
         model = Project
-        fields = '__all__'
+        fields = "__all__"
 
     def save(self, commit=True):
         instance = super().save(commit=False)
@@ -25,8 +26,8 @@ class ProjectAdminForm(forms.ModelForm):
             instance.save()
 
         # Handle additional images upload
-        if self.cleaned_data.get('additional_images'):
-            files = self.files.getlist('additional_images')
+        if self.cleaned_data.get("additional_images"):
+            files = self.files.getlist("additional_images")
             for uploaded_file in files:
                 # Create Image instance for each uploaded file
                 image_instance = Image(file=uploaded_file)
@@ -40,27 +41,36 @@ class ProjectAdminForm(forms.ModelForm):
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
     form = ProjectAdminForm
-    list_display = ('title', 'technology_used', 'created_at')
-    search_fields = ('title', 'description', 'technology_used')
-    filter_horizontal = ('images',)  # Allows easy selection of multiple images
+    list_display = ("title", "technology_used", "created_at")
+    search_fields = ("title", "description", "technology_used")
+    filter_horizontal = ("images",)  # Allows easy selection of multiple images
 
     fieldsets = (
-        (None, {
-            'fields': ('title', 'description', 'technology_used', 'live_site_url', 'github_url')
-        }),
-        ('Images', {
-            'fields': ('images', 'additional_images'),
-            'description': 'Select existing images or upload new ones below.'
-        }),
-        ('Timestamps', {
-            'fields': ('created_at',),
-            'classes': ('collapse',)
-        }),
+        (
+            None,
+            {
+                "fields": (
+                    "title",
+                    "description",
+                    "technology_used",
+                    "live_site_url",
+                    "github_url",
+                )
+            },
+        ),
+        (
+            "Images",
+            {
+                "fields": ("images", "additional_images"),
+                "description": "Select existing images or upload new ones below.",
+            },
+        ),
+        ("Timestamps", {"fields": ("created_at",), "classes": ("collapse",)}),
     )
 
-    readonly_fields = ('created_at',)
+    readonly_fields = ("created_at",)
 
 
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ('file',)
+    list_display = ("file",)

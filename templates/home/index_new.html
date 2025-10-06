@@ -1,392 +1,368 @@
-{% extends "layouts/base_public.html" %}
+{% extends 'layouts/base_public.html' %}
 {% load ui_tags %}
 
 {% block content %}
-<!-- Hero Section with Animated Background -->
-<section id="overview" class="relative overflow-hidden">
+  <!-- Hero Section with Animated Background -->
+  <section id="overview" class="relative overflow-hidden">
     <!-- Animated Background Gradient -->
     <div class="absolute inset-0 bg-gradient-to-br from-brand-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800"></div>
     <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMzLjMxNCAwIDYgMi42ODYgNiA2cy0yLjY4NiA2LTYgNi02LTIuNjg2LTYtNiAyLjY4Ni02IDYtNiIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjAuNSIgb3BhY2l0eT0iLjA1Ii8+PC9nPjwvc3ZnPg==')] opacity-40"></div>
-    
+
     <div class="relative mx-auto flex w-full max-w-7xl flex-col gap-16 px-4 py-20 lg:flex-row lg:items-center lg:py-32">
-        <!-- Left Column - Main Content -->
-        <div class="flex-1 space-y-8 animate-fade-in-up">
-            <div class="inline-flex items-center gap-2 rounded-full bg-brand-100 dark:bg-brand-900/30 border border-brand-200 dark:border-brand-800 px-4 py-2 backdrop-blur-sm">
-                <span class="relative flex h-2 w-2">
-                    <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-400 opacity-75"></span>
-                    <span class="relative inline-flex h-2 w-2 rounded-full bg-brand-500"></span>
-                </span>
-                <p class="text-xs font-bold uppercase tracking-widest text-brand-700 dark:text-brand-300">Backend Services API Platform</p>
-            </div>
-            
-            <h1 class="text-5xl font-bold leading-tight text-slate-900 dark:text-white sm:text-6xl lg:text-7xl">
-                Secure API Platform for
-                <span class="bg-gradient-to-r from-brand-600 to-blue-600 bg-clip-text text-transparent">Modern Applications</span>
-            </h1>
-            
-            <p class="text-xl leading-relaxed text-slate-700 dark:text-slate-300 max-w-2xl">
-                Enterprise-grade Django REST framework powering production applications with robust authentication, 
-                content management, and seamless integrations.
-            </p>
-            
-            <!-- CTA Buttons -->
-            <div class="flex flex-wrap items-center gap-4">
-                {% if request.user.is_authenticated and request.user.is_staff %}
-                    <a href="{% url 'console:file-manager' %}" 
-                       class="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-600 to-brand-700 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-brand-500/30 transition-all hover:shadow-xl hover:shadow-brand-500/40 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                        </svg>
-                        Open Console
-                        <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                    </a>
-                    <a href="{% url 'admin:index' %}" 
-                       class="inline-flex items-center gap-2 rounded-xl border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-8 py-4 text-base font-semibold text-slate-900 dark:text-slate-100 transition-all hover:border-brand-500 hover:text-brand-600 dark:hover:text-brand-400 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        Django Admin
-                    </a>
-                    <a href="{% url 'schema-yaml' %}" 
-                       class="inline-flex items-center gap-2 rounded-xl px-6 py-4 text-base font-semibold text-slate-600 dark:text-slate-300 transition-all hover:text-primary-600 dark:hover:text-primary-400 hover:gap-3">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        API Schema
-                    </a>
-                {% else %}
-                    <a href="{% url 'console:login' %}" 
-                       class="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-slate-900 to-slate-800 dark:from-slate-100 dark:to-slate-200 px-8 py-4 text-base font-semibold text-white dark:text-slate-900 shadow-lg transition-all hover:shadow-xl hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                        </svg>
-                        Staff Sign In
-                        <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                        </svg>
-                    </a>
-                    <span class="inline-flex items-center gap-2 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 px-6 py-4 text-sm font-medium text-slate-500 dark:text-slate-400">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
-                        Schema available after sign-in
-                    </span>
-                {% endif %}
-                <a href="https://github.com/naveedkhan1998" target="_blank" rel="noopener" 
-                   class="inline-flex items-center gap-2 rounded-xl px-6 py-4 text-base font-semibold text-slate-600 dark:text-slate-300 transition-all hover:text-slate-900 dark:hover:text-white hover:gap-3">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
-                    </svg>
-                    View on GitHub
-                </a>
-            </div>
-            
-            {% if request.user.is_authenticated and request.user.is_staff %}
-            <!-- Feature Highlights -->
-            <div class="grid gap-6 pt-8 sm:grid-cols-2">
-                <div class="group flex gap-4 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 bg-white/60 dark:bg-slate-800/60 p-6 backdrop-blur-sm transition-all hover:border-primary-300 dark:hover:border-primary-700 hover:shadow-lg">
-                    <div class="flex-shrink-0">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/30">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="flex-1">
-                        <dt class="text-sm font-bold text-slate-900 dark:text-white mb-1">Authentication</dt>
-                        <dd class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">JWT tokens with refresh rotation and Google OAuth integration</dd>
-                    </div>
-                </div>
-                <div class="group flex gap-4 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 bg-white/60 dark:bg-slate-800/60 p-6 backdrop-blur-sm transition-all hover:border-accent-300 dark:hover:border-accent-700 hover:shadow-lg">
-                    <div class="flex-shrink-0">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-accent-500 to-accent-600 text-white shadow-lg shadow-accent-500/30">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="flex-1">
-                        <dt class="text-sm font-bold text-slate-900 dark:text-white mb-1">Content Delivery</dt>
-                        <dd class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Portfolio, posts, and messaging endpoints for frontend consumption</dd>
-                    </div>
-                </div>
-                <div class="group flex gap-4 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 bg-white/60 dark:bg-slate-800/60 p-6 backdrop-blur-sm transition-all hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-lg">
-                    <div class="flex-shrink-0">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-500/30">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="flex-1">
-                        <dt class="text-sm font-bold text-slate-900 dark:text-white mb-1">Static Assets</dt>
-                        <dd class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Direct <code class="text-xs bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded">STATIC_ROOT</code> access for file management</dd>
-                    </div>
-                </div>
-                <div class="group flex gap-4 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 bg-white/60 dark:bg-slate-800/60 p-6 backdrop-blur-sm transition-all hover:border-violet-300 dark:hover:border-violet-700 hover:shadow-lg">
-                    <div class="flex-shrink-0">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-violet-600 text-white shadow-lg shadow-violet-500/30">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="flex-1">
-                        <dt class="text-sm font-bold text-slate-900 dark:text-white mb-1">Observability</dt>
-                        <dd class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Real-time feedback with breadcrumbs and status alerts</dd>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
+      <!-- Left Column - Main Content -->
+      <div class="flex-1 space-y-8 animate-fade-in-up">
+        <div class="inline-flex items-center gap-2 rounded-full bg-brand-100 dark:bg-brand-900/30 border border-brand-200 dark:border-brand-800 px-4 py-2 backdrop-blur-sm">
+          <span class="relative flex h-2 w-2">
+            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-400 opacity-75"></span>
+            <span class="relative inline-flex h-2 w-2 rounded-full bg-brand-500"></span>
+          </span>
+          <p class="text-xs font-bold uppercase tracking-widest text-brand-700 dark:text-brand-300">Backend Services API Platform</p>
         </div>
-        
-        <!-- Right Column - Info Card -->
-        <div class="flex-1 animate-fade-in-up" style="animation-delay: 200ms;">
-            <div class="sticky top-24 rounded-3xl border border-slate-200/70 bg-white/90 p-10 shadow-2xl backdrop-blur-xl dark:border-slate-700/50 dark:bg-slate-800/90 overflow-hidden">
-                <!-- Decorative Elements -->
-                <div class="absolute -top-24 -right-24 h-48 w-48 rounded-full bg-gradient-to-br from-primary-400/20 to-accent-400/20 blur-3xl"></div>
-                <div class="absolute -bottom-24 -left-24 h-48 w-48 rounded-full bg-gradient-to-tr from-accent-400/20 to-primary-400/20 blur-3xl"></div>
-                
-                <div class="relative">
-                {% if request.user.is_authenticated and request.user.is_staff %}
-                    <div class="inline-flex items-center gap-2 rounded-full bg-primary-100 dark:bg-primary-900/50 px-3 py-1.5 mb-4">
-                        <svg class="w-4 h-4 text-primary-600 dark:text-primary-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                        </svg>
-                        <span class="text-xs font-bold uppercase tracking-widest text-primary-700 dark:text-primary-300">Staff Access Active</span>
-                    </div>
-                    <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-6">Quick Access Panel</h2>
-                    
-                    <div class="space-y-4">
-                        <div class="group flex items-start gap-4 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-800/50 p-5 transition-all hover:border-primary-300 dark:hover:border-primary-700 hover:shadow-lg">
-                            <div class="mt-0.5 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-md">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                                </svg>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-bold text-slate-900 dark:text-white mb-1">File Manager Console</h3>
-                                <p class="text-sm text-slate-600 dark:text-slate-300">Browse directories, upload files, and manage static assets directly from your browser</p>
-                            </div>
-                        </div>
-                        
-                        <div class="group flex items-start gap-4 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-800/50 p-5 transition-all hover:border-accent-300 dark:hover:border-accent-700 hover:shadow-lg">
-                            <div class="mt-0.5 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-accent-500 to-accent-600 text-white shadow-md">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-bold text-slate-900 dark:text-white mb-1">Django Administration</h3>
-                                <p class="text-sm text-slate-600 dark:text-slate-300">Manage users, content models, and review inbound message submissions</p>
-                            </div>
-                        </div>
-                        
-                        <div class="group flex items-start gap-4 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-800/50 p-5 transition-all hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-lg">
-                            <div class="mt-0.5 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-md">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-bold text-slate-900 dark:text-white mb-1">API Schema Export</h3>
-                                <p class="text-sm text-slate-600 dark:text-slate-300">Download OpenAPI specification to keep client integrations synchronized</p>
-                            </div>
-                        </div>
-                    </div>
-                {% else %}
-                    <div class="inline-flex items-center gap-2 rounded-full bg-amber-100 dark:bg-amber-900/50 px-3 py-1.5 mb-4">
-                        <svg class="w-4 h-4 text-amber-600 dark:text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
-                        </svg>
-                        <span class="text-xs font-bold uppercase tracking-widest text-amber-700 dark:text-amber-300">Staff Access Required</span>
-                    </div>
-                    <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-4">Protected Console</h2>
-                    <p class="text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
-                        Administrative tools, asset management, and extended API documentation are exclusively available to authorized staff members.
-                    </p>
-                    
-                    <div class="rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/50 p-6">
-                        <div class="flex items-start gap-3 mb-3">
-                            <svg class="w-5 h-5 text-slate-500 dark:text-slate-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <div>
-                                <h3 class="font-semibold text-slate-900 dark:text-white text-sm mb-1">Public API Access</h3>
-                                <p class="text-sm text-slate-600 dark:text-slate-400">API endpoints require valid JWT authentication. Unauthorized requests receive standard HTTP error responses.</p>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
-{% if request.user.is_authenticated and request.user.is_staff %}
-<!-- API Endpoints Section -->
-<section id="apis" class="relative bg-gradient-to-b from-slate-50 to-white dark:from-slate-900/50 dark:to-slate-900 py-24">
-    <div class="mx-auto w-full max-w-7xl space-y-12 px-4">
-        <div class="text-center space-y-4 max-w-3xl mx-auto">
-            <div class="inline-flex items-center gap-2 rounded-full bg-primary-100 dark:bg-primary-900/30 px-4 py-2">
-                <svg class="w-4 h-4 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <span class="text-xs font-bold uppercase tracking-widest text-primary-700 dark:text-primary-300">Core APIs</span>
-            </div>
-            <h2 class="text-4xl font-bold text-slate-900 dark:text-white">Powerful Endpoints</h2>
-            <p class="text-lg text-slate-600 dark:text-slate-300">JWT-secured authentication, content feeds, and messaging pipelines ready for production</p>
-        </div>
-        
-        <div class="grid gap-8 md:grid-cols-2">
-            <article class="group rounded-3xl border border-slate-200/70 bg-white/80 p-8 shadow-lg backdrop-blur-sm transition-all hover:border-primary-300 hover:shadow-xl hover:-translate-y-1 dark:border-slate-700/60 dark:bg-slate-800/80">
-                <header class="flex items-start justify-between mb-6">
-                    <div class="flex items-center gap-4">
-                        <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/30">
-                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Account</h3>
-                            <span class="inline-block mt-1 rounded-full bg-primary-100 dark:bg-primary-900/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-700 dark:text-primary-300">Authentication</span>
-                        </div>
-                    </div>
-                </header>
-                <p class="text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
-                    Comprehensive authentication system with registration, login, password recovery, and seamless Google OAuth integration for trusted clients.
-                </p>
-                <code class="inline-block rounded-xl bg-slate-100 dark:bg-slate-900 px-4 py-2 text-sm font-mono text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">/api/user/...</code>
-            </article>
-            
-            <article class="group rounded-3xl border border-slate-200/70 bg-white/80 p-8 shadow-lg backdrop-blur-sm transition-all hover:border-accent-300 hover:shadow-xl hover:-translate-y-1 dark:border-slate-700/60 dark:bg-slate-800/80">
-                <header class="flex items-start justify-between mb-6">
-                    <div class="flex items-center gap-4">
-                        <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-accent-500 to-accent-600 text-white shadow-lg shadow-accent-500/30">
-                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Posts</h3>
-                            <span class="inline-block mt-1 rounded-full bg-accent-100 dark:bg-accent-900/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-accent-700 dark:text-accent-300">Content</span>
-                        </div>
-                    </div>
-                </header>
-                <p class="text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
-                    Structured editorial content feeds with pagination, tagging, and filtering capabilities consumed by marketing surfaces.
-                </p>
-                <code class="inline-block rounded-xl bg-slate-100 dark:bg-slate-900 px-4 py-2 text-sm font-mono text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">/posts/...</code>
-            </article>
-            
-            <article class="group rounded-3xl border border-slate-200/70 bg-white/80 p-8 shadow-lg backdrop-blur-sm transition-all hover:border-emerald-300 hover:shadow-xl hover:-translate-y-1 dark:border-slate-700/60 dark:bg-slate-800/80">
-                <header class="flex items-start justify-between mb-6">
-                    <div class="flex items-center gap-4">
-                        <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-500/30">
-                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Portfolio</h3>
-                            <span class="inline-block mt-1 rounded-full bg-emerald-100 dark:bg-emerald-900/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">Showcase</span>
-                        </div>
-                    </div>
-                </header>
-                <p class="text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
-                    Project galleries, media management, and categorization system powering the public portfolio showcase.
-                </p>
-                <code class="inline-block rounded-xl bg-slate-100 dark:bg-slate-900 px-4 py-2 text-sm font-mono text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">/portfolio/...</code>
-            </article>
-            
-            <article class="group rounded-3xl border border-slate-200/70 bg-white/80 p-8 shadow-lg backdrop-blur-sm transition-all hover:border-violet-300 hover:shadow-xl hover:-translate-y-1 dark:border-slate-700/60 dark:bg-slate-800/80">
-                <header class="flex items-start justify-between mb-6">
-                    <div class="flex items-center gap-4">
-                        <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-violet-600 text-white shadow-lg shadow-violet-500/30">
-                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Messages</h3>
-                            <span class="inline-block mt-1 rounded-full bg-violet-100 dark:bg-violet-900/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-violet-700 dark:text-violet-300">Inbound</span>
-                        </div>
-                    </div>
-                </header>
-                <p class="text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
-                    Contact form submissions and messaging pipeline routed for administrative review and follow-up actions.
-                </p>
-                <code class="inline-block rounded-xl bg-slate-100 dark:bg-slate-900 px-4 py-2 text-sm font-mono text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">/api/message/...</code>
-            </article>
-        </div>
-    </div>
-</section>
+        <h1 class="text-5xl font-bold leading-tight text-slate-900 dark:text-white sm:text-6xl lg:text-7xl">
+          Secure API Platform for
+          <span class="bg-gradient-to-r from-brand-600 to-blue-600 bg-clip-text text-transparent">Modern Applications</span>
+        </h1>
 
-<!-- Operations Confidence Section -->
-<section id="operations" class="relative py-24">
-    <div class="mx-auto w-full max-w-7xl space-y-12 px-4">
-        <div class="text-center space-y-4 max-w-3xl mx-auto">
-            <div class="inline-flex items-center gap-2 rounded-full bg-accent-100 dark:bg-accent-900/30 px-4 py-2">
-                <svg class="w-4 h-4 text-accent-600 dark:text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <p class="text-xl leading-relaxed text-slate-700 dark:text-slate-300 max-w-2xl">Enterprise-grade Django REST framework powering production applications with robust authentication, content management, and seamless integrations.</p>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-wrap items-center gap-4">
+          {% if request.user.is_authenticated and request.user.is_staff %}
+            <a href="{% url 'console:file-manager' %}" class="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-600 to-brand-700 px-8 py-4 text-base font-semibold text-white shadow-lg shadow-brand-500/30 transition-all hover:shadow-xl hover:shadow-brand-500/40 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+              </svg>Open Console<svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+            <a href="{% url 'admin:index' %}" class="inline-flex items-center gap-2 rounded-xl border-2 border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-8 py-4 text-base font-semibold text-slate-900 dark:text-slate-100 transition-all hover:border-brand-500 hover:text-brand-600 dark:hover:text-brand-400 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>Django Admin
+            </a>
+            <a href="{% url 'schema-yaml' %}" class="inline-flex items-center gap-2 rounded-xl px-6 py-4 text-base font-semibold text-slate-600 dark:text-slate-300 transition-all hover:text-primary-600 dark:hover:text-primary-400 hover:gap-3">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>API Schema
+            </a>
+          {% else %}
+            <a href="{% url 'console:login' %}" class="group inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-slate-900 to-slate-800 dark:from-slate-100 dark:to-slate-200 px-8 py-4 text-base font-semibold text-white dark:text-slate-900 shadow-lg transition-all hover:shadow-xl hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+              </svg>Staff Sign In<svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+            <span class="inline-flex items-center gap-2 rounded-xl border-2 border-dashed border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 px-6 py-4 text-sm font-medium text-slate-500 dark:text-slate-400">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>Schema available after sign-in
+            </span>
+          {% endif %}
+          <a href="https://github.com/naveedkhan1998" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-xl px-6 py-4 text-base font-semibold text-slate-600 dark:text-slate-300 transition-all hover:text-slate-900 dark:hover:text-white hover:gap-3">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+            </svg>View on GitHub
+          </a>
+        </div>
+
+        {% if request.user.is_authenticated and request.user.is_staff %}
+          <!-- Feature Highlights -->
+          <div class="grid gap-6 pt-8 sm:grid-cols-2">
+            <div class="group flex gap-4 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 bg-white/60 dark:bg-slate-800/60 p-6 backdrop-blur-sm transition-all hover:border-primary-300 dark:hover:border-primary-700 hover:shadow-lg">
+              <div class="flex-shrink-0">
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/30">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="flex-1">
+                <dt class="text-sm font-bold text-slate-900 dark:text-white mb-1">Authentication</dt>
+                <dd class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">JWT tokens with refresh rotation and Google OAuth integration</dd>
+              </div>
+            </div>
+            <div class="group flex gap-4 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 bg-white/60 dark:bg-slate-800/60 p-6 backdrop-blur-sm transition-all hover:border-accent-300 dark:hover:border-accent-700 hover:shadow-lg">
+              <div class="flex-shrink-0">
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-accent-500 to-accent-600 text-white shadow-lg shadow-accent-500/30">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  </svg>
+                </div>
+              </div>
+              <div class="flex-1">
+                <dt class="text-sm font-bold text-slate-900 dark:text-white mb-1">Content Delivery</dt>
+                <dd class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Portfolio, posts, and messaging endpoints for frontend consumption</dd>
+              </div>
+            </div>
+            <div class="group flex gap-4 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 bg-white/60 dark:bg-slate-800/60 p-6 backdrop-blur-sm transition-all hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-lg">
+              <div class="flex-shrink-0">
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-500/30">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                  </svg>
+                </div>
+              </div>
+              <div class="flex-1">
+                <dt class="text-sm font-bold text-slate-900 dark:text-white mb-1">Static Assets</dt>
+                <dd class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Direct <code class="text-xs bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded">STATIC_ROOT</code> access for file management</dd>
+              </div>
+            </div>
+            <div class="group flex gap-4 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 bg-white/60 dark:bg-slate-800/60 p-6 backdrop-blur-sm transition-all hover:border-violet-300 dark:hover:border-violet-700 hover:shadow-lg">
+              <div class="flex-shrink-0">
+                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-violet-600 text-white shadow-lg shadow-violet-500/30">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                </div>
+              </div>
+              <div class="flex-1">
+                <dt class="text-sm font-bold text-slate-900 dark:text-white mb-1">Observability</dt>
+                <dd class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">Real-time feedback with breadcrumbs and status alerts</dd>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Right Column - Info Card -->
+      <div class="flex-1 animate-fade-in-up" style="animation-delay: 200ms;">
+        <div class="sticky top-24 rounded-3xl border border-slate-200/70 bg-white/90 p-10 shadow-2xl backdrop-blur-xl dark:border-slate-700/50 dark:bg-slate-800/90 overflow-hidden">
+          <!-- Decorative Elements -->
+          <div class="absolute -top-24 -right-24 h-48 w-48 rounded-full bg-gradient-to-br from-primary-400/20 to-accent-400/20 blur-3xl"></div>
+          <div class="absolute -bottom-24 -left-24 h-48 w-48 rounded-full bg-gradient-to-tr from-accent-400/20 to-primary-400/20 blur-3xl"></div>
+
+          <div class="relative">
+            {% if request.user.is_authenticated and request.user.is_staff %}
+              <div class="inline-flex items-center gap-2 rounded-full bg-primary-100 dark:bg-primary-900/50 px-3 py-1.5 mb-4">
+                <svg class="w-4 h-4 text-primary-600 dark:text-primary-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                 </svg>
-                <span class="text-xs font-bold uppercase tracking-widest text-accent-700 dark:text-accent-300">Operational Excellence</span>
-            </div>
-            <h2 class="text-4xl font-bold text-slate-900 dark:text-white">Built for Safe Deployment</h2>
-            <p class="text-lg text-slate-600 dark:text-slate-300">Consolidated tooling keeps asset management and authentication aligned in production</p>
+                <span class="text-xs font-bold uppercase tracking-widest text-primary-700 dark:text-primary-300">Staff Access Active</span>
+              </div>
+              <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-6">Quick Access Panel</h2>
+
+              <div class="space-y-4">
+                <div class="group flex items-start gap-4 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-800/50 p-5 transition-all hover:border-primary-300 dark:hover:border-primary-700 hover:shadow-lg">
+                  <div class="mt-0.5 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-md">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                    </svg>
+                  </div>
+                  <div class="flex-1">
+                    <h3 class="font-bold text-slate-900 dark:text-white mb-1">File Manager Console</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-300">Browse directories, upload files, and manage static assets directly from your browser</p>
+                  </div>
+                </div>
+
+                <div class="group flex items-start gap-4 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-800/50 p-5 transition-all hover:border-accent-300 dark:hover:border-accent-700 hover:shadow-lg">
+                  <div class="mt-0.5 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-accent-500 to-accent-600 text-white shadow-md">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <div class="flex-1">
+                    <h3 class="font-bold text-slate-900 dark:text-white mb-1">Django Administration</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-300">Manage users, content models, and review inbound message submissions</p>
+                  </div>
+                </div>
+
+                <div class="group flex items-start gap-4 rounded-2xl border border-slate-200/50 dark:border-slate-700/50 bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-800/50 p-5 transition-all hover:border-emerald-300 dark:hover:border-emerald-700 hover:shadow-lg">
+                  <div class="mt-0.5 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-md">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                  <div class="flex-1">
+                    <h3 class="font-bold text-slate-900 dark:text-white mb-1">API Schema Export</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-300">Download OpenAPI specification to keep client integrations synchronized</p>
+                  </div>
+                </div>
+              </div>
+            {% else %}
+              <div class="inline-flex items-center gap-2 rounded-full bg-amber-100 dark:bg-amber-900/50 px-3 py-1.5 mb-4">
+                <svg class="w-4 h-4 text-amber-600 dark:text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                </svg>
+                <span class="text-xs font-bold uppercase tracking-widest text-amber-700 dark:text-amber-300">Staff Access Required</span>
+              </div>
+              <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-4">Protected Console</h2>
+              <p class="text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-6">Administrative tools, asset management, and extended API documentation are exclusively available to authorized staff members.</p>
+
+              <div class="rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800/50 p-6">
+                <div class="flex items-start gap-3 mb-3">
+                  <svg class="w-5 h-5 text-slate-500 dark:text-slate-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <div>
+                    <h3 class="font-semibold text-slate-900 dark:text-white text-sm mb-1">Public API Access</h3>
+                    <p class="text-sm text-slate-600 dark:text-slate-400">API endpoints require valid JWT authentication. Unauthorized requests receive standard HTTP error responses.</p>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          </div>
         </div>
-        
-        <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            <div class="group rounded-3xl border border-slate-200/70 bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-800/50 p-8 shadow-lg backdrop-blur transition-all hover:shadow-xl hover:-translate-y-1">
-                <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/30">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                </div>
-                <dt class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3">Speed</dt>
-                <dd class="text-3xl font-bold text-slate-900 dark:text-white mb-3">On-Server</dd>
-                <p class="text-sm text-slate-600 dark:text-slate-300">Direct file operations against <code class="text-xs bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded">STATIC_ROOT</code></p>
-            </div>
-            
-            <div class="group rounded-3xl border border-slate-200/70 bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-800/50 p-8 shadow-lg backdrop-blur transition-all hover:shadow-xl hover:-translate-y-1">
-                <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-accent-500 to-accent-600 text-white shadow-lg shadow-accent-500/30">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                </div>
-                <dt class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3">Security</dt>
-                <dd class="text-3xl font-bold text-slate-900 dark:text-white mb-3">Staff Only</dd>
-                <p class="text-sm text-slate-600 dark:text-slate-300">Permission checks ensure only admin accounts access privileged tooling</p>
-            </div>
-            
-            <div class="group rounded-3xl border border-slate-200/70 bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-800/50 p-8 shadow-lg backdrop-blur transition-all hover:shadow-xl hover:-translate-y-1">
-                <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-500/30">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                    </svg>
-                </div>
-                <dt class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3">Feedback</dt>
-                <dd class="text-3xl font-bold text-slate-900 dark:text-white mb-3">Transparent</dd>
-                <p class="text-sm text-slate-600 dark:text-slate-300">Breadcrumbs, alerts, and redirects keep operational context clear</p>
-            </div>
-            
-            <div class="group rounded-3xl border border-slate-200/70 bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-800/50 p-8 shadow-lg backdrop-blur transition-all hover:shadow-xl hover:-translate-y-1">
-                <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-violet-600 text-white shadow-lg shadow-violet-500/30">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                    </svg>
-                </div>
-                <dt class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3">Access</dt>
-                <dd class="text-3xl font-bold text-slate-900 dark:text-white mb-3">Unified</dd>
-                <p class="text-sm text-slate-600 dark:text-slate-300">Admin, APIs, and static assets from a single entry point</p>
-            </div>
-        </div>
+      </div>
     </div>
-</section>
-{% endif %}
+  </section>
+
+  {% if request.user.is_authenticated and request.user.is_staff %}
+    <!-- API Endpoints Section -->
+    <section id="apis" class="relative bg-gradient-to-b from-slate-50 to-white dark:from-slate-900/50 dark:to-slate-900 py-24">
+      <div class="mx-auto w-full max-w-7xl space-y-12 px-4">
+        <div class="text-center space-y-4 max-w-3xl mx-auto">
+          <div class="inline-flex items-center gap-2 rounded-full bg-primary-100 dark:bg-primary-900/30 px-4 py-2">
+            <svg class="w-4 h-4 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span class="text-xs font-bold uppercase tracking-widest text-primary-700 dark:text-primary-300">Core APIs</span>
+          </div>
+          <h2 class="text-4xl font-bold text-slate-900 dark:text-white">Powerful Endpoints</h2>
+          <p class="text-lg text-slate-600 dark:text-slate-300">JWT-secured authentication, content feeds, and messaging pipelines ready for production</p>
+        </div>
+
+        <div class="grid gap-8 md:grid-cols-2">
+          <article class="group rounded-3xl border border-slate-200/70 bg-white/80 p-8 shadow-lg backdrop-blur-sm transition-all hover:border-primary-300 hover:shadow-xl hover:-translate-y-1 dark:border-slate-700/60 dark:bg-slate-800/80">
+            <header class="flex items-start justify-between mb-6">
+              <div class="flex items-center gap-4">
+                <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/30">
+                  <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Account</h3>
+                  <span class="inline-block mt-1 rounded-full bg-primary-100 dark:bg-primary-900/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary-700 dark:text-primary-300">Authentication</span>
+                </div>
+              </div>
+            </header>
+            <p class="text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-6">Comprehensive authentication system with registration, login, password recovery, and seamless Google OAuth integration for trusted clients.</p>
+            <code class="inline-block rounded-xl bg-slate-100 dark:bg-slate-900 px-4 py-2 text-sm font-mono text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">/api/user/...</code>
+          </article>
+
+          <article class="group rounded-3xl border border-slate-200/70 bg-white/80 p-8 shadow-lg backdrop-blur-sm transition-all hover:border-accent-300 hover:shadow-xl hover:-translate-y-1 dark:border-slate-700/60 dark:bg-slate-800/80">
+            <header class="flex items-start justify-between mb-6">
+              <div class="flex items-center gap-4">
+                <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-accent-500 to-accent-600 text-white shadow-lg shadow-accent-500/30">
+                  <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Posts</h3>
+                  <span class="inline-block mt-1 rounded-full bg-accent-100 dark:bg-accent-900/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-accent-700 dark:text-accent-300">Content</span>
+                </div>
+              </div>
+            </header>
+            <p class="text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-6">Structured editorial content feeds with pagination, tagging, and filtering capabilities consumed by marketing surfaces.</p>
+            <code class="inline-block rounded-xl bg-slate-100 dark:bg-slate-900 px-4 py-2 text-sm font-mono text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">/posts/...</code>
+          </article>
+
+          <article class="group rounded-3xl border border-slate-200/70 bg-white/80 p-8 shadow-lg backdrop-blur-sm transition-all hover:border-emerald-300 hover:shadow-xl hover:-translate-y-1 dark:border-slate-700/60 dark:bg-slate-800/80">
+            <header class="flex items-start justify-between mb-6">
+              <div class="flex items-center gap-4">
+                <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-500/30">
+                  <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Portfolio</h3>
+                  <span class="inline-block mt-1 rounded-full bg-emerald-100 dark:bg-emerald-900/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-300">Showcase</span>
+                </div>
+              </div>
+            </header>
+            <p class="text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-6">Project galleries, media management, and categorization system powering the public portfolio showcase.</p>
+            <code class="inline-block rounded-xl bg-slate-100 dark:bg-slate-900 px-4 py-2 text-sm font-mono text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">/portfolio/...</code>
+          </article>
+
+          <article class="group rounded-3xl border border-slate-200/70 bg-white/80 p-8 shadow-lg backdrop-blur-sm transition-all hover:border-violet-300 hover:shadow-xl hover:-translate-y-1 dark:border-slate-700/60 dark:bg-slate-800/80">
+            <header class="flex items-start justify-between mb-6">
+              <div class="flex items-center gap-4">
+                <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-violet-600 text-white shadow-lg shadow-violet-500/30">
+                  <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Messages</h3>
+                  <span class="inline-block mt-1 rounded-full bg-violet-100 dark:bg-violet-900/50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-violet-700 dark:text-violet-300">Inbound</span>
+                </div>
+              </div>
+            </header>
+            <p class="text-base text-slate-600 dark:text-slate-300 leading-relaxed mb-6">Contact form submissions and messaging pipeline routed for administrative review and follow-up actions.</p>
+            <code class="inline-block rounded-xl bg-slate-100 dark:bg-slate-900 px-4 py-2 text-sm font-mono text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">/api/message/...</code>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Operations Confidence Section -->
+    <section id="operations" class="relative py-24">
+      <div class="mx-auto w-full max-w-7xl space-y-12 px-4">
+        <div class="text-center space-y-4 max-w-3xl mx-auto">
+          <div class="inline-flex items-center gap-2 rounded-full bg-accent-100 dark:bg-accent-900/30 px-4 py-2">
+            <svg class="w-4 h-4 text-accent-600 dark:text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            <span class="text-xs font-bold uppercase tracking-widest text-accent-700 dark:text-accent-300">Operational Excellence</span>
+          </div>
+          <h2 class="text-4xl font-bold text-slate-900 dark:text-white">Built for Safe Deployment</h2>
+          <p class="text-lg text-slate-600 dark:text-slate-300">Consolidated tooling keeps asset management and authentication aligned in production</p>
+        </div>
+
+        <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div class="group rounded-3xl border border-slate-200/70 bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-800/50 p-8 shadow-lg backdrop-blur transition-all hover:shadow-xl hover:-translate-y-1">
+            <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/30">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <dt class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3">Speed</dt>
+            <dd class="text-3xl font-bold text-slate-900 dark:text-white mb-3">On-Server</dd>
+            <p class="text-sm text-slate-600 dark:text-slate-300">
+              Direct file operations against <code class="text-xs bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded">STATIC_ROOT</code>
+            </p>
+          </div>
+
+          <div class="group rounded-3xl border border-slate-200/70 bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-800/50 p-8 shadow-lg backdrop-blur transition-all hover:shadow-xl hover:-translate-y-1">
+            <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-accent-500 to-accent-600 text-white shadow-lg shadow-accent-500/30">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <dt class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3">Security</dt>
+            <dd class="text-3xl font-bold text-slate-900 dark:text-white mb-3">Staff Only</dd>
+            <p class="text-sm text-slate-600 dark:text-slate-300">Permission checks ensure only admin accounts access privileged tooling</p>
+          </div>
+
+          <div class="group rounded-3xl border border-slate-200/70 bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-800/50 p-8 shadow-lg backdrop-blur transition-all hover:shadow-xl hover:-translate-y-1">
+            <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-500/30">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+            </div>
+            <dt class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3">Feedback</dt>
+            <dd class="text-3xl font-bold text-slate-900 dark:text-white mb-3">Transparent</dd>
+            <p class="text-sm text-slate-600 dark:text-slate-300">Breadcrumbs, alerts, and redirects keep operational context clear</p>
+          </div>
+
+          <div class="group rounded-3xl border border-slate-200/70 bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-800/50 p-8 shadow-lg backdrop-blur transition-all hover:shadow-xl hover:-translate-y-1">
+            <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-violet-600 text-white shadow-lg shadow-violet-500/30">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+              </svg>
+            </div>
+            <dt class="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-3">Access</dt>
+            <dd class="text-3xl font-bold text-slate-900 dark:text-white mb-3">Unified</dd>
+            <p class="text-sm text-slate-600 dark:text-slate-300">Admin, APIs, and static assets from a single entry point</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  {% endif %}
 {% endblock %}

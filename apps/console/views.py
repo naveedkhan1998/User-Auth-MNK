@@ -1,8 +1,6 @@
 from __future__ import annotations
 
-import mimetypes
-import shutil
-from datetime import datetime, timedelta
+from datetime import timedelta
 from pathlib import Path
 from urllib.parse import urlencode
 
@@ -14,7 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.exceptions import SuspiciousFileOperation
 from django.db.models import Q
-from django.http import FileResponse, Http404
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
@@ -91,7 +89,7 @@ class FileManagerView(StaffOnlyMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         storage = get_storage_backend()
         current_path = (self.request.GET.get("path") or "").strip()
-        
+
         # Get entries from storage backend (works for both local and GCS)
         try:
             entries = storage.list_entries(current_path)
@@ -99,11 +97,11 @@ class FileManagerView(StaffOnlyMixin, TemplateView):
             messages.error(self.request, f"Error listing files: {str(e)}")
             entries = []
             current_path = ""
-        
+
         # Build breadcrumbs
         breadcrumbs = _build_breadcrumbs(current_path)
         parent_path = storage.get_parent_path(current_path)
-        
+
         # Determine storage type for UI
         storage_type = "GCS" if "GCS" in type(storage).__name__ else "Local"
 
@@ -124,9 +122,7 @@ class FileManagerView(StaffOnlyMixin, TemplateView):
                 "breadcrumbs": breadcrumbs,
                 "parent_path": parent_path,
                 "storage_type": storage_type,
-                "upload_form": UploadFileForm(
-                    initial={"current_path": current_path}
-                ),
+                "upload_form": UploadFileForm(initial={"current_path": current_path}),
                 "mkdir_form": CreateDirectoryForm(
                     initial={"current_path": current_path}
                 ),
@@ -142,25 +138,27 @@ class FileUploadView(StaffOnlyMixin, View):
             current_path = form.cleaned_data["current_path"] or ""
             uploaded_file = form.cleaned_data["file"]
             storage = get_storage_backend()
-            
+
             file_name = Path(uploaded_file.name).name
             if not file_name:
                 messages.error(request, "Could not determine a valid file name.")
                 return _redirect_to_manager(current_path)
 
             # Build the target path
-            target_path = f"{current_path}/{file_name}".strip("/") if current_path else file_name
-            
+            target_path = (
+                f"{current_path}/{file_name}".strip("/") if current_path else file_name
+            )
+
             # Read file content
             file_content = uploaded_file.read()
             content_type = uploaded_file.content_type or "application/octet-stream"
-            
+
             try:
                 storage.upload_file(target_path, file_content, content_type)
                 messages.success(request, f"Uploaded {file_name}.")
             except Exception as e:
                 messages.error(request, f"Error uploading file: {str(e)}")
-            
+
             return _redirect_to_manager(current_path)
 
         _add_form_errors(request, form)
@@ -173,7 +171,7 @@ class CreateDirectoryView(StaffOnlyMixin, View):
         if form.is_valid():
             current_path = form.cleaned_data["current_path"] or ""
             folder_name = form.cleaned_data["directory_name"].strip()
-            
+
             if not folder_name:
                 messages.error(request, "Folder name cannot be empty.")
                 return _redirect_to_manager(current_path)
@@ -185,8 +183,12 @@ class CreateDirectoryView(StaffOnlyMixin, View):
                 return _redirect_to_manager(current_path)
 
             storage = get_storage_backend()
-            target_path = f"{current_path}/{folder_name}".strip("/") if current_path else folder_name
-            
+            target_path = (
+                f"{current_path}/{folder_name}".strip("/")
+                if current_path
+                else folder_name
+            )
+
             try:
                 storage.create_directory(target_path)
                 messages.success(request, f"Created folder {folder_name}.")
@@ -207,13 +209,13 @@ class DeleteEntryView(StaffOnlyMixin, View):
         if form.is_valid():
             current_path = form.cleaned_data["current_path"] or ""
             target_relative = form.cleaned_data["target"]
-            
+
             if not target_relative:
                 messages.error(request, "Cannot delete the root folder.")
                 return _redirect_to_manager(current_path)
-            
+
             storage = get_storage_backend()
-            
+
             try:
                 storage.delete(target_relative)
                 messages.success(request, f"Deleted {Path(target_relative).name}.")
@@ -231,31 +233,37 @@ class DownloadFileView(StaffOnlyMixin, View):
         relative_path = (request.GET.get("path") or "").strip()
         if not relative_path:
             raise Http404
-        
+
         storage = get_storage_backend()
-        
+
         try:
             content, content_type = storage.download_file(relative_path)
             from django.http import HttpResponse
+
             response = HttpResponse(content, content_type=content_type)
-            response["Content-Disposition"] = f'attachment; filename="{Path(relative_path).name}"'
+            response["Content-Disposition"] = (
+                f'attachment; filename="{Path(relative_path).name}"'
+            )
             return response
         except Exception as e:
             raise Http404(f"File not found: {e}")
-    
+
     def post(self, request):
         # Support POST method with 'target' parameter from forms
         relative_path = (request.POST.get("target") or "").strip()
         if not relative_path:
             raise Http404
-        
+
         storage = get_storage_backend()
-        
+
         try:
             content, content_type = storage.download_file(relative_path)
             from django.http import HttpResponse
+
             response = HttpResponse(content, content_type=content_type)
-            response["Content-Disposition"] = f'attachment; filename="{Path(relative_path).name}"'
+            response["Content-Disposition"] = (
+                f'attachment; filename="{Path(relative_path).name}"'
+            )
             return response
         except Exception as e:
             raise Http404(f"File not found: {e}")
@@ -285,14 +293,14 @@ class ProjectCreateView(StaffOnlyMixin, TemplateView):
     def post(self, request, *args, **kwargs):
         form = ProjectForm(request.POST)
         image_form = ProjectImageUploadForm(request.POST, request.FILES)
-        
+
         if form.is_valid():
             project = form.save()
-            
+
             # Handle multiple file uploads
-            uploaded_files = request.FILES.getlist('images')
+            uploaded_files = request.FILES.getlist("images")
             added = 0
-            
+
             for uploaded_file in uploaded_files:
                 try:
                     # Create Image instance and save
@@ -302,18 +310,17 @@ class ProjectCreateView(StaffOnlyMixin, TemplateView):
                     added += 1
                 except Exception as e:
                     messages.warning(
-                        request,
-                        f"Could not upload {uploaded_file.name}: {str(e)}"
+                        request, f"Could not upload {uploaded_file.name}: {str(e)}"
                     )
-            
+
             if added:
                 messages.success(
                     request,
-                    f"Project created with {added} image{'s' if added != 1 else ''}."
+                    f"Project created with {added} image{'s' if added != 1 else ''}.",
                 )
             else:
                 messages.success(request, "Project created successfully.")
-            
+
             return redirect("console:project-detail", pk=project.pk)
 
         # If form is invalid
@@ -371,24 +378,24 @@ class ProjectImageUploadView(StaffOnlyMixin, View):
     def post(self, request, pk):
         project = get_object_or_404(Project, pk=pk)
         image_form = ProjectImageUploadForm(request.POST, request.FILES)
-        
+
         # Get all uploaded files
-        uploaded_files = request.FILES.getlist('images')
-        
+        uploaded_files = request.FILES.getlist("images")
+
         if not uploaded_files:
             messages.warning(request, "No images were selected.")
             return redirect("console:project-detail", pk=project.pk)
-        
+
         added = 0
         errors = []
-        
+
         for uploaded_file in uploaded_files:
             try:
                 # Validate file type
-                if not uploaded_file.content_type.startswith('image/'):
+                if not uploaded_file.content_type.startswith("image/"):
                     errors.append(f"{uploaded_file.name} is not a valid image file")
                     continue
-                
+
                 # Create and save image
                 image = Image(file=uploaded_file)
                 image.save()  # This triggers compression
@@ -396,20 +403,19 @@ class ProjectImageUploadView(StaffOnlyMixin, View):
                 added += 1
             except Exception as e:
                 errors.append(f"Could not upload {uploaded_file.name}: {str(e)}")
-        
+
         # Provide feedback
         if added:
             messages.success(
-                request, 
-                f"Successfully added {added} image{'s' if added != 1 else ''}."
+                request, f"Successfully added {added} image{'s' if added != 1 else ''}."
             )
-        
+
         for error in errors:
             messages.warning(request, error)
-        
+
         if not added and not errors:
             messages.info(request, "No images were uploaded.")
-        
+
         return redirect("console:project-detail", pk=project.pk)
 
 

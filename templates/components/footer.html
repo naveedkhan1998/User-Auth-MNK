@@ -2,25 +2,15 @@
   <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
       <div class="flex items-center gap-2">
-        <div class="flex h-6 w-6 items-center justify-center rounded bg-brand-500 text-white font-bold text-xs">
-          MNK
-        </div>
-        <span class="text-sm text-slate-500 dark:text-slate-400">
-          &copy; {% now 'Y' %} MNK Platform. All rights reserved.
-        </span>
+        <div class="flex h-6 w-6 items-center justify-center rounded bg-brand-500 text-white font-bold text-xs">MNK</div>
+        <span class="text-sm text-slate-500 dark:text-slate-400">&copy;{% now 'Y' %}MNK Platform. All rights reserved.</span>
       </div>
-      
+
       <div class="flex items-center gap-6 text-sm">
-        <a class="text-slate-500 transition hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400" href="mailto: naveedkhan13041998@gmail.com">
-          Contact
-        </a>
-        <a class="text-slate-500 transition hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400" href="https://github.com/naveedkhan98" target="_blank" rel="noopener">
-          GitHub
-        </a>
+        <a class="text-slate-500 transition hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400" href="mailto: naveedkhan13041998@gmail.com">Contact</a>
+        <a class="text-slate-500 transition hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400" href="https://github.com/naveedkhan98" target="_blank" rel="noopener">GitHub</a>
         {% if request.user.is_authenticated and request.user.is_staff %}
-          <a class="text-slate-500 transition hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400" href="{% url 'schema-yaml' %}">
-            API Schema
-          </a>
+          <a class="text-slate-500 transition hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400" href="{% url 'schema-yaml' %}">API Schema</a>
         {% endif %}
       </div>
     </div>

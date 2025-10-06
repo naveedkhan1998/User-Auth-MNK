@@ -1,86 +1,79 @@
 {# Pagination component with modern design #}
 {% if is_paginated %}
-<nav class="flex items-center justify-between rounded-2xl border border-slate-200/50 bg-gradient-to-r from-white to-slate-50 px-6 py-5 shadow-lg backdrop-blur-sm dark:border-slate-800/50 dark:from-slate-950 dark:to-slate-900" aria-label="Pagination">
-  {# Mobile View #}
-  <div class="flex flex-1 justify-between gap-3 sm:hidden">
-    {% if page_obj.has_previous %}
-      <a href="?page={{ page_obj.previous_page_number }}" class="group inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 shadow-sm transition-all duration-200 hover:border-brand-400 hover:bg-brand-50 hover:text-brand-600 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-brand-600 dark:hover:bg-brand-950/30 dark:hover:text-brand-400">
-        <svg class="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-        </svg>
-        Previous
-      </a>
-    {% else %}
-      <span class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm font-bold text-slate-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-600">
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-        </svg>
-        Previous
-      </span>
-    {% endif %}
-    
-    {% if page_obj.has_next %}
-      <a href="?page={{ page_obj.next_page_number }}" class="group inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 shadow-sm transition-all duration-200 hover:border-brand-400 hover:bg-brand-50 hover:text-brand-600 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-brand-600 dark:hover:bg-brand-950/30 dark:hover:text-brand-400">
-        Next
-        <svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-        </svg>
-      </a>
-    {% else %}
-      <span class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm font-bold text-slate-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-600">
-        Next
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-        </svg>
-      </span>
-    {% endif %}\n  </div>
-  
-  {# Desktop View #}
-  <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-    <div class="rounded-lg bg-slate-100/60 px-4 py-2 dark:bg-slate-900/60">
-      <p class="text-sm font-semibold text-slate-700 dark:text-slate-300">
-        Showing
-        <span class="font-bold text-brand-600 dark:text-brand-400">{{ page_obj.start_index }}</span>
-        to
-        <span class="font-bold text-brand-600 dark:text-brand-400">{{ page_obj.end_index }}</span>
-        of
-        <span class="font-bold text-brand-600 dark:text-brand-400">{{ paginator.count }}</span>
-        results
-      </p>
+  <nav class="flex items-center justify-between rounded-2xl border border-slate-200/50 bg-gradient-to-r from-white to-slate-50 px-6 py-5 shadow-lg backdrop-blur-sm dark:border-slate-800/50 dark:from-slate-950 dark:to-slate-900" aria-label="Pagination">
+    {# Mobile View #}
+    <div class="flex flex-1 justify-between gap-3 sm:hidden">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="group inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 shadow-sm transition-all duration-200 hover:border-brand-400 hover:bg-brand-50 hover:text-brand-600 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-brand-600 dark:hover:bg-brand-950/30 dark:hover:text-brand-400">
+          <svg class="h-4 w-4 transition-transform duration-200 group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>Previous
+        </a>
+      {% else %}
+        <span class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm font-bold text-slate-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-600">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>Previous
+        </span>
+      {% endif %}
+
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="group inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-bold text-slate-700 shadow-sm transition-all duration-200 hover:border-brand-400 hover:bg-brand-50 hover:text-brand-600 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-brand-600 dark:hover:bg-brand-950/30 dark:hover:text-brand-400">
+          Next<svg class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </a>
+      {% else %}
+        <span class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-100 px-4 py-2.5 text-sm font-bold text-slate-400 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-600">
+          Next<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </span>
+      {% endif %}\n
     </div>
-    <div>
-      <nav class="isolate inline-flex gap-1 rounded-xl" aria-label="Pagination">
-        {% if page_obj.has_previous %}
-          <a href="?page={{ page_obj.previous_page_number }}" class="group relative inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm transition-all duration-200 hover:border-brand-400 hover:bg-brand-50 hover:text-brand-600 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-brand-600 dark:hover:bg-brand-950/30 dark:hover:text-brand-400">
-            <span class="sr-only">Previous</span>
-            <svg class="h-5 w-5 transition-transform duration-200 group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-            </svg>
-          </a>
-        {% endif %}
-        
-        {% for num in paginator.page_range %}
-          {% if page_obj.number == num %}
-            <span class="relative z-10 inline-flex h-10 min-w-[2.5rem] items-center justify-center rounded-lg border-2 border-brand-500 bg-gradient-to-r from-brand-500 to-brand-600 px-3 text-sm font-bold text-white shadow-lg shadow-brand-500/30">
-              {{ num }}
-            </span>
-          {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-            <a href="?page={{ num }}" class="relative inline-flex h-10 min-w-[2.5rem] items-center justify-center rounded-lg border border-slate-200 bg-white px-3 text-sm font-bold text-slate-700 shadow-sm transition-all duration-200 hover:border-brand-400 hover:bg-brand-50 hover:text-brand-600 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-brand-600 dark:hover:bg-brand-950/30 dark:hover:text-brand-400">
-              {{ num }}
+
+    {# Desktop View #}
+    <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+      <div class="rounded-lg bg-slate-100/60 px-4 py-2 dark:bg-slate-900/60">
+        <p class="text-sm font-semibold text-slate-700 dark:text-slate-300">
+          Showing
+          <span class="font-bold text-brand-600 dark:text-brand-400">{{ page_obj.start_index }}</span>
+          to
+          <span class="font-bold text-brand-600 dark:text-brand-400">{{ page_obj.end_index }}</span>
+          of
+          <span class="font-bold text-brand-600 dark:text-brand-400">{{ paginator.count }}</span>
+          results
+        </p>
+      </div>
+      <div>
+        <nav class="isolate inline-flex gap-1 rounded-xl" aria-label="Pagination">
+          {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="group relative inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm transition-all duration-200 hover:border-brand-400 hover:bg-brand-50 hover:text-brand-600 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-brand-600 dark:hover:bg-brand-950/30 dark:hover:text-brand-400">
+              <span class="sr-only">Previous</span>
+              <svg class="h-5 w-5 transition-transform duration-200 group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
             </a>
           {% endif %}
-        {% endfor %}
-        
-        {% if page_obj.has_next %}
-          <a href="?page={{ page_obj.next_page_number }}" class="group relative inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm transition-all duration-200 hover:border-brand-400 hover:bg-brand-50 hover:text-brand-600 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-brand-600 dark:hover:bg-brand-950/30 dark:hover:text-brand-400">
-            <span class="sr-only">Next</span>
-            <svg class="h-5 w-5 transition-transform duration-200 group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-          </a>
-        {% endif %}
-      </nav>
+
+          {% for num in paginator.page_range %}
+            {% if page_obj.number == num %}
+              <span class="relative z-10 inline-flex h-10 min-w-[2.5rem] items-center justify-center rounded-lg border-2 border-brand-500 bg-gradient-to-r from-brand-500 to-brand-600 px-3 text-sm font-bold text-white shadow-lg shadow-brand-500/30">{{ num }}</span>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+              <a href="?page={{ num }}" class="relative inline-flex h-10 min-w-[2.5rem] items-center justify-center rounded-lg border border-slate-200 bg-white px-3 text-sm font-bold text-slate-700 shadow-sm transition-all duration-200 hover:border-brand-400 hover:bg-brand-50 hover:text-brand-600 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-brand-600 dark:hover:bg-brand-950/30 dark:hover:text-brand-400">{{ num }}</a>
+            {% endif %}
+          {% endfor %}
+
+          {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="group relative inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm transition-all duration-200 hover:border-brand-400 hover:bg-brand-50 hover:text-brand-600 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-brand-600 dark:hover:bg-brand-950/30 dark:hover:text-brand-400">
+              <span class="sr-only">Next</span>
+              <svg class="h-5 w-5 transition-transform duration-200 group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          {% endif %}
+        </nav>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
 {% endif %}

@@ -1,6 +1,7 @@
 """
 URL configuration for blog API.
 """
+
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import BlogPostViewSet, BlogImageViewSet

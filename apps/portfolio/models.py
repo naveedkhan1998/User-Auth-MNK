@@ -2,7 +2,6 @@ from django.db import models
 from PIL import Image as PilImage
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
-import sys
 
 
 class Image(models.Model):

@@ -42,7 +42,9 @@ urlpatterns = [
     path("projects/", ProjectListView.as_view(), name="project-list"),
     path("projects/create/", ProjectCreateView.as_view(), name="project-create"),
     path("projects/<int:pk>/", ProjectDetailView.as_view(), name="project-detail"),
-    path("projects/<int:pk>/update/", ProjectUpdateView.as_view(), name="project-update"),
+    path(
+        "projects/<int:pk>/update/", ProjectUpdateView.as_view(), name="project-update"
+    ),
     path(
         "projects/<int:pk>/images/add/",
         ProjectImageUploadView.as_view(),
@@ -53,14 +55,26 @@ urlpatterns = [
         ProjectImageDeleteView.as_view(),
         name="project-image-delete",
     ),
-    path("projects/<int:pk>/delete/", ProjectDeleteView.as_view(), name="project-delete"),
+    path(
+        "projects/<int:pk>/delete/", ProjectDeleteView.as_view(), name="project-delete"
+    ),
     path("messages/", MessageListView.as_view(), name="message-list"),
     path("messages/<int:pk>/", MessageDetailView.as_view(), name="message-detail"),
     # Blog CMS URLs
     path("blog/", BlogPostListView.as_view(), name="blog-post-list"),
     path("blog/create/", BlogPostCreateView.as_view(), name="blog-post-create"),
     path("blog/<uuid:pk>/", BlogPostUpdateView.as_view(), name="blog-post-update"),
-    path("blog/<uuid:pk>/delete/", BlogPostDeleteView.as_view(), name="blog-post-delete"),
-    path("blog/<uuid:pk>/images/add/", BlogImageUploadView.as_view(), name="blog-image-upload"),
-    path("blog/<uuid:post_pk>/images/<uuid:image_pk>/delete/", BlogImageDeleteView.as_view(), name="blog-image-delete"),
+    path(
+        "blog/<uuid:pk>/delete/", BlogPostDeleteView.as_view(), name="blog-post-delete"
+    ),
+    path(
+        "blog/<uuid:pk>/images/add/",
+        BlogImageUploadView.as_view(),
+        name="blog-image-upload",
+    ),
+    path(
+        "blog/<uuid:post_pk>/images/<uuid:image_pk>/delete/",
+        BlogImageDeleteView.as_view(),
+        name="blog-image-delete",
+    ),
 ]

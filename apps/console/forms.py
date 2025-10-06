@@ -22,10 +22,11 @@ _CHECKBOX_CLASSES = (
 
 class MultipleFileInput(forms.ClearableFileInput):
     """Custom widget that allows multiple file selection."""
+
     allow_multiple_selected = True
 
     def __init__(self, attrs=None):
-        default_attrs = {'multiple': True}
+        default_attrs = {"multiple": True}
         if attrs:
             default_attrs.update(attrs)
         super().__init__(attrs=default_attrs)
@@ -33,6 +34,7 @@ class MultipleFileInput(forms.ClearableFileInput):
 
 class MultipleFileField(forms.FileField):
     """Custom field that handles multiple file uploads."""
+
     widget = MultipleFileInput
 
     def clean(self, data, initial=None):
@@ -118,16 +120,15 @@ class ProjectImageUploadForm(TailwindForm):
     images = MultipleFileField(
         label="Upload images",
         required=False,
-        help_text="Select one or more images to upload. Supported formats: JPEG, PNG, WebP"
+        help_text="Select one or more images to upload. Supported formats: JPEG, PNG, WebP",
     )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Ensure the multiple attribute is set
-        self.fields['images'].widget.attrs.update({
-            'accept': 'image/jpeg,image/png,image/webp,image/jpg',
-            'multiple': True
-        })
+        self.fields["images"].widget.attrs.update(
+            {"accept": "image/jpeg,image/png,image/webp,image/jpg", "multiple": True}
+        )
 
 
 class ProjectDeleteForm(TailwindForm):
@@ -158,6 +159,3 @@ class MessageFilterForm(TailwindForm):
         ),
         label="Time frame",
     )
-
-
-
