@@ -104,6 +104,11 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     #'DEFAULT_RENDERER_CLASSES':('rest_framework.renderers.JSONRenderer',),
+    "DEFAULT_THROTTLE_RATES": {
+        "anon": "100/day",
+        "user": "1000/day",
+        "message_post": "10/hour",  # Specific rate for message posting
+    },
 }
 
 
