@@ -1,267 +1,284 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" class="{% block html_class %}scroll-smooth{% endblock %}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="{% block meta_description %}MNK Service Platform - Professional Backend Services{% endblock %}">
-    <meta name="author" content="Mohammad Naveed Khan">
-    <meta name="theme-color" content="#3b82f6">
-    
-    <title>{% block title %}MNK Platform{% endblock %}</title>
-    
+<html lang="en"
+  class="{% block html_class %}
+    scroll-smooth
+  {% endblock %}">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description"
+      content="{% block meta_description %}
+        MNK Service Platform - Professional Backend Services
+      {% endblock %}" />
+    <meta name="author" content="Mohammad Naveed Khan" />
+    <meta name="theme-color" content="#3b82f6" />
+
+    <title>
+      {% block title %}
+        MNK Platform
+      {% endblock %}
+    </title>
+
     {# Preconnect to external resources #}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
     {# Google Fonts - Inter for UI #}
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
     {# Theme Detection Script - Must be in head for no-flash theme switching #}
     <script>
-        ;(function () {
-            try {
-                const stored = window.localStorage.getItem('mnk-theme')
-                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-                if (stored === 'dark' || (!stored && prefersDark)) {
-                    document.documentElement.classList.add('dark')
-                }
-            } catch (err) {
-                console.warn('Theme detection failed', err)
-            }
-        })()
+      ;(function () {
+        try {
+          const stored = window.localStorage.getItem('mnk-theme')
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+          if (stored === 'dark' || (!stored && prefersDark)) {
+            document.documentElement.classList.add('dark')
+          }
+        } catch (err) {
+          console.warn('Theme detection failed', err)
+        }
+      })()
     </script>
-    
+
     {# Tailwind CSS #}
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        window.tailwind = window.tailwind || {}
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            200: '#bae6fd',
-                            300: '#7dd3fc',
-                            400: '#38bdf8',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e',
-                            950: '#082f49',
-                        },
-                        accent: {
-                            50: '#fdf4ff',
-                            100: '#fae8ff',
-                            200: '#f5d0fe',
-                            300: '#f0abfc',
-                            400: '#e879f9',
-                            500: '#d946ef',
-                            600: '#c026d3',
-                            700: '#a21caf',
-                            800: '#86198f',
-                            900: '#701a75',
-                        }
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.5s ease-in-out',
-                        'slide-up': 'slideUp 0.4s ease-out',
-                        'slide-down': 'slideDown 0.4s ease-out',
-                        'scale-in': 'scaleIn 0.3s ease-out',
-                        'shimmer': 'shimmer 2s linear infinite',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' },
-                        },
-                        slideUp: {
-                            '0%': { transform: 'translateY(10px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' },
-                        },
-                        slideDown: {
-                            '0%': { transform: 'translateY(-10px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' },
-                        },
-                        scaleIn: {
-                            '0%': { transform: 'scale(0.95)', opacity: '0' },
-                            '100%': { transform: 'scale(1)', opacity: '1' },
-                        },
-                        shimmer: {
-                            '0%': { backgroundPosition: '-1000px 0' },
-                            '100%': { backgroundPosition: '1000px 0' },
-                        },
-                    },
-                    boxShadow: {
-                        'glow': '0 0 20px rgba(14, 165, 233, 0.3)',
-                        'glow-lg': '0 0 30px rgba(14, 165, 233, 0.4)',
-                        'inner-glow': 'inset 0 0 20px rgba(14, 165, 233, 0.1)',
-                    },
-                }
+      window.tailwind = window.tailwind || {}
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif']
+            },
+            colors: {
+              brand: {
+                50: '#f0f9ff',
+                100: '#e0f2fe',
+                200: '#bae6fd',
+                300: '#7dd3fc',
+                400: '#38bdf8',
+                500: '#0ea5e9',
+                600: '#0284c7',
+                700: '#0369a1',
+                800: '#075985',
+                900: '#0c4a6e',
+                950: '#082f49'
+              },
+              accent: {
+                50: '#fdf4ff',
+                100: '#fae8ff',
+                200: '#f5d0fe',
+                300: '#f0abfc',
+                400: '#e879f9',
+                500: '#d946ef',
+                600: '#c026d3',
+                700: '#a21caf',
+                800: '#86198f',
+                900: '#701a75'
+              }
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.5s ease-in-out',
+              'slide-up': 'slideUp 0.4s ease-out',
+              'slide-down': 'slideDown 0.4s ease-out',
+              'scale-in': 'scaleIn 0.3s ease-out',
+              shimmer: 'shimmer 2s linear infinite'
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' }
+              },
+              slideUp: {
+                '0%': { transform: 'translateY(10px)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' }
+              },
+              slideDown: {
+                '0%': { transform: 'translateY(-10px)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' }
+              },
+              scaleIn: {
+                '0%': { transform: 'scale(0.95)', opacity: '0' },
+                '100%': { transform: 'scale(1)', opacity: '1' }
+              },
+              shimmer: {
+                '0%': { backgroundPosition: '-1000px 0' },
+                '100%': { backgroundPosition: '1000px 0' }
+              }
+            },
+            boxShadow: {
+              glow: '0 0 20px rgba(14, 165, 233, 0.3)',
+              'glow-lg': '0 0 30px rgba(14, 165, 233, 0.4)',
+              'inner-glow': 'inset 0 0 20px rgba(14, 165, 233, 0.1)'
             }
+          }
         }
+      }
     </script>
-    
+
     {# Custom Global Styles #}
     <style>
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-            height: 10px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgb(241 245 249);
-        }
-        .dark ::-webkit-scrollbar-track {
-            background: rgb(15 23 42);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgb(203 213 225);
-            border-radius: 5px;
-        }
-        .dark ::-webkit-scrollbar-thumb {
-            background: rgb(51 65 85);
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgb(148 163 184);
-        }
-        .dark ::-webkit-scrollbar-thumb:hover {
-            background: rgb(71 85 105);
-        }
-        
-        /* Smooth focus rings */
-        *:focus-visible {
-            outline: 2px solid rgb(14 165 233);
-            outline-offset: 2px;
-            border-radius: 0.375rem;
-        }
-        
-        /* Form input styling */
-        input[type="text"],
-        input[type="email"],
-        input[type="password"],
-        input[type="url"],
-        input[type="number"],
-        textarea,
-        select {
-            @apply w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 transition-all duration-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder-slate-500 dark:focus:border-brand-400;
-        }
-        
-        textarea {
-            @apply min-h-[120px] resize-y;
-        }
-        
-        /* Checkbox and radio styling */
-        input[type="checkbox"],
-        input[type="radio"] {
-            @apply h-4 w-4 rounded border-slate-300 text-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-slate-700 dark:bg-slate-900;
-        }
-        
-        /* File input styling */
-        input[type="file"] {
-            @apply text-sm text-slate-500 file:mr-4 file:rounded-lg file:border-0 file:bg-brand-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-brand-700 hover:file:bg-brand-100 dark:text-slate-400 dark:file:bg-brand-950 dark:file:text-brand-300 dark:hover:file:bg-brand-900;
-        }
-        
-        /* Label styling */
-        label {
-            @apply mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-300;
-        }
-        
-        /* Smooth page transitions */
-        .page-transition {
-            animation: fadeIn 0.3s ease-in-out;
-        }
-        
-        /* Gradient backgrounds */
-        .gradient-mesh {
-            background: linear-gradient(135deg, rgb(14 165 233 / 0.05) 0%, rgb(217 70 239 / 0.05) 100%);
-        }
-        .dark .gradient-mesh {
-            background: linear-gradient(135deg, rgb(14 165 233 / 0.02) 0%, rgb(217 70 239 / 0.02) 100%);
-        }
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: rgb(241 245 249);
+      }
+      .dark ::-webkit-scrollbar-track {
+        background: rgb(15 23 42);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgb(203 213 225);
+        border-radius: 5px;
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background: rgb(51 65 85);
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgb(148 163 184);
+      }
+      .dark ::-webkit-scrollbar-thumb:hover {
+        background: rgb(71 85 105);
+      }
+      
+      /* Smooth focus rings */
+      *:focus-visible {
+        outline: 2px solid rgb(14 165 233);
+        outline-offset: 2px;
+        border-radius: 0.375rem;
+      }
+      
+      /* Form input styling */
+      input[type='text'],
+      input[type='email'],
+      input[type='password'],
+      input[type='url'],
+      input[type='number'],
+      textarea,
+      select {
+        @apply w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 transition-all duration-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder-slate-500 dark:focus:border-brand-400;
+      }
+      
+      textarea {
+        @apply min-h-[120px] resize-y;
+      }
+      
+      /* Checkbox and radio styling */
+      input[type='checkbox'],
+      input[type='radio'] {
+        @apply h-4 w-4 rounded border-slate-300 text-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-slate-700 dark:bg-slate-900;
+      }
+      
+      /* File input styling */
+      input[type='file'] {
+        @apply text-sm text-slate-500 file:mr-4 file:rounded-lg file:border-0 file:bg-brand-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-brand-700 hover:file:bg-brand-100 dark:text-slate-400 dark:file:bg-brand-950 dark:file:text-brand-300 dark:hover:file:bg-brand-900;
+      }
+      
+      /* Label styling */
+      label {
+        @apply mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-300;
+      }
+      
+      /* Smooth page transitions */
+      .page-transition {
+        animation: fadeIn 0.3s ease-in-out;
+      }
+      
+      /* Gradient backgrounds */
+      .gradient-mesh {
+        background: linear-gradient(135deg, rgb(14 165 233 / 0.05) 0%, rgb(217 70 239 / 0.05) 100%);
+      }
+      .dark .gradient-mesh {
+        background: linear-gradient(135deg, rgb(14 165 233 / 0.02) 0%, rgb(217 70 239 / 0.02) 100%);
+      }
     </style>
-    
+
     {# Custom Stylesheets #}
-    {% block extra_css %}{% endblock %}
-    
+    {% block extra_css %}
+    {% endblock %}
+
     {# Custom Head Content #}
-    {% block extra_head %}{% endblock %}
-</head>
-<body class="{% block body_class %}bg-gradient-to-br from-slate-50 via-white to-slate-100 text-slate-900 antialiased transition-colors duration-300 selection:bg-brand-200 selection:text-brand-900 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 dark:text-slate-100 dark:selection:bg-brand-900 dark:selection:text-brand-100{% endblock %}">
-    
+    {% block extra_head %}
+    {% endblock %}
+  </head>
+  <body class="{% block body_class %}
+      bg-gradient-to-br from-slate-50 via-white to-slate-100 text-slate-900 antialiased transition-colors duration-300 selection:bg-brand-200 selection:text-brand-900 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 dark:text-slate-100 dark:selection:bg-brand-900 dark:selection:text-brand-100
+    {% endblock %}">
     {# Skip to main content for accessibility #}
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:m-4 focus:rounded-lg focus:bg-brand-500 focus:px-4 focus:py-2 focus:text-white">
-        Skip to main content
-    </a>
-    
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:m-4 focus:rounded-lg focus:bg-brand-500 focus:px-4 focus:py-2 focus:text-white">Skip to main content</a>
+
     {# Page Header #}
     {% block header %}
-        {% include 'includes/_header.html' %}
+      {% include 'includes/_header.html' %}
     {% endblock %}
-    
+
     {# Messages Display #}
     {% if messages %}
-        <div class="mx-auto w-full max-w-7xl space-y-3 px-4 pt-4 sm:px-6 lg:px-8">
-            {% for message in messages %}
-                {% include 'components/_alert.html' with message=message %}
-            {% endfor %}
-        </div>
+      <div class="mx-auto w-full max-w-7xl space-y-3 px-4 pt-4 sm:px-6 lg:px-8">
+        {% for message in messages %}
+          {% include 'components/_alert.html' with message=message %}
+        {% endfor %}
+      </div>
     {% endif %}
-    
+
     {# Main Content Area #}
-    <main id="main-content" class="{% block main_class %}min-h-[calc(100dvh-10rem)] w-full{% endblock %}" role="main">
-        {% block content %}
-            {# Page-specific content goes here #}
-        {% endblock %}
+    <main id="main-content"
+      class="{% block main_class %}
+        min-h-[calc(100dvh-10rem)] w-full
+      {% endblock %}"
+      role="main">
+      {% block content %}
+        {# Page-specific content goes here #}
+      {% endblock %}
     </main>
-    
+
     {# Page Footer #}
     {% block footer %}
-        {% include 'includes/_footer.html' %}
+      {% include 'includes/_footer.html' %}
     {% endblock %}
-    
+
     {# Theme Toggle Script #}
     <script>
-        ;(function () {
-            const toggle = document.getElementById('theme-toggle')
-            const label = document.getElementById('theme-toggle-label')
-            if (!toggle || !label) return
-            
-            const apply = (mode) => {
-                if (mode === 'dark') {
-                    document.documentElement.classList.add('dark')
-                } else {
-                    document.documentElement.classList.remove('dark')
-                }
-                label.textContent = mode === 'dark' ? 'Light' : 'Dark'
-            }
-            
-            const current = document.documentElement.classList.contains('dark') ? 'dark' : 'light'
-            apply(current)
-            
-            toggle.addEventListener('click', () => {
-                const next = document.documentElement.classList.contains('dark') ? 'light' : 'dark'
-                apply(next)
-                try {
-                    window.localStorage.setItem('mnk-theme', next)
-                } catch (err) {
-                    console.warn('Theme persistence failed', err)
-                }
-            })
-        })()
+      ;(function () {
+        const toggle = document.getElementById('theme-toggle')
+        const label = document.getElementById('theme-toggle-label')
+        if (!toggle || !label) return
+      
+        const apply = (mode) => {
+          if (mode === 'dark') {
+            document.documentElement.classList.add('dark')
+          } else {
+            document.documentElement.classList.remove('dark')
+          }
+          label.textContent = mode === 'dark' ? 'Light' : 'Dark'
+        }
+      
+        const current = document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+        apply(current)
+      
+        toggle.addEventListener('click', () => {
+          const next = document.documentElement.classList.contains('dark') ? 'light' : 'dark'
+          apply(next)
+          try {
+            window.localStorage.setItem('mnk-theme', next)
+          } catch (err) {
+            console.warn('Theme persistence failed', err)
+          }
+        })
+      })()
     </script>
-    
+
     {# Custom JavaScript #}
-    {% block extra_js %}{% endblock %}
-    
+    {% block extra_js %}
+    {% endblock %}
+
     {# Custom Body Content #}
-    {% block extra_body %}{% endblock %}
-</body>
+    {% block extra_body %}
+    {% endblock %}
+  </body>
 </html>

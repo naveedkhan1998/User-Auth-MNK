@@ -1,56 +1,165 @@
 {# Badge component for status indicators with modern styling #}
-{% with variant=variant|default:"default" size=size|default:"md" %}
-  {% if variant == "primary" %}
-    {% with base_class="bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-lg shadow-brand-500/30" %}
-      <span class="inline-flex items-center gap-1.5 rounded-full {{ base_class }} {% if size == 'sm' %}px-2.5 py-1 text-xs{% elif size == 'lg' %}px-5 py-2.5 text-base{% else %}px-3.5 py-1.5 text-sm{% endif %} font-bold transition-all duration-200 hover:scale-105 hover:shadow-xl hover:shadow-brand-500/40">
+{% with variant=variant|default:'default' size=size|default:'md' %}
+  {% if variant == 'primary' %}
+    {% with base_class='bg-gradient-to-r from-brand-500 to-brand-600 text-white shadow-lg shadow-brand-500/30' %}
+      <span class="inline-flex items-center gap-1.5 rounded-full {{ base_class }} {% if size == 'sm' %}
+          
+          px-2.5 py-1 text-xs
+
+        {% elif size == 'lg' %}
+          
+          px-5 py-2.5 text-base
+
+        {% else %}
+          
+          px-3.5 py-1.5 text-sm
+
+        {% endif %} font-bold transition-all duration-200 hover:scale-105 hover:shadow-xl hover:shadow-brand-500/40">
         {% if icon %}
-          <svg class="{% if size == 'sm' %}h-3 w-3{% else %}h-4 w-4{% endif %} animate-pulse" fill="currentColor" viewBox="0 0 20 20">
-            <circle cx="10" cy="10" r="5"/>
+          <svg class="{% if size == 'sm' %}
+              
+              h-3 w-3
+
+            {% else %}
+              
+              h-4 w-4
+
+            {% endif %} animate-pulse"
+            fill="currentColor"
+            viewBox="0 0 20 20">
+            <circle cx="10" cy="10" r="5" />
           </svg>
         {% endif %}
         {{ text }}
       </span>
     {% endwith %}
-  {% elif variant == "success" %}
-    {% with base_class="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-500/30" %}
-      <span class="inline-flex items-center gap-1.5 rounded-full {{ base_class }} {% if size == 'sm' %}px-2.5 py-1 text-xs{% elif size == 'lg' %}px-5 py-2.5 text-base{% else %}px-3.5 py-1.5 text-sm{% endif %} font-bold transition-all duration-200 hover:scale-105 hover:shadow-xl hover:shadow-emerald-500/40">
+  {% elif variant == 'success' %}
+    {% with base_class='bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg shadow-emerald-500/30' %}
+      <span class="inline-flex items-center gap-1.5 rounded-full {{ base_class }} {% if size == 'sm' %}
+          
+          px-2.5 py-1 text-xs
+
+        {% elif size == 'lg' %}
+          
+          px-5 py-2.5 text-base
+
+        {% else %}
+          
+          px-3.5 py-1.5 text-sm
+
+        {% endif %} font-bold transition-all duration-200 hover:scale-105 hover:shadow-xl hover:shadow-emerald-500/40">
         {% if icon %}
-          <svg class="{% if size == 'sm' %}h-3 w-3{% else %}h-4 w-4{% endif %} animate-pulse" fill="currentColor" viewBox="0 0 20 20">
-            <circle cx="10" cy="10" r="5"/>
+          <svg class="{% if size == 'sm' %}
+              
+              h-3 w-3
+
+            {% else %}
+              
+              h-4 w-4
+
+            {% endif %} animate-pulse"
+            fill="currentColor"
+            viewBox="0 0 20 20">
+            <circle cx="10" cy="10" r="5" />
           </svg>
         {% endif %}
         {{ text }}
       </span>
     {% endwith %}
-  {% elif variant == "warning" %}
-    {% with base_class="bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg shadow-amber-500/30" %}
-      <span class="inline-flex items-center gap-1.5 rounded-full {{ base_class }} {% if size == 'sm' %}px-2.5 py-1 text-xs{% elif size == 'lg' %}px-5 py-2.5 text-base{% else %}px-3.5 py-1.5 text-sm{% endif %} font-bold transition-all duration-200 hover:scale-105 hover:shadow-xl hover:shadow-amber-500/40">
+  {% elif variant == 'warning' %}
+    {% with base_class='bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg shadow-amber-500/30' %}
+      <span class="inline-flex items-center gap-1.5 rounded-full {{ base_class }} {% if size == 'sm' %}
+          
+          px-2.5 py-1 text-xs
+
+        {% elif size == 'lg' %}
+          
+          px-5 py-2.5 text-base
+
+        {% else %}
+          
+          px-3.5 py-1.5 text-sm
+
+        {% endif %} font-bold transition-all duration-200 hover:scale-105 hover:shadow-xl hover:shadow-amber-500/40">
         {% if icon %}
-          <svg class="{% if size == 'sm' %}h-3 w-3{% else %}h-4 w-4{% endif %} animate-pulse" fill="currentColor" viewBox="0 0 20 20">
-            <circle cx="10" cy="10" r="5"/>
+          <svg class="{% if size == 'sm' %}
+              
+              h-3 w-3
+
+            {% else %}
+              
+              h-4 w-4
+
+            {% endif %} animate-pulse"
+            fill="currentColor"
+            viewBox="0 0 20 20">
+            <circle cx="10" cy="10" r="5" />
           </svg>
         {% endif %}
         {{ text }}
       </span>
     {% endwith %}
-  {% elif variant == "error" %}
-    {% with base_class="bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg shadow-red-500/30" %}
-      <span class="inline-flex items-center gap-1.5 rounded-full {{ base_class }} {% if size == 'sm' %}px-2.5 py-1 text-xs{% elif size == 'lg' %}px-5 py-2.5 text-base{% else %}px-3.5 py-1.5 text-sm{% endif %} font-bold transition-all duration-200 hover:scale-105 hover:shadow-xl hover:shadow-red-500/40">
+  {% elif variant == 'error' %}
+    {% with base_class='bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg shadow-red-500/30' %}
+      <span class="inline-flex items-center gap-1.5 rounded-full {{ base_class }} {% if size == 'sm' %}
+          
+          px-2.5 py-1 text-xs
+
+        {% elif size == 'lg' %}
+          
+          px-5 py-2.5 text-base
+
+        {% else %}
+          
+          px-3.5 py-1.5 text-sm
+
+        {% endif %} font-bold transition-all duration-200 hover:scale-105 hover:shadow-xl hover:shadow-red-500/40">
         {% if icon %}
-          <svg class="{% if size == 'sm' %}h-3 w-3{% else %}h-4 w-4{% endif %} animate-pulse" fill="currentColor" viewBox="0 0 20 20">
-            <circle cx="10" cy="10" r="5"/>
+          <svg class="{% if size == 'sm' %}
+              
+              h-3 w-3
+
+            {% else %}
+              
+              h-4 w-4
+
+            {% endif %} animate-pulse"
+            fill="currentColor"
+            viewBox="0 0 20 20">
+            <circle cx="10" cy="10" r="5" />
           </svg>
         {% endif %}
         {{ text }}
       </span>
     {% endwith %}
   {% else %}
-    {% with base_class="bg-gradient-to-r from-slate-100 to-slate-200 text-slate-700 shadow-sm dark:from-slate-800 dark:to-slate-700 dark:text-slate-300" %}
-      <span class="inline-flex items-center gap-1.5 rounded-full border border-slate-200/50 {{ base_class }} {% if size == 'sm' %}px-2.5 py-1 text-xs{% elif size == 'lg' %}px-5 py-2.5 text-base{% else %}px-3.5 py-1.5 text-sm{% endif %} font-bold transition-all duration-200 hover:scale-105 hover:shadow-md dark:border-slate-700/50">
+    {% with base_class='bg-gradient-to-r from-slate-100 to-slate-200 text-slate-700 shadow-sm dark:from-slate-800 dark:to-slate-700 dark:text-slate-300' %}
+      <span class="inline-flex items-center gap-1.5 rounded-full border border-slate-200/50 {{ base_class }} {% if size == 'sm' %}
+          
+          px-2.5 py-1 text-xs
+
+        {% elif size == 'lg' %}
+          
+          px-5 py-2.5 text-base
+
+        {% else %}
+          
+          px-3.5 py-1.5 text-sm
+
+        {% endif %} font-bold transition-all duration-200 hover:scale-105 hover:shadow-md dark:border-slate-700/50">
         {% if icon %}
-          <svg class="{% if size == 'sm' %}h-3 w-3{% else %}h-4 w-4{% endif %}" fill="currentColor" viewBox="0 0 20 20"
-          <svg class="{% if size == 'sm' %}h-3 w-3{% else %}h-4 w-4{% endif %}" fill="currentColor" viewBox="0 0 20 20">
-            <circle cx="10" cy="10" r="5"/>
+          <svg class="{% if size == 'sm' %}
+              
+              h-3 w-3
+
+            {% else %}
+              
+              h-4 w-4
+
+            {% endif %}"
+            fill="currentColor"
+            viewBox="0 0 20 20">
+            <circle cx="10" cy="10" r="5" />
           </svg>
         {% endif %}
         {{ text }}

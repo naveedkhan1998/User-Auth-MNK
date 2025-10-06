@@ -1,0 +1,260 @@
+{% extends "layouts/base_console.html" %}
+
+{% block console_title %}{% if object.pk %}Edit{% else %}Create{% endif %} Blog Post{% endblock %}
+{% block console_section %}Content Management{% endblock %}
+{% block console_heading %}{% if object.pk %}Edit: {{ object.title }}{% else %}Create New Blog Post{% endif %}{% endblock %}
+
+{% block console_description %}
+    <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">
+        {% if object.pk %}
+            Update the blog post details and MDX content below.
+        {% else %}
+            Fill in the details to create a new blog post with MDX content.
+        {% endif %}
+    </p>
+{% endblock %}
+
+{% block console_header_actions %}
+    <div class="flex flex-wrap items-center gap-3">
+        <a class="inline-flex items-center gap-2 rounded-2xl border border-slate-300/70 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-brand-500 hover:text-brand-600 dark:border-slate-700 dark:text-slate-300" 
+           href="{% url 'console:blog-post-list' %}">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Back to List
+        </a>
+    </div>
+{% endblock %}
+
+{% block console_content %}
+    <form method="post" enctype="multipart/form-data" class="space-y-6">
+        {% csrf_token %}
+        
+        <!-- Main Details Card -->
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900/50">
+            <h2 class="mb-4 text-lg font-bold text-slate-900 dark:text-slate-100">Post Details</h2>
+            
+            <div class="grid gap-4 md:grid-cols-2">
+                <div class="md:col-span-2">
+                    <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                        Title *
+                    </label>
+                    {{ form.title }}
+                    {% if form.title.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.title.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                <div class="md:col-span-2">
+                    <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                        Slug *
+                    </label>
+                    {{ form.slug }}
+                    <p class="mt-1 text-xs text-slate-500">Leave blank to auto-generate from title</p>
+                    {% if form.slug.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.slug.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                <div class="md:col-span-2">
+                    <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                        Description *
+                    </label>
+                    {{ form.description }}
+                    <p class="mt-1 text-xs text-slate-500">Short excerpt for the blog post</p>
+                    {% if form.description.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.description.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                <div class="md:col-span-2">
+                    <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                        Tags
+                    </label>
+                    {{ form.tags_input }}
+                    {% if form.tags_input.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.tags_input.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                        Status
+                    </label>
+                    {{ form.status }}
+                    {% if form.status.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.status.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                        Published At
+                    </label>
+                    {{ form.published_at }}
+                    {% if form.published_at.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.published_at.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Featured Image Card -->
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900/50">
+            <h2 class="mb-4 text-lg font-bold text-slate-900 dark:text-slate-100">Featured Image</h2>
+            
+            {% if object.pk and object.featured_image %}
+                <div class="mb-4">
+                    <img src="{{ object.featured_image.url }}" alt="{{ object.featured_image_alt }}" 
+                         class="max-w-xs rounded-lg border border-slate-200 dark:border-slate-700">
+                </div>
+            {% endif %}
+            
+            <div class="grid gap-4 md:grid-cols-2">
+                <div class="md:col-span-2">
+                    <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                        Image
+                    </label>
+                    {{ form.featured_image }}
+                    {% if form.featured_image.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.featured_image.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                <div class="md:col-span-2">
+                    <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                        Alt Text
+                    </label>
+                    {{ form.featured_image_alt }}
+                    {% if form.featured_image_alt.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.featured_image_alt.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- SEO Card -->
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900/50">
+            <h2 class="mb-4 text-lg font-bold text-slate-900 dark:text-slate-100">SEO Settings</h2>
+            
+            <div class="grid gap-4">
+                <div>
+                    <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                        Meta Title
+                    </label>
+                    {{ form.meta_title }}
+                    <p class="mt-1 text-xs text-slate-500">Leave blank to use post title (max 60 chars)</p>
+                    {% if form.meta_title.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.meta_title.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                        Meta Description
+                    </label>
+                    {{ form.meta_description }}
+                    <p class="mt-1 text-xs text-slate-500">Max 160 characters</p>
+                    {% if form.meta_description.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.meta_description.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- MDX Content Card -->
+        <div class="rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900/50">
+            <h2 class="mb-4 text-lg font-bold text-slate-900 dark:text-slate-100">MDX Content</h2>
+            
+            <div class="mb-4 rounded-lg bg-blue-50 p-4 dark:bg-blue-950/30">
+                <p class="text-sm text-blue-800 dark:text-blue-300">
+                    <strong>MDX Format:</strong> Write your content in Markdown with optional frontmatter. 
+                    You can include JSX components and interactive elements. The editor supports syntax highlighting.
+                </p>
+            </div>
+            
+            {{ form.mdx_content }}
+            {% if form.mdx_content.errors %}
+                <p class="mt-1 text-sm text-red-600">{{ form.mdx_content.errors.0 }}</p>
+            {% endif %}
+        </div>
+        
+        <!-- Images Card (only show when editing) -->
+        {% if object.pk %}
+            <div class="rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900/50">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100">Post Images</h2>
+                    <a href="{% url 'console:blog-image-upload' object.pk %}" 
+                       class="inline-flex items-center gap-2 rounded-lg bg-blue-500 px-3 py-2 text-sm font-semibold text-white transition hover:bg-blue-600">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Upload Image
+                    </a>
+                </div>
+                
+                {% if images %}
+                    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {% for image in images %}
+                            <div class="rounded-lg border border-slate-200 p-3 dark:border-slate-700">
+                                <img src="{{ image.image.url }}" alt="{{ image.alt_text }}" 
+                                     class="mb-2 h-32 w-full rounded object-cover">
+                                <p class="mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">
+                                    {{ image.alt_text|default:"No alt text" }}
+                                </p>
+                                <div class="flex gap-2">
+                                    <button type="button" 
+                                            onclick="navigator.clipboard.writeText('{{ image.image.url }}')"
+                                            class="flex-1 rounded bg-blue-500 px-2 py-1 text-xs text-white hover:bg-blue-600">
+                                        Copy URL
+                                    </button>
+                                    <a href="{% url 'console:blog-image-delete' object.pk image.pk %}" 
+                                       class="rounded bg-red-500 px-2 py-1 text-xs text-white hover:bg-red-600">
+                                        Delete
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-sm text-slate-500 dark:text-slate-400">No images uploaded yet.</p>
+                {% endif %}
+            </div>
+        {% endif %}
+        
+        <!-- Form Actions -->
+        <div class="flex gap-3">
+            <button type="submit" 
+                    class="rounded-2xl bg-brand-500 px-6 py-3 font-semibold text-white transition hover:bg-brand-600">
+                {% if object.pk %}Update{% else %}Create{% endif %} Blog Post
+            </button>
+            
+            <a href="{% url 'console:blog-post-list' %}" 
+               class="rounded-2xl border border-slate-300 px-6 py-3 font-semibold text-slate-600 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
+                Cancel
+            </a>
+        </div>
+    </form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Auto-generate slug from title
+    document.addEventListener('DOMContentLoaded', function() {
+        const titleInput = document.querySelector('input[name="title"]');
+        const slugInput = document.querySelector('input[name="slug"]');
+        
+        if (titleInput && slugInput && !slugInput.value) {
+            titleInput.addEventListener('input', function() {
+                const slug = this.value
+                    .toLowerCase()
+                    .replace(/[^\w\s-]/g, '')
+                    .replace(/\s+/g, '-')
+                    .replace(/-+/g, '-')
+                    .trim();
+                slugInput.value = slug;
+            });
+        }
+    });
+</script>
+{% endblock %}

@@ -55,11 +55,12 @@
       }
     </script>
     {% block extra_head %}
+
     {% endblock %}
   </head>
   <body class="bg-slate-50 text-slate-900 antialiased transition-colors selection:bg-sky-200 selection:text-slate-900 dark:bg-slate-950 dark:text-slate-100">
     {% include 'components/header.html' %}
-    
+
     {% if messages %}
       <div class="mx-auto w-full max-w-7xl space-y-3 px-4 pt-4 sm:px-6 lg:px-8">
         {% for message in messages %}
@@ -67,20 +68,21 @@
         {% endfor %}
       </div>
     {% endif %}
-    
+
     <main class="min-h-[calc(100dvh-10rem)] w-full">
       {% block content %}
+
       {% endblock %}
     </main>
-    
+
     {% include 'components/footer.html' %}
-    
+
     <script>
       ;(function () {
         const toggle = document.getElementById('theme-toggle')
         const label = document.getElementById('theme-toggle-label')
         if (!toggle || !label) return
-        
+      
         const apply = (mode) => {
           if (mode === 'dark') {
             document.documentElement.classList.add('dark')
@@ -89,10 +91,10 @@
           }
           label.textContent = mode === 'dark' ? 'Light' : 'Dark'
         }
-        
+      
         const current = document.documentElement.classList.contains('dark') ? 'dark' : 'light'
         apply(current)
-        
+      
         toggle.addEventListener('click', () => {
           const next = document.documentElement.classList.contains('dark') ? 'light' : 'dark'
           apply(next)
@@ -105,7 +107,7 @@
       })()
     </script>
     {% block extra_body %}
+
     {% endblock %}
   </body>
 </html>
-  

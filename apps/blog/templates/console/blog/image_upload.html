@@ -1,0 +1,68 @@
+{% extends "layouts/base_console.html" %}
+
+{% block console_title %}Upload Image{% endblock %}
+{% block console_section %}Content Management{% endblock %}
+{% block console_heading %}Upload Image for: {{ blog_post.title }}{% endblock %}
+
+{% block console_header_actions %}
+    <div class="flex flex-wrap items-center gap-3">
+        <a class="inline-flex items-center gap-2 rounded-2xl border border-slate-300/70 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-brand-500 hover:text-brand-600 dark:border-slate-700 dark:text-slate-300" 
+           href="{% url 'console:blog-post-update' blog_post.pk %}">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Back to Post
+        </a>
+    </div>
+{% endblock %}
+
+{% block console_content %}
+    <div class="rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900/50">
+        <form method="post" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+            
+            <div>
+                <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                    Image File *
+                </label>
+                {{ form.image }}
+                {% if form.image.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.image.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                    Alt Text
+                </label>
+                {{ form.alt_text }}
+                <p class="mt-1 text-xs text-slate-500">Descriptive text for accessibility</p>
+                {% if form.alt_text.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.alt_text.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">
+                    Caption
+                </label>
+                {{ form.caption }}
+                {% if form.caption.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.caption.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="flex gap-3 pt-4">
+                <button type="submit" 
+                        class="rounded-2xl bg-brand-500 px-6 py-3 font-semibold text-white transition hover:bg-brand-600">
+                    Upload Image
+                </button>
+                
+                <a href="{% url 'console:blog-post-update' blog_post.pk %}" 
+                   class="rounded-2xl border border-slate-300 px-6 py-3 font-semibold text-slate-600 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

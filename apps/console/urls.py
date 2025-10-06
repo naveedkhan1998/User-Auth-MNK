@@ -19,6 +19,15 @@ from .views import (
     ProjectUpdateView,
 )
 
+from apps.blog.console_views import (
+    BlogPostListView,
+    BlogPostCreateView,
+    BlogPostUpdateView,
+    BlogPostDeleteView,
+    BlogImageUploadView,
+    BlogImageDeleteView,
+)
+
 
 app_name = "console"
 
@@ -47,4 +56,11 @@ urlpatterns = [
     path("projects/<int:pk>/delete/", ProjectDeleteView.as_view(), name="project-delete"),
     path("messages/", MessageListView.as_view(), name="message-list"),
     path("messages/<int:pk>/", MessageDetailView.as_view(), name="message-detail"),
+    # Blog CMS URLs
+    path("blog/", BlogPostListView.as_view(), name="blog-post-list"),
+    path("blog/create/", BlogPostCreateView.as_view(), name="blog-post-create"),
+    path("blog/<uuid:pk>/", BlogPostUpdateView.as_view(), name="blog-post-update"),
+    path("blog/<uuid:pk>/delete/", BlogPostDeleteView.as_view(), name="blog-post-delete"),
+    path("blog/<uuid:pk>/images/add/", BlogImageUploadView.as_view(), name="blog-image-upload"),
+    path("blog/<uuid:post_pk>/images/<uuid:image_pk>/delete/", BlogImageDeleteView.as_view(), name="blog-image-delete"),
 ]

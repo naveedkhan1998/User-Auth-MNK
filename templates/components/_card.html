@@ -16,22 +16,16 @@
           {% endif %}
         </div>
       {% endif %}
-      
+
       {% if actions %}
-        <div class="flex items-center gap-3">
-          {{ actions }}
-        </div>
+        <div class="flex items-center gap-3">{{ actions }}</div>
       {% endif %}
     </div>
   {% endif %}
-  
-  <div class="p-8">
-    {{ content }}
-  </div>
-  
+
+  <div class="p-8">{{ content }}</div>
+
   {% if footer %}
-    <div class="border-t border-slate-200/50 bg-gradient-to-r from-transparent via-slate-50/30 to-transparent px-8 py-5 dark:border-slate-800/50 dark:via-slate-900/30">
-      {{ footer }}
-    </div>
+    <div class="border-t border-slate-200/50 bg-gradient-to-r from-transparent via-slate-50/30 to-transparent px-8 py-5 dark:border-slate-800/50 dark:via-slate-900/30">{{ footer }}</div>
   {% endif %}
 </div>

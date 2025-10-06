@@ -21,6 +21,7 @@ urlpatterns = (
         path("portfolio/", include("apps.portfolio.urls")),
         path("home/", include("apps.home.urls")),
         path("console/", include("apps.console.urls")),
+        path("api/blog/", include("apps.blog.urls")),
         path("api/schema/", SpectacularAPIView.as_view(permission_classes=[IsAdminUser]), name="schema"),
         path("api/schema.yaml", SpectacularYAMLView.as_view(permission_classes=[IsAdminUser]), name="schema-yaml"),
         path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema", permission_classes=[IsAdminUser]), name="swagger-ui"),
