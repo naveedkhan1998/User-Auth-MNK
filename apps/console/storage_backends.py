@@ -63,8 +63,9 @@ class StorageBackend(Protocol):
 class LocalStorageBackend:
     """Local filesystem storage backend."""
 
-    def __init__(self, base_dir: Path):
+    def __init__(self, base_dir: Path, base_url: str | None = None):
         self.base_dir = base_dir
+        self.base_url = (base_url or "").strip() or None
 
     def exists(self, path: str = "") -> bool:
         full_path = self._resolve_path(path)
@@ -93,6 +94,7 @@ class LocalStorageBackend:
                             stat.st_mtime, tz=timezone.get_current_timezone()
                         )
                     ),
+                    url=None if entry.is_dir() else self._build_url(rel_path),
                 )
             )
         return entries
@@ -150,13 +152,32 @@ class LocalStorageBackend:
             raise Http404("Invalid path")
         return resolved.resolve()
 
+    def _build_url(self, rel_path: str) -> str | None:
+        if not self.base_url:
+            return None
+
+        rel_path = rel_path.lstrip("/").replace("\\", "/")
+        base_url = self.base_url
+
+        if base_url.endswith("/"):
+            url = f"{base_url}{rel_path}"
+        else:
+            url = f"{base_url}/{rel_path}" if rel_path else base_url
+
+        if url.startswith("//"):
+            return f"/{url.lstrip('/')}"
+        return url
+
 
 class GCSStorageBackend:
     """Google Cloud Storage backend."""
 
-    def __init__(self, bucket_name: str, location: str = "static"):
+    def __init__(
+        self, bucket_name: str, location: str = "static", base_url: str | None = None
+    ):
         self.bucket_name = bucket_name
         self.location = location.strip("/")
+        self.base_url = (base_url or "").strip() or None
         self._client = None
         self._bucket = None
 
@@ -325,8 +346,12 @@ class GCSStorageBackend:
         return "/".join(parts[:-1])
 
 
-def get_storage_backend() -> StorageBackend:
+def get_storage_backend(storage_root: str = "static") -> StorageBackend:
     """Get the appropriate storage backend based on settings."""
+
+    storage_root = (storage_root or "static").strip().lower()
+    if storage_root not in {"static", "media"}:
+        storage_root = "static"
 
     # Check if using GCS in production
     storages_config = getattr(settings, "STORAGES", {})
@@ -337,19 +362,53 @@ def get_storage_backend() -> StorageBackend:
         or "GoogleCloudStorage" in staticfiles_backend
     ):
         # Using GCS
-        bucket_name = storages_config["staticfiles"]["OPTIONS"]["bucket_name"]
-        location = storages_config["staticfiles"]["OPTIONS"].get("location", "static")
-        return GCSStorageBackend(bucket_name, location)
+        static_opts = storages_config.get("staticfiles", {}).get("OPTIONS", {})
+        default_opts = storages_config.get("default", {}).get("OPTIONS", {})
+
+        bucket_name = (
+            static_opts.get("bucket_name")
+            or default_opts.get("bucket_name")
+            or getattr(settings, "GS_BUCKET_NAME", None)
+        )
+        if not bucket_name:
+            raise RuntimeError("GCS bucket name is not configured.")
+
+        if storage_root == "static":
+            location = static_opts.get("location", "static")
+            base_url = getattr(
+                settings,
+                "STATIC_URL",
+                f"https://storage.googleapis.com/{bucket_name}/{location}/",
+            )
+        else:
+            location = default_opts.get("location", "media")
+            base_url = getattr(
+                settings,
+                "MEDIA_URL",
+                f"https://storage.googleapis.com/{bucket_name}/{location}/",
+            )
+
+        return GCSStorageBackend(bucket_name, location, base_url=base_url)
     else:
         # Using local filesystem
-        static_root = getattr(settings, "STATIC_ROOT", None)
-        if static_root:
-            base_dir = Path(static_root)
+        if storage_root == "static":
+            static_root = getattr(settings, "STATIC_ROOT", None)
+            if static_root:
+                base_dir = Path(static_root)
+            else:
+                static_dirs = getattr(settings, "STATICFILES_DIRS", [])
+                base_dir = (
+                    Path(static_dirs[0])
+                    if static_dirs
+                    else Path(settings.BASE_DIR) / "static"
+                )
+            base_url = getattr(settings, "STATIC_URL", "static/")
         else:
-            static_dirs = getattr(settings, "STATICFILES_DIRS", [])
-            base_dir = (
-                Path(static_dirs[0])
-                if static_dirs
-                else Path(settings.BASE_DIR) / "static"
-            )
-        return LocalStorageBackend(base_dir)
+            media_root = getattr(settings, "MEDIA_ROOT", None)
+            if media_root:
+                base_dir = Path(media_root)
+            else:
+                base_dir = Path(settings.BASE_DIR) / "media"
+            base_url = getattr(settings, "MEDIA_URL", "media/")
+
+        return LocalStorageBackend(base_dir, base_url=base_url)

@@ -33,6 +33,22 @@ from .forms import (
 )
 from .storage_backends import get_storage_backend
 
+DEFAULT_STORAGE_ROOT = "static"
+STORAGE_ROOTS = {
+    "static": {
+        "key": "static",
+        "label": "Static files",
+        "root_label": "Static",
+        "description": "Manage build-time assets such as CSS, JavaScript, and images stored in STATIC_ROOT.",
+    },
+    "media": {
+        "key": "media",
+        "label": "Media files",
+        "root_label": "Media",
+        "description": "Manage uploaded media content stored in MEDIA_ROOT (user uploads, images, documents).",
+    },
+}
+
 
 class StaffAuthenticationForm(AuthenticationForm):
     def __init__(self, request=None, *args, **kwargs):
@@ -87,8 +103,9 @@ class FileManagerView(StaffOnlyMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        storage = get_storage_backend()
         current_path = (self.request.GET.get("path") or "").strip()
+        storage_root = _normalize_storage_root(self.request.GET.get("storage"))
+        storage = get_storage_backend(storage_root)
 
         # Get entries from storage backend (works for both local and GCS)
         try:
@@ -99,32 +116,47 @@ class FileManagerView(StaffOnlyMixin, TemplateView):
             current_path = ""
 
         # Build breadcrumbs
-        breadcrumbs = _build_breadcrumbs(current_path)
+        breadcrumbs = _build_breadcrumbs(storage_root, current_path)
         parent_path = storage.get_parent_path(current_path)
 
         # Determine storage type for UI
         storage_type = "GCS" if "GCS" in type(storage).__name__ else "Local"
+        storage_meta = STORAGE_ROOTS[storage_root]
+        storage_options = list(STORAGE_ROOTS.values())
+        entries_data = []
+        for entry in entries:
+            entries_data.append(
+                {
+                    "name": entry.name,
+                    "rel_path": entry.rel_path,
+                    "is_dir": entry.is_dir,
+                    "size": entry.size,
+                    "modified": entry.modified,
+                    "url": _build_entry_url(self.request, storage, entry),
+                }
+            )
 
         context.update(
             {
+                "storage_root": storage_root,
+                "storage_meta": storage_meta,
+                "storage_options": storage_options,
                 "current_path": current_path,
-                "entries": [
-                    {
-                        "name": e.name,
-                        "rel_path": e.rel_path,
-                        "is_dir": e.is_dir,
-                        "size": e.size,
-                        "modified": e.modified,
-                        "url": e.url,
-                    }
-                    for e in entries
-                ],
+                "entries": entries_data,
                 "breadcrumbs": breadcrumbs,
                 "parent_path": parent_path,
                 "storage_type": storage_type,
-                "upload_form": UploadFileForm(initial={"current_path": current_path}),
+                "upload_form": UploadFileForm(
+                    initial={
+                        "current_path": current_path,
+                        "storage_root": storage_root,
+                    }
+                ),
                 "mkdir_form": CreateDirectoryForm(
-                    initial={"current_path": current_path}
+                    initial={
+                        "current_path": current_path,
+                        "storage_root": storage_root,
+                    }
                 ),
             }
         )
@@ -136,13 +168,16 @@ class FileUploadView(StaffOnlyMixin, View):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             current_path = form.cleaned_data["current_path"] or ""
+            storage_root = _normalize_storage_root(
+                 form.cleaned_data.get("storage_root")
+             )
             uploaded_file = form.cleaned_data["file"]
-            storage = get_storage_backend()
+            storage = get_storage_backend(storage_root)
 
             file_name = Path(uploaded_file.name).name
             if not file_name:
                 messages.error(request, "Could not determine a valid file name.")
-                return _redirect_to_manager(current_path)
+                return _redirect_to_manager(current_path, storage_root)
 
             # Build the target path
             target_path = (
@@ -159,10 +194,13 @@ class FileUploadView(StaffOnlyMixin, View):
             except Exception as e:
                 messages.error(request, f"Error uploading file: {str(e)}")
 
-            return _redirect_to_manager(current_path)
+            return _redirect_to_manager(current_path, storage_root)
 
         _add_form_errors(request, form)
-        return _redirect_to_manager(request.POST.get("current_path", ""))
+        return _redirect_to_manager(
+            request.POST.get("current_path", ""),
+            _normalize_storage_root(request.POST.get("storage_root")),
+        )
 
 
 class CreateDirectoryView(StaffOnlyMixin, View):
@@ -170,19 +208,22 @@ class CreateDirectoryView(StaffOnlyMixin, View):
         form = CreateDirectoryForm(request.POST)
         if form.is_valid():
             current_path = form.cleaned_data["current_path"] or ""
+            storage_root = _normalize_storage_root(
+                form.cleaned_data.get("storage_root")
+            )
             folder_name = form.cleaned_data["directory_name"].strip()
 
             if not folder_name:
                 messages.error(request, "Folder name cannot be empty.")
-                return _redirect_to_manager(current_path)
+                return _redirect_to_manager(current_path, storage_root)
             if any(sep in folder_name for sep in ("/", "\\")):
                 messages.error(request, "Folder name cannot contain path separators.")
-                return _redirect_to_manager(current_path)
+                return _redirect_to_manager(current_path, storage_root)
             if Path(folder_name).name != folder_name:
                 messages.error(request, "Folder name is invalid.")
-                return _redirect_to_manager(current_path)
+                return _redirect_to_manager(current_path, storage_root)
 
-            storage = get_storage_backend()
+            storage = get_storage_backend(storage_root)
             target_path = (
                 f"{current_path}/{folder_name}".strip("/")
                 if current_path
@@ -197,10 +238,13 @@ class CreateDirectoryView(StaffOnlyMixin, View):
             except Exception as e:
                 messages.error(request, f"Error creating folder: {str(e)}")
 
-            return _redirect_to_manager(current_path)
+            return _redirect_to_manager(current_path, storage_root)
 
         _add_form_errors(request, form)
-        return _redirect_to_manager(request.POST.get("current_path", ""))
+        return _redirect_to_manager(
+            request.POST.get("current_path", ""),
+            _normalize_storage_root(request.POST.get("storage_root")),
+        )
 
 
 class DeleteEntryView(StaffOnlyMixin, View):
@@ -208,13 +252,16 @@ class DeleteEntryView(StaffOnlyMixin, View):
         form = DeleteEntryForm(request.POST)
         if form.is_valid():
             current_path = form.cleaned_data["current_path"] or ""
+            storage_root = _normalize_storage_root(
+                form.cleaned_data.get("storage_root")
+            )
             target_relative = form.cleaned_data["target"]
 
             if not target_relative:
                 messages.error(request, "Cannot delete the root folder.")
-                return _redirect_to_manager(current_path)
+                return _redirect_to_manager(current_path, storage_root)
 
-            storage = get_storage_backend()
+            storage = get_storage_backend(storage_root)
 
             try:
                 storage.delete(target_relative)
@@ -222,10 +269,13 @@ class DeleteEntryView(StaffOnlyMixin, View):
             except Exception as exc:
                 messages.error(request, f"Unable to delete: {exc}")
 
-            return _redirect_to_manager(current_path)
+            return _redirect_to_manager(current_path, storage_root)
 
         _add_form_errors(request, form)
-        return _redirect_to_manager(request.POST.get("current_path", ""))
+        return _redirect_to_manager(
+            request.POST.get("current_path", ""),
+            _normalize_storage_root(request.POST.get("storage_root")),
+        )
 
 
 class DownloadFileView(StaffOnlyMixin, View):
@@ -233,8 +283,9 @@ class DownloadFileView(StaffOnlyMixin, View):
         relative_path = (request.GET.get("path") or "").strip()
         if not relative_path:
             raise Http404
+        storage_root = _normalize_storage_root(request.GET.get("storage"))
 
-        storage = get_storage_backend()
+        storage = get_storage_backend(storage_root)
 
         try:
             content, content_type = storage.download_file(relative_path)
@@ -251,10 +302,11 @@ class DownloadFileView(StaffOnlyMixin, View):
     def post(self, request):
         # Support POST method with 'target' parameter from forms
         relative_path = (request.POST.get("target") or "").strip()
+        storage_root = _normalize_storage_root(request.POST.get("storage_root"))
         if not relative_path:
             raise Http404
 
-        storage = get_storage_backend()
+        storage = get_storage_backend(storage_root)
 
         try:
             content, content_type = storage.download_file(relative_path)
@@ -552,23 +604,84 @@ def _parent_path(relative: str) -> str:
     return "/".join(parts[:-1])
 
 
-def _build_breadcrumbs(relative: str):
-    crumbs = [{"label": "static", "path": ""}]
+def _normalize_storage_root(value) -> str:
+    value = (value or DEFAULT_STORAGE_ROOT).strip().lower()
+    if value not in STORAGE_ROOTS:
+        return DEFAULT_STORAGE_ROOT
+    return value
+
+
+def _build_entry_url(request, storage, entry) -> str | None:
+    if getattr(entry, "is_dir", False):
+        return None
+    if entry.url:
+        return entry.url
+
+    base_url = getattr(storage, "base_url", None)
+    if not base_url:
+        return None
+
+    rel_path = getattr(entry, "rel_path", "") or ""
+    rel_path = rel_path.replace("\\", "/").lstrip("/")
+
+    base = base_url.rstrip("/") if base_url else ""
+    if rel_path:
+        url = f"{base}/{rel_path}" if base else rel_path
+    else:
+        url = base
+
+    if url.startswith(("http://", "https://")):
+        return url
+
+    absolute_path = "/" + url.lstrip("/")
+    return request.build_absolute_uri(absolute_path)
+
+
+def _build_breadcrumbs(storage_root: str, relative: str):
+    storage_root = _normalize_storage_root(storage_root)
+    meta = STORAGE_ROOTS[storage_root]
+    base_url = reverse("console:file-manager")
+    params = {"storage": storage_root}
+    crumbs = []
+
+    root_url = f"{base_url}?{urlencode(params)}"
+    crumbs.append(
+        {
+            "label": meta["root_label"],
+            "url": None if not relative else root_url,
+        }
+    )
+
     if not relative:
         return crumbs
+
     parts = [part for part in relative.split("/") if part]
-    path_so_far = []
-    for part in parts:
-        path_so_far.append(part)
-        crumbs.append({"label": part, "path": "/".join(path_so_far)})
+    for index, part in enumerate(parts):
+        path = "/".join(parts[: index + 1])
+        crumb_params = {"storage": storage_root, "path": path}
+        crumb_url = (
+            f"{base_url}?{urlencode(crumb_params)}"
+            if index < len(parts) - 1
+            else None
+        )
+        crumbs.append({"label": part, "url": crumb_url})
     return crumbs
 
 
-def _redirect_to_manager(relative: str):
+def _redirect_to_manager(relative: str, storage_root: str = DEFAULT_STORAGE_ROOT):
     url = reverse("console:file-manager")
+    params = {}
+    storage_root = _normalize_storage_root(storage_root)
+
+    if storage_root:
+        params["storage"] = storage_root
+
     relative = (relative or "").strip()
     if relative:
-        url = f"{url}?{urlencode({'path': relative})}"
+        params["path"] = relative
+
+    if params:
+        url = f"{url}?{urlencode(params)}"
     return redirect(url)
 
 

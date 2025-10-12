@@ -1,29 +1,42 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{% block title %} MNK Service Platform {% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="description" content="MNK Service Platform - Professional Django Backend Services" />
+    <meta name="theme-color" content="#0ea5e9" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0c4a6e" media="(prefers-color-scheme: dark)" />
+    <title>{% block title %}MNK Service Platform{% endblock %}</title>
+
+    {# Preconnect for Performance #}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://cdn.tailwindcss.com" />
+
+    {# Google Fonts #}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    {# Theme Detection Script - Must run before render #}
     <script>
       (function () {
         try {
-          const stored = window.localStorage.getItem("mnk-theme");
+          const stored = window.localStorage.getItem("theme");
           const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
           if (stored === "dark" || (!stored && prefersDark)) {
             document.documentElement.classList.add("dark");
+          } else {
+            document.documentElement.classList.remove("dark");
           }
         } catch (err) {
-          console.warn("Theme detection failed", err);
+          console.warn("Theme detection failed:", err);
         }
       })();
     </script>
+
+    {# Tailwind CSS CDN #}
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-      window.tailwind = window.tailwind || {};
       tailwind.config = {
         darkMode: "class",
         theme: {
@@ -42,54 +55,229 @@
                 900: "#0c4a6e",
                 950: "#082f49",
               },
+              accent: {
+                50: "#fdf4ff",
+                100: "#fae8ff",
+                200: "#f5d0fe",
+                300: "#f0abfc",
+                400: "#e879f9",
+                500: "#d946ef",
+                600: "#c026d3",
+                700: "#a21caf",
+                800: "#86198f",
+                900: "#701a75",
+              },
             },
             fontFamily: {
-              sans: ["Inter", "system-ui", "sans-serif"],
+              sans: ["Inter", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
+            },
+            animation: {
+              "fade-in": "fadeIn 0.3s ease-in-out",
+              "slide-up": "slideUp 0.4s ease-out",
+              "slide-down": "slideDown 0.4s ease-out",
+            },
+            keyframes: {
+              fadeIn: {
+                "0%": { opacity: "0" },
+                "100%": { opacity: "1" },
+              },
+              slideUp: {
+                "0%": { transform: "translateY(10px)", opacity: "0" },
+                "100%": { transform: "translateY(0)", opacity: "1" },
+              },
+              slideDown: {
+                "0%": { transform: "translateY(-10px)", opacity: "0" },
+                "100%": { transform: "translateY(0)", opacity: "1" },
+              },
             },
           },
         },
       };
     </script>
-    {% block extra_head %} {% endblock %}
+
+    {# Custom Styles #}
+    <style>
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+      }
+
+      ::-webkit-scrollbar-track {
+        @apply bg-slate-100 dark:bg-slate-900;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        @apply bg-slate-300 hover:bg-slate-400 dark:bg-slate-700 dark:hover:bg-slate-600 rounded-full;
+      }
+
+      /* Selection */
+      ::selection {
+        @apply bg-brand-200 text-brand-900 dark:bg-brand-800 dark:text-brand-100;
+      }
+
+      /* Focus visible styles */
+      *:focus-visible {
+        @apply outline-none ring-2 ring-brand-500 ring-offset-2 dark:ring-offset-slate-900;
+      }
+
+      /* Smooth transitions for theme changes */
+      * {
+        @apply transition-colors duration-200;
+      }
+    </style>
+
+    {% block extra_head %}{% endblock %}
   </head>
-  <body class="bg-slate-50 text-slate-900 antialiased transition-colors selection:bg-sky-200 selection:text-slate-900 dark:bg-slate-950 dark:text-slate-100">
-    {% include 'components/header.html' %} {% if messages %}
-    <div class="mx-auto w-full max-w-7xl space-y-3 px-4 pt-4 sm:px-6 lg:px-8">{% for message in messages %} {% include 'components/alert.html' with message=message %} {% endfor %}</div>
+
+  <body class="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-slate-50 text-slate-900 antialiased dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 dark:text-slate-100">
+    {# Header #}
+    {% include 'includes/_header.html' %}
+
+    {# Messages/Alerts Container #}
+    {% if messages %}
+      <div class="animate-slide-down mx-auto w-full max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
+        <div class="space-y-3">
+          {% for message in messages %}
+            <div class="relative overflow-hidden rounded-lg border shadow-lg transition-all duration-300 hover:shadow-xl
+              {% if message.tags == 'error' or message.tags == 'danger' %}
+                border-red-200 bg-red-50 text-red-900 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-100
+              {% elif message.tags == 'warning' %}
+                border-yellow-200 bg-yellow-50 text-yellow-900 dark:border-yellow-900/50 dark:bg-yellow-950/30 dark:text-yellow-100
+              {% elif message.tags == 'success' %}
+                border-green-200 bg-green-50 text-green-900 dark:border-green-900/50 dark:bg-green-950/30 dark:text-green-100
+              {% elif message.tags == 'info' %}
+                border-blue-200 bg-blue-50 text-blue-900 dark:border-blue-900/50 dark:bg-blue-950/30 dark:text-blue-100
+              {% else %}
+                border-slate-200 bg-slate-50 text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100
+              {% endif %}">
+              <div class="flex items-start gap-3 p-4">
+                {# Icon #}
+                <div class="flex-shrink-0">
+                  {% if message.tags == 'error' or message.tags == 'danger' %}
+                    <svg class="h-5 w-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                  {% elif message.tags == 'warning' %}
+                    <svg class="h-5 w-5 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                  {% elif message.tags == 'success' %}
+                    <svg class="h-5 w-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                  {% else %}
+                    <svg class="h-5 w-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                  {% endif %}
+                </div>
+
+                {# Message Content #}
+                <div class="flex-1 text-sm font-medium">{{ message }}</div>
+
+                {# Dismiss Button #}
+                <button type="button" onclick="this.closest('div[class*=border]').remove()" class="flex-shrink-0 rounded-lg p-1 transition-colors hover:bg-black/5 dark:hover:bg-white/5" aria-label="Dismiss">
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+                </button>
+              </div>
+
+              {# Progress bar for auto-dismiss #}
+              <div class="h-1 w-full bg-black/5 dark:bg-white/5">
+                <div class="h-full animate-[shrink_5s_linear] bg-current opacity-30" style="animation-name: shrink; animation-duration: 5s; animation-timing-function: linear;"></div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      {# Auto-dismiss script #}
+      <script>
+        setTimeout(() => {
+          document.querySelectorAll('[class*="border-red"], [class*="border-yellow"], [class*="border-green"], [class*="border-blue"]').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(-10px)';
+            setTimeout(() => el.remove(), 300);
+          });
+        }, 5000);
+      </script>
+
+      {# Shrink animation for progress bar #}
+      <style>
+        @keyframes shrink {
+          from { width: 100%; }
+          to { width: 0%; }
+        }
+      </style>
     {% endif %}
 
-    <main class="min-h-[calc(100dvh-10rem)] w-full">{% block content %} {% endblock %}</main>
+    {# Main Content Area #}
+    <main class="mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 py-8 sm:px-6 lg:px-8">
+      <div class="animate-fade-in">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
 
-    {% include 'components/footer.html' %}
+    {# Footer #}
+    {% include 'includes/_footer.html' %}
 
+    {# Theme Toggle Script #}
     <script>
       (function () {
         const toggle = document.getElementById("theme-toggle");
-        const label = document.getElementById("theme-toggle-label");
-        if (!toggle || !label) return;
+        if (!toggle) return;
 
-        const apply = (mode) => {
+        const applyTheme = (mode) => {
+          const html = document.documentElement;
           if (mode === "dark") {
-            document.documentElement.classList.add("dark");
+            html.classList.add("dark");
           } else {
-            document.documentElement.classList.remove("dark");
+            html.classList.remove("dark");
           }
-          label.textContent = mode === "dark" ? "Light" : "Dark";
+
+          // Update icon visibility
+          const darkIcon = document.getElementById("theme-icon-dark");
+          const lightIcon = document.getElementById("theme-icon-light");
+          if (darkIcon && lightIcon) {
+            if (mode === "dark") {
+              darkIcon.classList.remove("hidden");
+              lightIcon.classList.add("hidden");
+            } else {
+              darkIcon.classList.add("hidden");
+              lightIcon.classList.remove("hidden");
+            }
+          }
         };
 
-        const current = document.documentElement.classList.contains("dark") ? "dark" : "light";
-        apply(current);
+        // Apply initial theme
+        const currentTheme = document.documentElement.classList.contains("dark") ? "dark" : "light";
+        applyTheme(currentTheme);
 
+        // Toggle theme on click
         toggle.addEventListener("click", () => {
-          const next = document.documentElement.classList.contains("dark") ? "light" : "dark";
-          apply(next);
+          const nextTheme = document.documentElement.classList.contains("dark") ? "light" : "dark";
+          applyTheme(nextTheme);
           try {
-            window.localStorage.setItem("mnk-theme", next);
+            window.localStorage.setItem("theme", nextTheme);
           } catch (err) {
-            console.warn("Unable to persist theme preference", err);
+            console.warn("Unable to persist theme preference:", err);
+          }
+        });
+
+        // Listen for system theme changes
+        const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+        mediaQuery.addEventListener("change", (e) => {
+          const storedTheme = window.localStorage.getItem("theme");
+          if (!storedTheme) {
+            applyTheme(e.matches ? "dark" : "light");
           }
         });
       })();
     </script>
-    {% block extra_body %} {% endblock %}
+
+    {# Additional Scripts #}
+    {% block extra_body %}{% endblock %}
   </body>
 </html>

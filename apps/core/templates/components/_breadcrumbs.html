@@ -1,23 +1,33 @@
 {# Breadcrumbs Navigation Component #}
 
 {% if breadcrumbs %}
-  <nav class="animate-slide-down flex flex-wrap items-center gap-2 rounded-xl border border-slate-200/50 bg-white/60 px-4 py-2.5 text-sm shadow-sm backdrop-blur-sm dark:border-slate-800/50 dark:bg-slate-900/60" aria-label="Breadcrumb">
-    <a href="{% url 'landing' %}" class="group flex items-center gap-1.5 font-medium text-slate-600 transition-all duration-200 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400">
-      <svg class="h-4 w-4 transition-transform duration-200 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+  <nav class="animate-fade-in flex flex-wrap items-center gap-1 rounded-xl border border-slate-200/60 bg-white/80 px-4 py-3 text-sm shadow-sm backdrop-blur-sm transition-all duration-300 hover:shadow-md dark:border-slate-800/60 dark:bg-slate-900/80" aria-label="Breadcrumb">
+    {# Home Link with Enhanced Styling #}
+    <a href="{% url 'landing' %}" class="group flex items-center gap-2 rounded-lg px-3 py-1.5 font-semibold text-slate-700 transition-all duration-200 hover:bg-slate-100 hover:text-brand-700 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-1 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-brand-400">
+      <svg class="h-4 w-4 transition-transform duration-200 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
       </svg>
       <span>Home</span>
     </a>
 
     {% for crumb in breadcrumbs %}
-      <svg class="h-4 w-4 text-slate-300 dark:text-slate-700" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-      </svg>
+      {# Modern Separator with Animation #}
+      <div class="flex items-center">
+        <svg class="h-4 w-4 text-slate-400 transition-all duration-200 group-hover:text-slate-600 dark:text-slate-600 dark:group-hover:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </div>
 
+      {# Breadcrumb Links with Interactive States #}
       {% if crumb.url %}
-        <a href="{{ crumb.url }}" class="font-medium text-slate-600 transition-all duration-200 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400">{{ crumb.label }}</a>
+        <a href="{{ crumb.url }}" class="group flex items-center rounded-lg px-3 py-1.5 font-medium text-slate-600 transition-all duration-200 hover:bg-slate-100 hover:text-brand-600 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-1 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-brand-400">
+          <span>{{ crumb.label }}</span>
+        </a>
       {% else %}
-        <span class="rounded-lg bg-brand-100 px-2 py-0.5 font-bold text-brand-700 dark:bg-brand-950 dark:text-brand-300" aria-current="page">{{ crumb.label }}</span>
+        {# Current Page with Enhanced Highlighting #}
+        <span class="flex items-center rounded-lg bg-gradient-to-r from-brand-500 to-brand-600 px-3 py-1.5 font-bold text-white shadow-sm ring-2 ring-brand-400/30" aria-current="page">
+          <span>{{ crumb.label }}</span>
+        </span>
       {% endif %}
     {% endfor %}
   </nav>

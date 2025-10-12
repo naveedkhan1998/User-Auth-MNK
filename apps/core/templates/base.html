@@ -1,46 +1,48 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en" class="{% block html_class %} scroll-smooth {% endblock %}">
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="{% block meta_description %}
-        MNK Service Platform - Professional Backend Services
-      {% endblock %}"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="description" content="{% block meta_description %}MNK Service Platform - Professional Django Backend Services with REST API, OAuth, and Cloud Storage{% endblock %}" />
     <meta name="author" content="Mohammad Naveed Khan" />
-    <meta name="theme-color" content="#3b82f6" />
+    <meta name="theme-color" content="#0ea5e9" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0c4a6e" media="(prefers-color-scheme: dark)" />
 
-    <title>{% block title %} MNK Platform {% endblock %}</title>
+    <title>{% block title %}MNK Platform{% endblock %}</title>
 
     {# Preconnect to external resources #}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.tailwindcss.com" />
 
     {# Google Fonts - Inter for UI #}
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
-    {# Theme Detection Script - Must be in head for no-flash theme switching #}
+    {# Theme Detection Script - FIXED: Must run before render to prevent flash #}
     <script>
       (function () {
         try {
-          const stored = window.localStorage.getItem("mnk-theme");
+          // Use consistent localStorage key
+          const storedTheme = window.localStorage.getItem("theme");
           const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-          if (stored === "dark" || (!stored && prefersDark)) {
+
+          // Apply dark mode only if explicitly set to "dark" OR if not set and user prefers dark
+          if (storedTheme === "dark" || (!storedTheme && prefersDark)) {
             document.documentElement.classList.add("dark");
+          } else {
+            // Explicitly remove dark class for light mode
+            document.documentElement.classList.remove("dark");
           }
         } catch (err) {
-          console.warn("Theme detection failed", err);
+          console.warn("Theme detection failed:", err);
         }
       })();
     </script>
 
-    {# Tailwind CSS #}
+    {# Tailwind CSS CDN #}
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-      window.tailwind = window.tailwind || {};
       tailwind.config = {
         darkMode: "class",
         theme: {
@@ -76,11 +78,12 @@
               },
             },
             animation: {
-              "fade-in": "fadeIn 0.5s ease-in-out",
+              "fade-in": "fadeIn 0.3s ease-in-out",
               "slide-up": "slideUp 0.4s ease-out",
               "slide-down": "slideDown 0.4s ease-out",
               "scale-in": "scaleIn 0.3s ease-out",
               shimmer: "shimmer 2s linear infinite",
+              pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
             },
             keyframes: {
               fadeIn: {
@@ -141,6 +144,17 @@
         background: rgb(71 85 105);
       }
 
+      /* Selection styling */
+      ::selection {
+        background-color: rgba(186, 230, 253, 0.7);
+        color: rgb(12, 74, 110);
+      }
+
+      .dark ::selection {
+        background-color: rgba(12, 74, 110, 0.7);
+        color: rgb(186, 230, 253);
+      }
+
       /* Smooth focus rings */
       *:focus-visible {
         outline: 2px solid rgb(14 165 233);
@@ -154,89 +168,310 @@
       input[type="password"],
       input[type="url"],
       input[type="number"],
+      input[type="date"],
+      input[type="time"],
+      input[type="datetime-local"],
       textarea,
       select {
-        @apply w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 transition-all duration-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder-slate-500 dark:focus:border-brand-400;
+        width: 100%;
+        border-radius: 0.5rem;
+        border: 1px solid rgb(203 213 225);
+        background-color: white;
+        padding: 0.625rem 1rem;
+        font-size: 0.875rem;
+        color: rgb(15 23 42);
+        transition: all 0.2s;
+      }
+
+      input[type="text"]:focus,
+      input[type="email"]:focus,
+      input[type="password"]:focus,
+      input[type="url"]:focus,
+      input[type="number"]:focus,
+      input[type="date"]:focus,
+      input[type="time"]:focus,
+      input[type="datetime-local"]:focus,
+      textarea:focus,
+      select:focus {
+        outline: none;
+        border-color: rgb(14 165 233);
+        box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+      }
+
+      .dark input[type="text"],
+      .dark input[type="email"],
+      .dark input[type="password"],
+      .dark input[type="url"],
+      .dark input[type="number"],
+      .dark input[type="date"],
+      .dark input[type="time"],
+      .dark input[type="datetime-local"],
+      .dark textarea,
+      .dark select {
+        border-color: rgb(51 65 85);
+        background-color: rgb(15 23 42);
+        color: rgb(248 250 252);
+      }
+
+      .dark input[type="text"]:focus,
+      .dark input[type="email"]:focus,
+      .dark input[type="password"]:focus,
+      .dark input[type="url"]:focus,
+      .dark input[type="number"]:focus,
+      .dark input[type="date"]:focus,
+      .dark input[type="time"]:focus,
+      .dark input[type="datetime-local"]:focus,
+      .dark textarea:focus,
+      .dark select:focus {
+        border-color: rgb(56 189 248);
       }
 
       textarea {
-        @apply min-h-[120px] resize-y;
+        min-height: 120px;
+        resize: vertical;
       }
 
       /* Checkbox and radio styling */
       input[type="checkbox"],
       input[type="radio"] {
-        @apply h-4 w-4 rounded border-slate-300 text-brand-500 focus:ring-2 focus:ring-brand-500/20 dark:border-slate-700 dark:bg-slate-900;
+        width: 1rem;
+        height: 1rem;
+        border-radius: 0.25rem;
+        border: 1px solid rgb(203 213 225);
+        accent-color: rgb(14 165 233);
+      }
+
+      .dark input[type="checkbox"],
+      .dark input[type="radio"] {
+        border-color: rgb(51 65 85);
+        background-color: rgb(15 23 42);
       }
 
       /* File input styling */
-      input[type="file"] {
-        @apply text-sm text-slate-500 file:mr-4 file:rounded-lg file:border-0 file:bg-brand-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-brand-700 hover:file:bg-brand-100 dark:text-slate-400 dark:file:bg-brand-950 dark:file:text-brand-300 dark:hover:file:bg-brand-900;
+      input[type="file"]::file-selector-button {
+        margin-right: 1rem;
+        cursor: pointer;
+        border-radius: 0.5rem;
+        border: none;
+        background-color: rgb(240 249 255);
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: rgb(3 105 161);
+        transition: all 0.2s;
+      }
+
+      input[type="file"]::file-selector-button:hover {
+        background-color: rgb(224 242 254);
+      }
+
+      .dark input[type="file"]::file-selector-button {
+        background-color: rgb(8 47 73);
+        color: rgb(186 230 253);
+      }
+
+      .dark input[type="file"]::file-selector-button:hover {
+        background-color: rgb(12 74 110);
       }
 
       /* Label styling */
       label {
-        @apply mb-1.5 block text-sm font-semibold text-slate-700 dark:text-slate-300;
+        display: block;
+        margin-bottom: 0.375rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: rgb(51 65 85);
       }
 
-      /* Smooth page transitions */
-      .page-transition {
-        animation: fadeIn 0.3s ease-in-out;
+      .dark label {
+        color: rgb(203 213 225);
+      }
+
+      /* Smooth transitions for theme changes */
+      html {
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      body * {
+        transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+      }
+
+      /* Loading states */
+      .loading {
+        pointer-events: none;
+        opacity: 0.5;
       }
 
       /* Gradient backgrounds */
       .gradient-mesh {
-        background: linear-gradient(135deg, rgb(14 165 233 / 0.05) 0%, rgb(217 70 239 / 0.05) 100%);
+        background: linear-gradient(135deg, rgba(14, 165, 233, 0.05) 0%, rgba(217, 70, 239, 0.05) 100%);
       }
+
       .dark .gradient-mesh {
-        background: linear-gradient(135deg, rgb(14 165 233 / 0.02) 0%, rgb(217 70 239 / 0.02) 100%);
+        background: linear-gradient(135deg, rgba(14, 165, 233, 0.02) 0%, rgba(217, 70, 239, 0.02) 100%);
+      }
+
+      /* Print styles */
+      @media print {
+        header,
+        footer,
+        button,
+        nav {
+          display: none !important;
+        }
       }
     </style>
 
-    {# Custom Stylesheets #} {% block extra_css %} {% endblock %} {# Custom Head Content #} {% block extra_head %} {% endblock %}
+    {% block extra_css %}{% endblock %} {% block extra_head %}{% endblock %}
   </head>
+
   <body
-    class="{% block body_class %} bg-gradient-to-br from-slate-50 via-white to-slate-100 text-slate-900 antialiased transition-colors duration-300 selection:bg-brand-200 selection:text-brand-900 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 dark:text-slate-100 dark:selection:bg-brand-900 dark:selection:text-brand-100 {% endblock %}"
+    class="flex min-h-screen flex-col bg-gradient-to-br from-slate-50 via-white to-slate-50 text-slate-900 antialiased dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 dark:text-slate-100"
   >
     {# Skip to main content for accessibility #}
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:m-4 focus:rounded-lg focus:bg-brand-500 focus:px-4 focus:py-2 focus:text-white">Skip to main content</a>
+    <a href="#main-content" class="sr-only rounded-lg bg-brand-500 px-4 py-2 text-white focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50"> Skip to main content </a>
 
     {# Page Header #} {% block header %} {% include 'includes/_header.html' %} {% endblock %} {# Messages Display #} {% if messages %}
-    <div class="mx-auto w-full max-w-7xl space-y-3 px-4 pt-4 sm:px-6 lg:px-8">{% for message in messages %} {% include 'components/_alert.html' with message=message %} {% endfor %}</div>
-    {% endif %} {# Main Content Area #}
-    <main id="main-content" class="{% block main_class %} min-h-[calc(100dvh-10rem)] w-full {% endblock %}" role="main">{% block content %} {# Page-specific content goes here #} {% endblock %}</main>
+    <div class="animate-slide-down mx-auto w-full max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
+      <div class="space-y-3">
+        {% for message in messages %}
+        <div
+          class="relative overflow-hidden rounded-lg border shadow-lg transition-all duration-300 hover:shadow-xl {% if message.tags == 'error' or message.tags == 'danger' %} border-red-200 bg-red-50 text-red-900 dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-100 {% elif message.tags == 'warning' %} border-yellow-200 bg-yellow-50 text-yellow-900 dark:border-yellow-900/50 dark:bg-yellow-950/30 dark:text-yellow-100 {% elif message.tags == 'success' %} border-green-200 bg-green-50 text-green-900 dark:border-green-900/50 dark:bg-green-950/30 dark:text-green-100 {% elif message.tags == 'info' %} border-blue-200 bg-blue-50 text-blue-900 dark:border-blue-900/50 dark:bg-blue-950/30 dark:text-blue-100 {% else %} border-slate-200 bg-slate-50 text-slate-900 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100 {% endif %}"
+        >
+          <div class="flex items-start gap-3 p-4">
+            {# Icon #}
+            <div class="flex-shrink-0">
+              {% if message.tags == 'error' or message.tags == 'danger' %}
+              <svg class="h-5 w-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {% elif message.tags == 'warning' %}
+              <svg class="h-5 w-5 text-yellow-600 dark:text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
+              </svg>
+              {% elif message.tags == 'success' %}
+              <svg class="h-5 w-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {% else %}
+              <svg class="h-5 w-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {% endif %}
+            </div>
 
-    {# Page Footer #} {% block footer %} {% include 'includes/_footer.html' %} {% endblock %} {# Theme Toggle Script #}
+            {# Message Content #}
+            <div class="flex-1 text-sm font-medium">{{ message }}</div>
+
+            {# Dismiss Button #}
+            <button
+              type="button"
+              onclick="this.closest('div[class*=border]').style.display='none'"
+              class="flex-shrink-0 rounded-lg p-1 transition-colors hover:bg-black/5 dark:hover:bg-white/5"
+              aria-label="Dismiss"
+            >
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %} {# Main Content Area #}
+    <main id="main-content" class="flex-1" role="main">{% block content %} {# Page-specific content goes here #} {% endblock %}</main>
+
+    {# Page Footer #} {% block footer %} {% include 'includes/_footer.html' %} {% endblock %} {# FIXED: Improved Theme Toggle Script with proper persistence #}
     <script>
       (function () {
-        const toggle = document.getElementById("theme-toggle");
-        const label = document.getElementById("theme-toggle-label");
-        if (!toggle || !label) return;
+        // Get theme elements
+        const themeToggle = document.getElementById("theme-toggle");
+        const darkIcon = document.getElementById("theme-icon-dark");
+        const lightIcon = document.getElementById("theme-icon-light");
 
-        const apply = (mode) => {
-          if (mode === "dark") {
-            document.documentElement.classList.add("dark");
+        if (!themeToggle) {
+          console.warn("Theme toggle button not found");
+          return;
+        }
+
+        // Function to apply theme and update UI
+        function applyTheme(theme) {
+          const html = document.documentElement;
+
+          if (theme === "dark") {
+            html.classList.add("dark");
+            if (darkIcon) {
+              darkIcon.classList.remove("hidden");
+              darkIcon.style.display = "block";
+            }
+            if (lightIcon) {
+              lightIcon.classList.add("hidden");
+              lightIcon.style.display = "none";
+            }
           } else {
-            document.documentElement.classList.remove("dark");
+            html.classList.remove("dark");
+            if (darkIcon) {
+              darkIcon.classList.add("hidden");
+              darkIcon.style.display = "none";
+            }
+            if (lightIcon) {
+              lightIcon.classList.remove("hidden");
+              lightIcon.style.display = "block";
+            }
           }
-          label.textContent = mode === "dark" ? "Light" : "Dark";
-        };
 
-        const current = document.documentElement.classList.contains("dark") ? "dark" : "light";
-        apply(current);
-
-        toggle.addEventListener("click", () => {
-          const next = document.documentElement.classList.contains("dark") ? "light" : "dark";
-          apply(next);
+          // Save to localStorage
           try {
-            window.localStorage.setItem("mnk-theme", next);
+            window.localStorage.setItem("theme", theme);
+            console.log("Theme saved:", theme);
           } catch (err) {
-            console.warn("Theme persistence failed", err);
+            console.warn("Unable to persist theme preference:", err);
           }
+        }
+
+        // Get current theme
+        function getCurrentTheme() {
+          return document.documentElement.classList.contains("dark") ? "dark" : "light";
+        }
+
+        // Initialize theme icons on page load
+        const initialTheme = getCurrentTheme();
+        console.log("Initial theme:", initialTheme);
+        applyTheme(initialTheme);
+
+        // Toggle theme on click
+        themeToggle.addEventListener("click", (e) => {
+          e.preventDefault();
+          const currentTheme = getCurrentTheme();
+          const newTheme = currentTheme === "dark" ? "light" : "dark";
+          console.log("Toggling theme from", currentTheme, "to", newTheme);
+          applyTheme(newTheme);
         });
+
+        // Listen for system theme changes (optional)
+        try {
+          const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+          mediaQuery.addEventListener("change", (e) => {
+            const storedTheme = window.localStorage.getItem("theme");
+            // Only apply system preference if user hasn't explicitly set a theme
+            if (!storedTheme) {
+              const systemTheme = e.matches ? "dark" : "light";
+              console.log("System theme changed to:", systemTheme);
+              applyTheme(systemTheme);
+            }
+          });
+        } catch (err) {
+          console.warn("Media query listener not supported:", err);
+        }
       })();
     </script>
 
-    {# Custom JavaScript #} {% block extra_js %} {% endblock %} {# Custom Body Content #} {% block extra_body %} {% endblock %}
+    {% block extra_js %}{% endblock %} {% block extra_body %}{% endblock %}
   </body>
 </html>

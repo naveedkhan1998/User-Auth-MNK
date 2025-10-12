@@ -1,45 +1,82 @@
-{% extends 'layouts/base_console.html' %}
+{% extends 'layouts/base_console.html' %} {% block console_title %} Sign in {% endblock %} {% block console_content %}
+<style>
+  input[name="username"],
+  input[name="password"] {
+    padding-left: 2.5rem !important;
+  }
+  /* Small refinement for error blocks and input focus */
+  .console-input:focus {
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.08);
+  }
+</style>
+<div
+  class="flex h-full rounded-2xl m-auto w-full flex-col p-2 lg:flex-row bg-gradient-to-br from-brand-500/10 via-brand-600/5 to-accent-500/10 lg:p-12 dark:from-brand-500/5 dark:via-brand-600/3 dark:to-accent-500/5"
+>
+  {# Left Side - Graphic #}
+  <div class="flex flex-1 items-center justify-center">
+    <div
+      class="relative overflow-hidden h-full rounded-3xl border border-slate-200/60 bg-gradient-to-br from-white/95 to-slate-50/95 p-12 shadow-2xl shadow-slate-900/5 backdrop-blur-2xl dark:border-slate-800/60 dark:from-slate-950/95 dark:to-slate-900/95 dark:shadow-slate-950/50 w-full max-w-md"
+    >
+      {# Decorative gradient overlay #}
+      <div class="absolute inset-0 bg-gradient-to-br from-brand-500/3 via-transparent to-accent-500/3"></div>
 
-{% block console_title %}
-  Sign in
-{% endblock %}
+      <div class="relative space-y-8 text-center">
+        <div class="mx-auto inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-600 text-white font-bold text-2xl shadow-xl shadow-brand-500/25">
+          <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold text-slate-900 dark:text-slate-100">Secure Console Access</h2>
+          <p class="mt-3 text-sm text-slate-600 dark:text-slate-400">Manage your platform with confidence</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-{% block console_content %}
-  <div class="flex min-h-[60vh] items-center justify-center">
-    <div class="w-full max-w-md space-y-8 animate-scale-in">
-      <div class="relative overflow-hidden rounded-3xl border border-slate-200/50 bg-gradient-to-br from-white/90 to-slate-50/90 p-10 shadow-2xl shadow-slate-900/10 backdrop-blur-xl dark:border-slate-800/50 dark:from-slate-950/90 dark:to-slate-900/90 dark:shadow-slate-950/50">
+  {# Right Side - Form #}
+  <div class="flex flex-1 items-center justify-center">
+    <div class="w-full space-y-10 animate-fade-in">
+      <div
+        class="relative overflow-hidden rounded-3xl border border-slate-200/60 bg-gradient-to-br from-white/95 to-slate-50/95 p-12 shadow-2xl shadow-slate-900/5 backdrop-blur-2xl dark:border-slate-800/60 dark:from-slate-950/95 dark:to-slate-900/95 dark:shadow-slate-950/50"
+      >
         {# Decorative gradient overlay #}
-        <div class="absolute inset-0 bg-gradient-to-br from-brand-500/5 via-transparent to-accent-500/5"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-brand-500/3 via-transparent to-accent-500/3"></div>
 
-        <div class="relative space-y-6">
+        <div class="relative space-y-8">
           {# Header #}
           <div class="text-center">
-            <div class="mx-auto inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-600 text-white font-bold text-2xl shadow-2xl shadow-brand-500/40">MNK</div>
-            <h1 class="mt-6 bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-3xl font-black tracking-tight text-transparent dark:from-slate-100 dark:to-slate-300">Console Access</h1>
-            <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">Staff credentials required for platform management</p>
+            <div
+              class="mx-auto inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-600 text-white font-bold text-2xl shadow-xl shadow-brand-500/25"
+            >
+              MNK
+            </div>
+            <h1 id="console-heading" class="mt-6 bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-3xl font-black tracking-tight text-transparent dark:from-slate-100 dark:to-slate-300">
+              Console Access
+            </h1>
+            <p class="mt-3 text-sm text-slate-600 dark:text-slate-400">Staff credentials required for platform management</p>
           </div>
 
           {# Login Form #}
-          <form method="post" class="space-y-5">
-            {% csrf_token %}
-
-            {# Non-field Errors #}
-            {% if form.non_field_errors %}
-              <div class="animate-slide-down flex items-start gap-2.5 rounded-2xl border border-red-300/50 bg-gradient-to-br from-red-50 to-red-100/50 px-4 py-3 shadow-lg dark:border-red-800/50 dark:from-red-950/70 dark:to-red-900/50">
-                <svg class="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                </svg>
-                <div class="text-sm font-semibold text-red-700 dark:text-red-200">
-                  {% for error in form.non_field_errors %}
-                    {{ error }}
-                  {% endfor %}
-                </div>
-              </div>
-            {% endif %}
-
-            {# Username Field #}
+          <form method="post" class="space-y-6" role="form" aria-labelledby="console-heading" novalidate>
+            {% csrf_token %} {# Non-field Errors #} {% if form.non_field_errors %}
+            <div
+              class="animate-slide-down flex items-start gap-2.5 rounded-2xl border border-red-300/60 bg-gradient-to-br from-red-50/80 to-red-100/80 px-4 py-3 shadow-lg dark:border-red-800/60 dark:from-red-950/80 dark:to-red-900/80"
+              role="alert"
+              aria-live="assertive"
+            >
+              <svg class="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <div class="text-sm font-semibold text-red-700 dark:text-red-200">{% for error in form.non_field_errors %} {{ error }} {% endfor %}</div>
+            </div>
+            {% endif %} {# Username Field #}
             <div class="space-y-2">
-              <label for="{{ form.username.id_for_label }}" class="block text-sm font-bold text-slate-700 dark:text-slate-300">Username</label>
+              <label for="{{ form.username.id_for_label }}" class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Username</label>
               <div class="relative">
                 <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
                   <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -49,17 +86,15 @@
                 {{ form.username }}
               </div>
               {% if form.username.errors %}
-                <div class="rounded-xl border border-red-300/50 bg-red-50 px-3 py-2 text-xs font-semibold text-red-700 dark:border-red-800/50 dark:bg-red-950/70 dark:text-red-200">
-                  {% for error in form.username.errors %}
-                    {{ error }}
-                  {% endfor %}
-                </div>
+              <div class="rounded-xl border border-red-300/60 bg-red-50/80 px-3 py-2 text-xs font-semibold text-red-700 dark:border-red-800/60 dark:bg-red-950/80 dark:text-red-200">
+                {% for error in form.username.errors %} {{ error }} {% endfor %}
+              </div>
               {% endif %}
             </div>
 
             {# Password Field #}
             <div class="space-y-2">
-              <label for="{{ form.password.id_for_label }}" class="block text-sm font-bold text-slate-700 dark:text-slate-300">Password</label>
+              <label for="{{ form.password.id_for_label }}" class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Password</label>
               <div class="relative">
                 <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
                   <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -67,22 +102,40 @@
                   </svg>
                 </div>
                 {{ form.password }}
+                <button type="button" id="toggle-password" class="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500 hover:text-slate-700" aria-label="Toggle password visibility">
+                  Show
+                </button>
               </div>
               {% if form.password.errors %}
-                <div class="rounded-xl border border-red-300/50 bg-red-50 px-3 py-2 text-xs font-semibold text-red-700 dark:border-red-800/50 dark:bg-red-950/70 dark:text-red-200">
-                  {% for error in form.password.errors %}
-                    {{ error }}
-                  {% endfor %}
-                </div>
+              <div class="rounded-xl border border-red-300/60 bg-red-50/80 px-3 py-2 text-xs font-semibold text-red-700 dark:border-red-800/60 dark:bg-red-950/80 dark:text-red-200">
+                {% for error in form.password.errors %} {{ error }} {% endfor %}
+              </div>
               {% endif %}
+              <div class="text-right">
+                <a href="#" class="text-sm text-brand-600 hover:text-brand-500 transition-colors duration-200 dark:text-brand-400 dark:hover:text-brand-300">Forgot Password?</a>
+              </div>
+            </div>
+
+            {# Remember Me Checkbox #}
+            <div class="flex items-center space-x-2">
+              <input
+                id="remember"
+                name="remember"
+                type="checkbox"
+                class="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500 focus:ring-2 dark:border-slate-600 dark:bg-slate-700 dark:checked:bg-brand-600"
+              />
+              <label for="remember" class="block text-sm text-slate-700 dark:text-slate-300">Remember me</label>
             </div>
 
             {# Submit Button #}
-            <button type="submit" class="group relative w-full overflow-hidden rounded-2xl bg-gradient-to-r from-brand-500 to-brand-600 px-6 py-3.5 text-base font-bold text-white shadow-2xl shadow-brand-500/30 transition-all duration-300 hover:scale-[1.02] hover:shadow-3xl hover:shadow-brand-500/40 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 dark:focus:ring-offset-slate-950">
+            <button
+              type="submit"
+              class="group relative w-full overflow-hidden rounded-2xl bg-gradient-to-r from-brand-500 to-brand-600 px-6 py-3.5 text-base font-bold text-white shadow-xl shadow-brand-500/25 transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-brand-500/30 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 dark:focus:ring-offset-slate-950"
+            >
               <span class="relative z-10 flex items-center justify-center gap-2">
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                </svg>Sign in to Console
+                <svg class="h-5 w-5 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /></svg
+                >Sign in to Console
               </span>
               <div class="absolute inset-0 bg-gradient-to-r from-brand-600 to-brand-700 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
             </button>
@@ -91,13 +144,35 @@
       </div>
 
       {# Security Notice #}
-      <div class="rounded-2xl border border-slate-200/50 bg-slate-100/60 px-4 py-3 text-center backdrop-blur dark:border-slate-800/50 dark:bg-slate-900/60">
+      <div class="rounded-2xl border border-slate-200/60 bg-slate-100/70 px-4 py-3 text-center backdrop-blur-xl dark:border-slate-800/60 dark:bg-slate-900/70">
         <p class="text-xs font-semibold text-slate-600 dark:text-slate-400">
           <svg class="mr-1 inline h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
-          </svg>Secured with enterprise-grade authentication
+            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" /></svg
+          >Secured with enterprise-grade authentication
         </p>
       </div>
     </div>
   </div>
+</div>
+<script>
+  (function () {
+    const toggle = document.getElementById("toggle-password");
+    if (!toggle) return;
+    const pwd = document.querySelector('input[name="password"]');
+    toggle.addEventListener("click", function () {
+      if (!pwd) return;
+      if (pwd.type === "password") {
+        pwd.type = "text";
+        toggle.textContent = "Hide";
+      } else {
+        pwd.type = "password";
+        toggle.textContent = "Show";
+      }
+      pwd.focus();
+    });
+    // Autofocus username if present
+    const user = document.querySelector('input[name="username"]');
+    if (user) user.autofocus = true;
+  })();
+</script>
 {% endblock %}

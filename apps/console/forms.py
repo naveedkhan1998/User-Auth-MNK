@@ -87,6 +87,7 @@ class PathAwareForm(TailwindForm):
     """Shared hidden field for tracking the current relative path."""
 
     current_path = forms.CharField(required=False, widget=forms.HiddenInput)
+    storage_root = forms.CharField(required=False, widget=forms.HiddenInput)
 
 
 class UploadFileForm(PathAwareForm):
