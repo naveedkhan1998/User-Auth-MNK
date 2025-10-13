@@ -1,25 +1,27 @@
-<header class="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 shadow-sm backdrop-blur-xl backdrop-saturate-150 transition-all duration-300 dark:border-slate-800/80 dark:bg-slate-950/95">
+<header class="sticky top-0 z-50 border-b border-neutral-200 bg-white/95 shadow-sm backdrop-blur-xl backdrop-saturate-150 transition-all duration-300 dark:border-neutral-800 dark:bg-neutral-950/95">
   <div class="mx-auto w-full px-4 sm:px-6 lg:px-8">
     <div class="flex h-16 items-center justify-between gap-4">
       {# Logo and Branding #}
       <div class="flex items-center gap-3 sm:gap-6">
         <a href="{% url 'landing' %}" class="group flex items-center gap-2.5 transition-transform duration-200 hover:scale-105 active:scale-95" aria-label="MNK Platform Home">
+          {# Simplified logo with better contrast in both modes #}
           <div
-            class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 via-brand-600 to-brand-700 text-white font-bold text-base shadow-lg shadow-brand-500/25 ring-2 ring-brand-400/20 transition-all duration-200 group-hover:shadow-xl group-hover:shadow-brand-500/30 group-hover:ring-brand-400/30"
+            class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-600 text-white font-bold text-base shadow-md ring-1 ring-primary-500/20 transition-all duration-200 group-hover:bg-primary-700 group-hover:shadow-lg dark:bg-primary-500 dark:ring-primary-400/20 dark:group-hover:bg-primary-600"
             aria-hidden="true"
           >
             M
           </div>
           <div class="hidden flex-col sm:flex">
-            <span class="text-base font-bold leading-tight tracking-tight text-slate-900 dark:text-slate-50">MNK</span>
-            <span class="text-[10px] font-medium leading-tight tracking-wider text-slate-500 dark:text-slate-400">PLATFORM</span>
+            <span class="text-base font-bold leading-tight tracking-tight text-neutral-900 dark:text-neutral-50">MNK</span>
+            <span class="text-[10px] font-medium leading-tight tracking-wider text-neutral-600 dark:text-neutral-400">PLATFORM</span>
           </div>
         </a>
 
         {# Desktop Navigation - Staff Only #} {% if request.user.is_authenticated and request.user.is_staff %}
         <nav class="hidden items-center gap-0.5 lg:flex" aria-label="Main navigation">
+          {# Improved navigation links with better contrast and cleaner active states #}
           <a
-            class="group relative rounded-lg px-4 py-2.5 text-sm font-semibold transition-all duration-200 {% if request.resolver_match.url_name == 'file-manager' %}text-brand-700 dark:text-brand-400{% else %}text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100{% endif %}"
+            class="group relative rounded-lg px-4 py-2.5 text-sm font-semibold transition-all duration-200 {% if request.resolver_match.url_name == 'file-manager' %}text-primary-700 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/50{% else %}text-neutral-700 hover:text-neutral-900 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:text-neutral-100 dark:hover:bg-neutral-900{% endif %}"
             href="{% url 'console:file-manager' %}"
           >
             <span class="relative z-10 flex items-center gap-2">
@@ -28,12 +30,9 @@
               </svg>
               Files
             </span>
-            <div
-              class="absolute inset-x-1 -bottom-px h-0.5 rounded-full bg-gradient-to-r from-brand-500 to-brand-600 transition-all duration-200 {% if request.resolver_match.url_name == 'file-manager' %}scale-x-100{% else %}scale-x-0 group-hover:scale-x-100{% endif %}"
-            ></div>
           </a>
           <a
-            class="group relative rounded-lg px-4 py-2.5 text-sm font-semibold transition-all duration-200 {% if 'project' in request.resolver_match.url_name %}text-brand-700 dark:text-brand-400{% else %}text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100{% endif %}"
+            class="group relative rounded-lg px-4 py-2.5 text-sm font-semibold transition-all duration-200 {% if 'project' in request.resolver_match.url_name %}text-primary-700 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/50{% else %}text-neutral-700 hover:text-neutral-900 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:text-neutral-100 dark:hover:bg-neutral-900{% endif %}"
             href="{% url 'console:project-list' %}"
           >
             <span class="relative z-10 flex items-center gap-2">
@@ -47,12 +46,9 @@
               </svg>
               Projects
             </span>
-            <div
-              class="absolute inset-x-1 -bottom-px h-0.5 rounded-full bg-gradient-to-r from-brand-500 to-brand-600 transition-all duration-200 {% if 'project' in request.resolver_match.url_name %}scale-x-100{% else %}scale-x-0 group-hover:scale-x-100{% endif %}"
-            ></div>
           </a>
           <a
-            class="group relative rounded-lg px-4 py-2.5 text-sm font-semibold transition-all duration-200 {% if 'message' in request.resolver_match.url_name %}text-brand-700 dark:text-brand-400{% else %}text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100{% endif %}"
+            class="group relative rounded-lg px-4 py-2.5 text-sm font-semibold transition-all duration-200 {% if 'message' in request.resolver_match.url_name %}text-primary-700 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/50{% else %}text-neutral-700 hover:text-neutral-900 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:text-neutral-100 dark:hover:bg-neutral-900{% endif %}"
             href="{% url 'console:message-list' %}"
           >
             <span class="relative z-10 flex items-center gap-2">
@@ -61,12 +57,9 @@
               </svg>
               Messages
             </span>
-            <div
-              class="absolute inset-x-1 -bottom-px h-0.5 rounded-full bg-gradient-to-r from-brand-500 to-brand-600 transition-all duration-200 {% if 'message' in request.resolver_match.url_name %}scale-x-100{% else %}scale-x-0 group-hover:scale-x-100{% endif %}"
-            ></div>
           </a>
           <a
-            class="group relative rounded-lg px-4 py-2.5 text-sm font-semibold transition-all duration-200 {% if 'blog' in request.resolver_match.url_name %}text-brand-700 dark:text-brand-400{% else %}text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100{% endif %}"
+            class="group relative rounded-lg px-4 py-2.5 text-sm font-semibold transition-all duration-200 {% if 'blog' in request.resolver_match.url_name %}text-primary-700 bg-primary-50 dark:text-primary-400 dark:bg-primary-950/50{% else %}text-neutral-700 hover:text-neutral-900 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:text-neutral-100 dark:hover:bg-neutral-900{% endif %}"
             href="{% url 'console:blog-post-list' %}"
           >
             <span class="relative z-10 flex items-center gap-2">
@@ -80,12 +73,9 @@
               </svg>
               Blog
             </span>
-            <div
-              class="absolute inset-x-1 -bottom-px h-0.5 rounded-full bg-gradient-to-r from-brand-500 to-brand-600 transition-all duration-200 {% if 'blog' in request.resolver_match.url_name %}scale-x-100{% else %}scale-x-0 group-hover:scale-x-100{% endif %}"
-            ></div>
           </a>
           <a
-            class="group relative rounded-lg px-4 py-2.5 text-sm font-semibold text-slate-600 transition-all duration-200 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+            class="group relative rounded-lg px-4 py-2.5 text-sm font-semibold text-neutral-700 transition-all duration-200 hover:text-neutral-900 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:text-neutral-100 dark:hover:bg-neutral-900"
             href="{% url 'admin:index' %}"
           >
             <span class="relative z-10 flex items-center gap-2">
@@ -100,7 +90,6 @@
               </svg>
               Admin
             </span>
-            <div class="absolute inset-x-1 -bottom-px h-0.5 rounded-full bg-gradient-to-r from-brand-500 to-brand-600 scale-x-0 transition-all duration-200 group-hover:scale-x-100"></div>
           </a>
         </nav>
         {% endif %}
@@ -108,11 +97,11 @@
 
       {# Right Actions #}
       <div class="flex items-center gap-2">
-        {# Theme Toggle #}
+        {# Simplified theme toggle with better contrast #}
         <button
           id="theme-toggle"
           type="button"
-          class="group relative flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-sm transition-all duration-200 hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700 hover:shadow focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-brand-700 dark:hover:bg-slate-800 dark:hover:text-brand-400"
+          class="group relative flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-200 bg-white text-neutral-700 transition-all duration-200 hover:bg-neutral-100 hover:text-neutral-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-neutral-100"
           aria-label="Toggle theme"
         >
           <svg id="theme-icon-dark" class="hidden h-4 w-4 transition-transform duration-200 group-hover:scale-110 dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -128,22 +117,18 @@
           </svg>
         </button>
 
-        {% if request.user.is_authenticated %} {# Desktop User Badge #}
-        <div
-          class="hidden items-center gap-2.5 rounded-lg border border-slate-200 bg-gradient-to-br from-slate-50 to-white px-3 py-1.5 shadow-sm lg:flex dark:border-slate-800 dark:from-slate-900 dark:to-slate-900/50"
-        >
-          <div class="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-white text-xs font-bold ring-2 ring-brand-400/20">
-            {{ request.user.name|first|upper }}
-          </div>
-          <span class="text-xs font-semibold text-slate-700 dark:text-slate-300">{{ request.user.name|truncatechars:15 }}</span>
+        {% if request.user.is_authenticated %} {# Cleaner user badge with better contrast #}
+        <div class="hidden items-center gap-2.5 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 lg:flex dark:border-neutral-800 dark:bg-neutral-900">
+          <div class="flex h-7 w-7 items-center justify-center rounded-full bg-primary-600 text-white text-xs font-bold dark:bg-primary-500">{{ request.user.name|first|upper }}</div>
+          <span class="text-xs font-semibold text-neutral-900 dark:text-neutral-100">{{ request.user.name|truncatechars:15 }}</span>
         </div>
 
-        {# Desktop Logout #}
+        {# Simplified logout button with better contrast #}
         <form method="post" action="{% url 'console:logout' %}" class="m-0 hidden lg:block">
           {% csrf_token %}
           <button
             type="submit"
-            class="group relative flex h-9 items-center gap-2 overflow-hidden rounded-lg border border-red-200 bg-white px-3.5 py-2 text-xs font-semibold tracking-wide text-red-600 shadow-sm transition-all duration-200 hover:border-red-400 hover:bg-red-50 hover:shadow focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:border-red-900/50 dark:bg-slate-900 dark:text-red-400 dark:hover:border-red-800 dark:hover:bg-red-950/30"
+            class="group relative flex h-9 items-center gap-2 rounded-lg border border-red-200 bg-white px-3.5 py-2 text-xs font-semibold text-red-600 transition-all duration-200 hover:bg-red-50 hover:border-red-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:border-red-900/50 dark:bg-neutral-900 dark:text-red-400 dark:hover:bg-red-950/30 dark:hover:border-red-800"
           >
             <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -156,7 +141,7 @@
         <button
           id="mobile-menu-toggle"
           type="button"
-          class="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 shadow-sm transition-all duration-200 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 lg:hidden dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-slate-800"
+          class="flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-200 bg-white text-neutral-700 transition-all duration-200 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 lg:hidden dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800"
           aria-label="Toggle menu"
         >
           <svg id="menu-icon" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -166,27 +151,26 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
-        {% endif %} {% else %} {# Login Button #}
+        {% endif %} {% else %} {# Cleaner login button with better contrast #}
         <a
-          class="group relative flex items-center gap-2 overflow-hidden rounded-lg bg-gradient-to-r from-brand-500 to-brand-600 px-4 py-2 text-xs font-bold tracking-wide text-white shadow-lg shadow-brand-500/25 transition-all duration-200 hover:scale-105 hover:shadow-xl hover:shadow-brand-500/30 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 active:scale-95"
+          class="group relative flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2 text-xs font-bold text-white transition-all duration-200 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 active:scale-95 dark:bg-primary-500 dark:hover:bg-primary-600"
           href="{% url 'console:login' %}"
         >
           <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
           </svg>
           Sign in
-          <div class="absolute inset-0 bg-gradient-to-r from-brand-600 to-brand-700 opacity-0 transition-opacity duration-200 group-hover:opacity-100"></div>
         </a>
         {% endif %}
       </div>
     </div>
   </div>
 
-  {# Mobile Navigation Menu #} {% if request.user.is_authenticated and request.user.is_staff %}
-  <div id="mobile-menu" class="hidden border-t border-slate-200 bg-white lg:hidden dark:border-slate-800 dark:bg-slate-950">
+  {# Mobile Navigation Menu #} {% if request.user.is_authenticated and request.user.is_staff %} {# Improved mobile menu with better contrast and cleaner styling #}
+  <div id="mobile-menu" class="hidden border-t border-neutral-200 bg-white lg:hidden dark:border-neutral-800 dark:bg-neutral-950">
     <nav class="mx-auto space-y-1 px-4 py-4" aria-label="Mobile navigation">
       <a
-        class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold transition-all duration-200 {% if request.resolver_match.url_name == 'file-manager' %}bg-brand-50 text-brand-700 dark:bg-brand-950/50 dark:text-brand-400{% else %}text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-900{% endif %}"
+        class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold transition-all duration-200 {% if request.resolver_match.url_name == 'file-manager' %}bg-primary-50 text-primary-700 dark:bg-primary-950/50 dark:text-primary-400{% else %}text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-900{% endif %}"
         href="{% url 'console:file-manager' %}"
       >
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -195,7 +179,7 @@
         Files
       </a>
       <a
-        class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold transition-all duration-200 {% if 'project' in request.resolver_match.url_name %}bg-brand-50 text-brand-700 dark:bg-brand-950/50 dark:text-brand-400{% else %}text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-900{% endif %}"
+        class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold transition-all duration-200 {% if 'project' in request.resolver_match.url_name %}bg-primary-50 text-primary-700 dark:bg-primary-950/50 dark:text-primary-400{% else %}text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-900{% endif %}"
         href="{% url 'console:project-list' %}"
       >
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -209,7 +193,7 @@
         Projects
       </a>
       <a
-        class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold transition-all duration-200 {% if 'message' in request.resolver_match.url_name %}bg-brand-50 text-brand-700 dark:bg-brand-950/50 dark:text-brand-400{% else %}text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-900{% endif %}"
+        class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold transition-all duration-200 {% if 'message' in request.resolver_match.url_name %}bg-primary-50 text-primary-700 dark:bg-primary-950/50 dark:text-primary-400{% else %}text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-900{% endif %}"
         href="{% url 'console:message-list' %}"
       >
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -218,7 +202,7 @@
         Messages
       </a>
       <a
-        class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold transition-all duration-200 {% if 'blog' in request.resolver_match.url_name %}bg-brand-50 text-brand-700 dark:bg-brand-950/50 dark:text-brand-400{% else %}text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-900{% endif %}"
+        class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold transition-all duration-200 {% if 'blog' in request.resolver_match.url_name %}bg-primary-50 text-primary-700 dark:bg-primary-950/50 dark:text-primary-400{% else %}text-neutral-700 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-900{% endif %}"
         href="{% url 'console:blog-post-list' %}"
       >
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -232,7 +216,7 @@
         Blog
       </a>
       <a
-        class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold text-slate-700 transition-all duration-200 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-900"
+        class="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold text-neutral-700 transition-all duration-200 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-900"
         href="{% url 'admin:index' %}"
       >
         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -248,21 +232,19 @@
       </a>
 
       {# Mobile User Info & Logout #}
-      <div class="mt-4 space-y-3 border-t border-slate-200 pt-4 dark:border-slate-800">
-        <div class="flex items-center gap-3 rounded-lg bg-slate-50 px-4 py-3 dark:bg-slate-900">
-          <div class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-white text-sm font-bold ring-2 ring-brand-400/20">
-            {{ request.user.name|first|upper }}
-          </div>
+      <div class="mt-4 space-y-3 border-t border-neutral-200 pt-4 dark:border-neutral-800">
+        <div class="flex items-center gap-3 rounded-lg bg-neutral-50 px-4 py-3 dark:bg-neutral-900">
+          <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary-600 text-white text-sm font-bold dark:bg-primary-500">{{ request.user.name|first|upper }}</div>
           <div class="flex flex-col">
-            <span class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ request.user.name }}</span>
-            <span class="text-xs text-slate-500 dark:text-slate-400">{{ request.user.email|truncatechars:25 }}</span>
+            <span class="text-sm font-semibold text-neutral-900 dark:text-neutral-100">{{ request.user.name }}</span>
+            <span class="text-xs text-neutral-600 dark:text-neutral-400">{{ request.user.email|truncatechars:25 }}</span>
           </div>
         </div>
         <form method="post" action="{% url 'console:logout' %}" class="m-0">
           {% csrf_token %}
           <button
             type="submit"
-            class="flex w-full items-center justify-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-3 text-sm font-semibold text-red-600 shadow-sm transition-all duration-200 hover:bg-red-50 dark:border-red-900/50 dark:bg-slate-900 dark:text-red-400 dark:hover:bg-red-950/30"
+            class="flex w-full items-center justify-center gap-2 rounded-lg border border-red-200 bg-white px-4 py-3 text-sm font-semibold text-red-600 transition-all duration-200 hover:bg-red-50 hover:border-red-300 dark:border-red-900/50 dark:bg-neutral-900 dark:text-red-400 dark:hover:bg-red-950/30 dark:hover:border-red-800"
           >
             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
