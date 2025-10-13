@@ -1,259 +1,1056 @@
-{% extends 'layouts/base_console.html' %} {% block console_title %} 
-{% if object.pk %} Edit {% else %} Create {% endif %}Blog Post {% endblock %} 
-{% block console_section %} Content Management {%endblock %} 
-{% block console_heading %} {% if object.pk %} Edit: {{ object.title }} {% else %} Create New Blog Post {% endif %} {% endblock %} 
-{% block console_description %}
-<p class="mt-2 text-sm text-slate-600 dark:text-slate-400">
-  {% if object.pk %} Update the blog post details and MDX content below. {% else %} Fill in the details to create a new blog post with MDX content. {% endif %}
-</p>
+{% extends 'layouts/base_console.html' %} {% block console_title %}{% if object.pk %}Edit{% else %}Create{% endif %} Blog Post{% endblock %} {% block console_section %}Content Studio{% endblock %}
+{%block console_heading %}{% if object.pk %}Update: {{ object.title }}{% else %}Compose a New Blog Story{% endif %}{% endblock %} {% block console_description %}
+<p class="mt-2 text-sm text-slate-600 dark:text-slate-400">Complete the post details, write in Markdown, and check the live preview before publishing.</p>
 {% endblock %} {% block console_header_actions %}
 <div class="flex flex-wrap items-center gap-3">
   <a
-    class="group inline-flex items-center gap-2 rounded-2xl border border-slate-300/70 px-5 py-2.5 text-sm font-semibold text-slate-600 transition-all hover:-translate-y-0.5 hover:border-brand-500/60 hover:text-brand-600 dark:border-slate-700 dark:text-slate-300 dark:hover:border-brand-500/60"
     href="{% url 'console:blog-post-list' %}"
+    class="group inline-flex items-center gap-2 rounded-2xl border border-slate-300/70 px-4 py-2 text-sm font-medium text-slate-600 transition hover:-translate-y-0.5 hover:border-brand-500/60 hover:text-brand-600 dark:border-slate-700 dark:text-slate-300"
   >
     <svg class="h-4 w-4 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg
-    ><span>Back to List</span>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+    </svg>
+    Back to list
   </a>
+  {% if object.pk %}
+  <a
+    href="{% url 'console:blog-image-upload' object.pk %}"
+    class="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-brand-500 to-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:scale-[1.02]"
+  >
+    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+    </svg>
+    Upload image
+  </a>
+  {% endif %}
 </div>
 {% endblock %} {% block console_content %}
 <form method="post" enctype="multipart/form-data" class="space-y-6">
-  {% csrf_token %}
-
-  <!-- Main Details Card -->
-  <div class="overflow-hidden rounded-3xl border border-slate-200/70 bg-gradient-to-br from-white via-white to-slate-50 p-6 shadow-sm transition hover:shadow-md dark:border-slate-800/70 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900/60">
-    <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-500/15 text-brand-600 dark:text-brand-400">
-          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6l4 2m5-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </span>
-        <div>
-          <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100">Post Details</h2>
-          <p class="text-sm text-slate-500 dark:text-slate-400">Outline the essentials before diving into the MDX canvas.</p>
-        </div>
-      </div>
-      <span class="rounded-full bg-brand-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-600 dark:text-brand-400">
-        Required fields marked with *
-      </span>
-    </div>
-
-    <div class="grid gap-5 md:grid-cols-2">
-      <div class="md:col-span-2">
-        <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Title *</label>
-        {{ form.title }} {% if form.title.errors %}
-        <p class="mt-1 text-sm text-red-600">{{ form.title.errors.0 }}</p>
-        {% endif %}
-      </div>
-
-      <div class="md:col-span-2">
-        <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Slug *</label>
-        {{ form.slug }}
-        <p class="mt-1 text-xs text-slate-500">Leave blank to auto-generate from title</p>
-        {% if form.slug.errors %}
-        <p class="mt-1 text-sm text-red-600">{{ form.slug.errors.0 }}</p>
-        {% endif %}
-      </div>
-
-      <div class="md:col-span-2">
-        <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Description *</label>
-        {{ form.description }}
-        <p class="mt-1 text-xs text-slate-500">Short excerpt for the blog post</p>
-        {% if form.description.errors %}
-        <p class="mt-1 text-sm text-red-600">{{ form.description.errors.0 }}</p>
-        {% endif %}
-      </div>
-
-      <div class="md:col-span-2">
-        <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Tags</label>
-        {{ form.tags_input }} {% if form.tags_input.errors %}
-        <p class="mt-1 text-sm text-red-600">{{ form.tags_input.errors.0 }}</p>
-        {% endif %}
-      </div>
-
-      <div>
-        <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Status</label>
-        {{ form.status }} {% if form.status.errors %}
-        <p class="mt-1 text-sm text-red-600">{{ form.status.errors.0 }}</p>
-        {% endif %}
-      </div>
-
-      <div>
-        <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Published At</label>
-        {{ form.published_at }} {% if form.published_at.errors %}
-        <p class="mt-1 text-sm text-red-600">{{ form.published_at.errors.0 }}</p>
-        {% endif %}
-      </div>
-    </div>
-  </div>
-
-  <!-- Featured Image Card -->
-  <div class="overflow-hidden rounded-3xl border border-slate-200/70 bg-gradient-to-br from-white via-white to-slate-50 p-6 shadow-sm transition hover:shadow-md dark:border-slate-800/70 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900/60">
-    <div class="mb-6 flex items-center gap-3">
-      <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-500/15 text-brand-600 dark:text-brand-400">
-        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4-4 4 4 6-6 2 2M21 21H3V3" />
-        </svg>
-      </span>
-      <div>
-        <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100">Featured Image</h2>
-        <p class="text-sm text-slate-500 dark:text-slate-400">Upload a striking hero image and define accessible alt text.</p>
-      </div>
-    </div>
-
-    {% if object.pk and object.featured_image %}
-    <div class="mb-6 overflow-hidden rounded-2xl border border-dashed border-slate-300/70 bg-white/80 p-4 dark:border-slate-700/70 dark:bg-slate-950/50">
-      <img src="{{ object.featured_image.url }}" alt="{{ object.featured_image_alt }}" class="mx-auto max-h-64 w-full rounded-xl object-cover shadow-sm" />
-      <p class="mt-3 text-center text-xs font-medium text-slate-500 dark:text-slate-400">Current featured image</p>
-    </div>
-    {% endif %}
-
-    <div class="grid gap-5 md:grid-cols-2">
-      <div class="md:col-span-2">
-        <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Image</label>
-        {{ form.featured_image }} {% if form.featured_image.errors %}
-        <p class="mt-1 text-sm text-red-600">{{ form.featured_image.errors.0 }}</p>
-        {% endif %}
-      </div>
-
-      <div class="md:col-span-2">
-        <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Alt Text</label>
-        {{ form.featured_image_alt }} {% if form.featured_image_alt.errors %}
-        <p class="mt-1 text-sm text-red-600">{{ form.featured_image_alt.errors.0 }}</p>
-        {% endif %}
-      </div>
-    </div>
-  </div>
-
-  <!-- SEO Card -->
-  <div class="overflow-hidden rounded-3xl border border-slate-200/70 bg-gradient-to-br from-white via-white to-slate-50 p-6 shadow-sm transition hover:shadow-md dark:border-slate-800/70 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900/60">
-    <div class="mb-6 flex items-center gap-3">
-      <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-500/15 text-brand-600 dark:text-brand-400">
-        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-        </svg>
-      </span>
-      <div>
-        <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100">SEO Settings</h2>
-        <p class="text-sm text-slate-500 dark:text-slate-400">Craft how this story appears in search results and social cards.</p>
-      </div>
-    </div>
-
-    <div class="grid gap-5">
-      <div>
-        <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Meta Title</label>
-        {{ form.meta_title }}
-        <p class="mt-1 text-xs text-slate-500">Leave blank to use post title (max 60 chars)</p>
-        {% if form.meta_title.errors %}
-        <p class="mt-1 text-sm text-red-600">{{ form.meta_title.errors.0 }}</p>
-        {% endif %}
-      </div>
-
-      <div>
-        <label class="mb-2 block text-sm font-semibold text-slate-700 dark:text-slate-300">Meta Description</label>
-        {{ form.meta_description }}
-        <p class="mt-1 text-xs text-slate-500">Max 160 characters</p>
-        {% if form.meta_description.errors %}
-        <p class="mt-1 text-sm text-red-600">{{ form.meta_description.errors.0 }}</p>
-        {% endif %}
-      </div>
-    </div>
-  </div>
-
-  <!-- MDX Content Card -->
-  <div class="overflow-hidden rounded-3xl border border-slate-200/70 bg-gradient-to-br from-white via-white to-slate-50 p-6 shadow-sm transition hover:shadow-md dark:border-slate-800/70 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900/60">
-    <div class="mb-6 flex items-center gap-3">
-      <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-500/15 text-brand-600 dark:text-brand-400">
-        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 20l9-5-9-5-9 5 9 5zm0-10l9-5-9-5-9 5 9 5z" />
-        </svg>
-      </span>
-      <div>
-        <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100">MDX Content</h2>
-        <p class="text-sm text-slate-500 dark:text-slate-400">Compose long-form content with Markdown, JSX, and custom components.</p>
-      </div>
-    </div>
-
-    <div class="mb-5 rounded-2xl border border-blue-200/60 bg-blue-50/80 p-4 text-sm leading-relaxed text-blue-800 shadow-sm dark:border-blue-500/40 dark:bg-blue-950/30 dark:text-blue-200">
-      <strong class="font-semibold">MDX Format:</strong> Include YAML frontmatter for metadata, embed custom components, and leverage fenced code blocks. Pair this with preview tooling in the console for production-ready narratives.
-    </div>
-
-    {{ form.mdx_content }} {% if form.mdx_content.errors %}
-    <p class="mt-1 text-sm text-red-600">{{ form.mdx_content.errors.0 }}</p>
-    {% endif %}
-  </div>
-
-  <!-- Images Card (only show when editing) -->
-  {% if object.pk %}
-  <div class="overflow-hidden rounded-3xl border border-slate-200/70 bg-gradient-to-br from-white via-white to-slate-50 p-6 shadow-sm transition hover:shadow-md dark:border-slate-800/70 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900/60">
-    <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
-      <div class="flex items-center gap-3">
-        <span class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-500/15 text-brand-600 dark:text-brand-400">
-          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4-4 4 4 6-6 2 2M21 21H3V3" />
-          </svg>
-        </span>
-        <div>
-          <h2 class="text-lg font-bold text-slate-900 dark:text-slate-100">Post Assets</h2>
-          <p class="text-sm text-slate-500 dark:text-slate-400">Curate supporting imagery to enrich the narrative.</p>
-        </div>
-      </div>
-      <a href="{% url 'console:blog-image-upload' object.pk %}" class="group relative inline-flex items-center gap-2 overflow-hidden rounded-2xl bg-gradient-to-r from-brand-500 to-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-500/30 transition hover:scale-[1.02]">
-        <span class="absolute inset-0 bg-gradient-to-r from-brand-400 to-brand-500 opacity-0 transition-opacity duration-200 group-hover:opacity-100"></span>
-        <svg class="relative h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-        </svg>
-        <span class="relative">Upload Image</span>
-      </a>
-    </div>
-
-    {% if images %}
-    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {% for image in images %}
-      <div class="group relative overflow-hidden rounded-2xl border border-slate-200/70 bg-white/90 p-4 shadow-sm transition hover:-translate-y-1 hover:border-brand-500/60 hover:shadow-lg dark:border-slate-800/70 dark:bg-slate-950/70">
-        <img src="{{ image.image.url }}" alt="{{ image.alt_text }}" class="mb-3 h-36 w-full rounded-xl object-cover transition duration-300 group-hover:scale-[1.02]" />
-        <p class="mb-3 text-sm font-medium text-slate-700 dark:text-slate-300">{{ image.alt_text|default:'No alt text' }}</p>
-        <div class="flex gap-2">
-          <button type="button" onclick="navigator.clipboard.writeText('{{ image.image.url }}')" class="flex-1 rounded-2xl border border-brand-500/50 px-3 py-1.5 text-xs font-semibold text-brand-600 transition hover:bg-brand-500/10 dark:border-brand-500/50 dark:text-brand-400">Copy URL</button>
-          <a href="{% url 'console:blog-image-delete' object.pk image.pk %}" class="inline-flex items-center justify-center gap-1 rounded-2xl border border-red-500/50 px-3 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-500/10 dark:border-red-500/50 dark:text-red-400">Delete</a>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-    {% else %}
-    <p class="rounded-2xl border border-dashed border-slate-300/80 bg-white/70 p-6 text-sm text-slate-500 dark:border-slate-700/80 dark:bg-slate-950/40 dark:text-slate-400">No images uploaded yet.</p>
-    {% endif %}
-  </div>
+  {% csrf_token %} {% if form.non_field_errors %}
+  <div class="rounded-2xl border border-red-200/70 bg-red-50/80 p-4 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-200">{{ form.non_field_errors }}</div>
   {% endif %}
 
-  <!-- Form Actions -->
-  <div class="flex flex-wrap gap-3">
-    <button type="submit" class="group relative inline-flex items-center gap-2 overflow-hidden rounded-2xl bg-gradient-to-r from-brand-500 to-brand-600 px-7 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-lg shadow-brand-500/30 transition hover:scale-[1.02] hover:shadow-brand-500/40 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 active:scale-[0.98] dark:focus:ring-offset-slate-950">
-      <span class="absolute inset-0 bg-gradient-to-r from-brand-400 to-brand-500 opacity-0 transition-opacity duration-200 group-hover:opacity-100"></span>
-      <svg class="relative h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <div class="grid gap-6 xl:grid-cols-[minmax(0,4.75fr)_minmax(260px,1fr)]">
+    <div class="space-y-6">
+      <section
+        class="rounded-3xl border border-slate-200/70 bg-gradient-to-br from-white via-white to-slate-50 p-6 shadow-sm dark:border-slate-800/70 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900"
+      >
+        <header class="flex items-start gap-3">
+          <span class="inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl bg-brand-500/15 text-brand-600 dark:text-brand-400">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6l4 2m5-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </span>
+          <div>
+            <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Post essentials</h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Give the post a clear headline, summary, and tagging.</p>
+          </div>
+        </header>
+
+        <div class="mt-5 grid gap-4 md:grid-cols-2">
+          <div class="md:col-span-2">
+            <label for="{{ form.title.id_for_label }}" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Title *</label>
+            {{ form.title }} {% if form.title.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.title.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <div class="md:col-span-2">
+            <label for="{{ form.slug.id_for_label }}" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Slug *</label>
+            {{ form.slug }}
+            <p class="mt-1 text-xs text-slate-500">Leave blank to auto-generate from the title.</p>
+            {% if form.slug.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.slug.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <div class="md:col-span-2">
+            <label for="{{ form.description.id_for_label }}" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Description *</label>
+            {{ form.description }} {% if form.description.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.description.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <div>
+            <label for="{{ form.tags_input.id_for_label }}" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Tags</label>
+            {{ form.tags_input }} {% if form.tags_input.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.tags_input.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <div>
+            <label for="{{ form.featured_image.id_for_label }}" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Featured image</label>
+            {{ form.featured_image }} {% if form.featured_image.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.featured_image.errors.0 }}</p>
+            {% endif %}
+          </div>
+
+          <div>
+            <label for="{{ form.featured_image_alt.id_for_label }}" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Alt text</label>
+            {{ form.featured_image_alt }} {% if form.featured_image_alt.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.featured_image_alt.errors.0 }}</p>
+            {% endif %}
+          </div>
+        </div>
+      </section>
+
+      <section class="rounded-3xl border border-slate-200/70 bg-white p-8 shadow-lg shadow-slate-900/5 dark:border-slate-800/70 dark:bg-slate-950">
+        <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
+          <div>
+            <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+              <svg class="h-5 w-5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                />
+              </svg>
+              Writing Studio
+            </h2>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mt-1.5">Craft your content with Markdown/MDX and see it come to life</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <span
+              id="mdx-word-count"
+              class="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-blue-50 to-blue-100 px-3 py-1.5 text-xs font-semibold text-blue-700 dark:from-blue-950/50 dark:to-blue-900/50 dark:text-blue-300"
+            >
+              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+              <span>0 words</span>
+            </span>
+            <span
+              id="mdx-reading-time"
+              class="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-purple-50 to-purple-100 px-3 py-1.5 text-xs font-semibold text-purple-700 dark:from-purple-950/50 dark:to-purple-900/50 dark:text-purple-300"
+            >
+              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>0 min</span>
+            </span>
+            <button
+              type="button"
+              id="toggle-view-mode"
+              class="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-brand-50 to-brand-100 px-3 py-1.5 text-xs font-semibold text-brand-700 transition hover:from-brand-100 hover:to-brand-200 dark:from-brand-950/50 dark:to-brand-900/50 dark:text-brand-300"
+            >
+              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                />
+              </svg>
+              <span id="view-mode-text">Split</span>
+            </button>
+            <button
+              type="button"
+              id="toggle-fullscreen"
+              class="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-green-50 to-green-100 px-3 py-1.5 text-xs font-semibold text-green-700 transition hover:from-green-100 hover:to-green-200 dark:from-green-950/50 dark:to-green-900/50 dark:text-green-300"
+            >
+              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+              </svg>
+              <span id="fullscreen-text">Expand</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Enhanced Toolbar -->
+        <div class="mb-5 space-y-3">
+          <!-- Primary Formatting Tools -->
+          <div class="flex flex-wrap items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50/50 p-2.5 dark:border-slate-700 dark:bg-slate-800/50">
+            <div class="flex gap-1">
+              <button type="button" class="mdx-toolbar-button" data-snippet="# " data-highlight="" title="Heading 1 (Ctrl+1)">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <text x="4" y="18" font-size="18" font-weight="bold" fill="currentColor">H1</text>
+                </svg>
+              </button>
+              <button type="button" class="mdx-toolbar-button" data-snippet="## " data-highlight="" title="Heading 2 (Ctrl+2)">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <text x="4" y="18" font-size="16" font-weight="bold" fill="currentColor">H2</text>
+                </svg>
+              </button>
+              <button type="button" class="mdx-toolbar-button" data-snippet="### " data-highlight="" title="Heading 3 (Ctrl+3)">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <text x="4" y="18" font-size="14" font-weight="bold" fill="currentColor">H3</text>
+                </svg>
+              </button>
+            </div>
+            <div class="h-6 w-px bg-slate-300 dark:bg-slate-600"></div>
+            <div class="flex gap-1">
+              <button type="button" class="mdx-toolbar-button" data-snippet="**Bold text**" data-highlight="Bold text" title="Bold (Ctrl+B)">
+                <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M15.6 10.79c.97-.67 1.65-1.77 1.65-2.79 0-2.26-1.75-4-4-4H7v14h7.04c2.09 0 3.71-1.7 3.71-3.79 0-1.52-.86-2.82-2.15-3.42zM10 6.5h3c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-3v-3zm3.5 9H10v-3h3.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5z"
+                  />
+                </svg>
+              </button>
+              <button type="button" class="mdx-toolbar-button" data-snippet="_Italic text_" data-highlight="Italic text" title="Italic (Ctrl+I)">
+                <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M10 4v3h2.21l-3.42 8H6v3h8v-3h-2.21l3.42-8H18V4z" />
+                </svg>
+              </button>
+              <button type="button" class="mdx-toolbar-button" data-snippet="~~Strikethrough~~" data-highlight="Strikethrough" title="Strikethrough">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12h18M7 8h10M7 16h10" />
+                </svg>
+              </button>
+              <button type="button" class="mdx-toolbar-button" data-snippet="`inline code`" data-highlight="inline code" title="Inline Code">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                </svg>
+              </button>
+            </div>
+            <div class="h-6 w-px bg-slate-300 dark:bg-slate-600"></div>
+            <div class="flex gap-1">
+              <button type="button" class="mdx-toolbar-button" data-snippet="[Link text](https://example.com)" data-highlight="Link text" title="Link (Ctrl+K)">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+                  />
+                </svg>
+              </button>
+              <button type="button" class="mdx-toolbar-button" data-snippet="![Image alt text](image-url.jpg)" data-highlight="Image alt text" title="Image">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div class="h-6 w-px bg-slate-300 dark:bg-slate-600"></div>
+            <div class="flex gap-1">
+              <button type="button" class="mdx-toolbar-button" data-snippet="- List item&#10;- Another item&#10;- Third item&#10;&#10;" data-highlight="List item" title="Bullet List">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+              <button type="button" class="mdx-toolbar-button" data-snippet="1. First item&#10;2. Second item&#10;3. Third item&#10;&#10;" data-highlight="First item" title="Numbered List">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
+                </svg>
+              </button>
+              <button type="button" class="mdx-toolbar-button" data-snippet="- [ ] Task item&#10;- [ ] Another task&#10;&#10;" data-highlight="Task item" title="Task List">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div class="h-6 w-px bg-slate-300 dark:bg-slate-600"></div>
+            <div class="flex gap-1">
+              <button type="button" class="mdx-toolbar-button" data-snippet="&gt; Blockquote text&#10;&#10;" data-highlight="Blockquote text" title="Quote">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                class="mdx-toolbar-button"
+                data-snippet="```javascript&#10;// Your code here&#10;const example = 'Hello World';&#10;```&#10;&#10;"
+                data-highlight="// Your code here"
+                title="Code Block"
+              >
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </button>
+              <button type="button" class="mdx-toolbar-button" data-snippet="---&#10;&#10;" data-highlight="" title="Horizontal Rule">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                </svg>
+              </button>
+            </div>
+            <div class="h-6 w-px bg-slate-300 dark:bg-slate-600"></div>
+            <div class="flex gap-1">
+              <button
+                type="button"
+                class="mdx-toolbar-button"
+                data-snippet="| Header 1 | Header 2 |&#10;|----------|----------|&#10;| Cell 1   | Cell 2   |&#10;&#10;"
+                data-highlight="Header 1"
+                title="Table"
+              >
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              id="clear-editor"
+              class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:border-red-400 hover:bg-red-50 hover:text-red-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-red-600 dark:hover:bg-red-950/30 dark:hover:text-red-400"
+            >
+              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                />
+              </svg>
+              Clear
+            </button>
+            <button
+              type="button"
+              id="undo-editor"
+              class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:border-brand-400 hover:bg-brand-50 hover:text-brand-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-brand-600 dark:hover:bg-brand-950/30 dark:hover:text-brand-400"
+            >
+              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+              </svg>
+              Undo
+            </button>
+            <button
+              type="button"
+              id="redo-editor"
+              class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:border-brand-400 hover:bg-brand-50 hover:text-brand-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-brand-600 dark:hover:bg-brand-950/30 dark:hover:text-brand-400"
+            >
+              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 10h-10a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6" />
+              </svg>
+              Redo
+            </button>
+            <div class="ml-auto flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+              <kbd class="rounded bg-slate-100 px-2 py-0.5 font-mono text-xs text-slate-700 dark:bg-slate-700 dark:text-slate-300">Ctrl+B</kbd>
+              <kbd class="rounded bg-slate-100 px-2 py-0.5 font-mono text-xs text-slate-700 dark:bg-slate-700 dark:text-slate-300">Ctrl+I</kbd>
+              <kbd class="rounded bg-slate-100 px-2 py-0.5 font-mono text-xs text-slate-700 dark:bg-slate-700 dark:text-slate-300">Ctrl+K</kbd>
+            </div>
+          </div>
+        </div>
+
+        <!-- Editor and Preview -->
+        <div id="editor-container" class="editor-split-view">
+          <div class="editor-panel space-y-3">
+            <label for="mdx-editor" class="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300">
+              <svg class="h-4 w-4 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                />
+              </svg>
+              Markdown Editor
+            </label>
+            <div class="relative">
+              <textarea
+                id="mdx-editor"
+                name="{{ form.mdx_content.name }}"
+                rows="24"
+                class="mdx-editor"
+                placeholder="Start writing your content in Markdown...
+
+Example:
+## Welcome to My Blog
+
+This is a **bold statement** and this is _emphasized_.
+
+### Key Points
+- Point one
+- Point two
+- Point three
+
+> A meaningful quote goes here
+
+```javascript
+const greeting = 'Hello, World!';
+console.log(greeting);
+```
+
+[Learn more](https://example.com)"
+              >
+{{ form.mdx_content.value|default_if_none:'' }}</textarea
+              >
+              <div
+                class="absolute bottom-3 right-3 flex items-center gap-2 rounded-lg bg-slate-100/90 px-2.5 py-1.5 text-xs font-medium text-slate-600 backdrop-blur-sm dark:bg-slate-800/90 dark:text-slate-300"
+              >
+                <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span id="cursor-position">Line 1, Col 1</span>
+              </div>
+            </div>
+            {% if form.mdx_content.errors %}
+            <p class="text-sm text-red-600">{{ form.mdx_content.errors.0 }}</p>
+            {% endif %}
+          </div>
+          <div class="preview-panel space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300">
+                <svg class="h-4 w-4 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+                Live Preview
+              </span>
+              <button
+                type="button"
+                id="copy-html"
+                class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:border-brand-400 hover:bg-brand-50 hover:text-brand-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400"
+              >
+                <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                  />
+                </svg>
+                Copy HTML
+              </button>
+            </div>
+            <div
+              id="mdx-preview"
+              class="mdx-preview-content min-h-[600px] rounded-xl border border-slate-200 bg-white p-8 text-base leading-relaxed text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+            >
+              <div class="flex flex-col items-center justify-center py-16 text-center text-slate-400 dark:text-slate-500">
+                <svg class="h-12 w-12 mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
+                </svg>
+                <p class="text-sm font-medium">Your preview will appear here</p>
+                <p class="text-xs mt-2">Start typing to see your formatted content</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="space-y-6">
+      <section
+        class="rounded-3xl border border-slate-200/70 bg-gradient-to-br from-white via-white to-slate-50 p-6 shadow-sm dark:border-slate-800/70 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900"
+      >
+        <header class="flex items-start gap-3">
+          <span class="inline-flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-2xl bg-brand-500/15 text-brand-600 dark:text-brand-400">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4-4 4 4 6-6 2 2M21 21H3V3" />
+            </svg>
+          </span>
+          <div>
+            <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Publish &amp; SEO</h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Choose visibility, schedule timing, and tune metadata.</p>
+          </div>
+        </header>
+        <div class="mt-5 space-y-4">
+          <div>
+            <label for="{{ form.status.id_for_label }}" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Status</label>
+            {{ form.status }} {% if form.status.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.status.errors.0 }}</p>
+            {% endif %}
+          </div>
+          <div>
+            <label for="{{ form.published_at.id_for_label }}" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Published at</label>
+            {{ form.published_at }} {% if form.published_at.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.published_at.errors.0 }}</p>
+            {% endif %}
+          </div>
+          <div>
+            <label for="{{ form.meta_title.id_for_label }}" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Meta title</label>
+            {{ form.meta_title }} {% if form.meta_title.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.meta_title.errors.0 }}</p>
+            {% endif %}
+          </div>
+          <div>
+            <label for="{{ form.meta_description.id_for_label }}" class="text-sm font-semibold text-slate-700 dark:text-slate-300">Meta description</label>
+            {{ form.meta_description }} {% if form.meta_description.errors %}
+            <p class="mt-1 text-sm text-red-600">{{ form.meta_description.errors.0 }}</p>
+            {% endif %}
+          </div>
+        </div>
+      </section>
+
+      {% if object.pk %}
+      <section
+        class="rounded-3xl border border-slate-200/70 bg-gradient-to-br sticky top-14 from-white via-white to-slate-50 p-6 shadow-sm dark:border-slate-800/70 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900"
+      >
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">Attached images</h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Drop ready-made Markdown snippets straight into your draft.</p>
+          </div>
+          <a
+            href="{% url 'console:blog-image-upload' object.pk %}"
+            class="inline-flex items-center gap-2 rounded-2xl border border-brand-400 px-3 py-1.5 text-xs font-semibold text-brand-600 transition hover:bg-brand-100/40 dark:border-brand-600 dark:text-brand-300"
+          >
+            Add more
+          </a>
+        </div>
+        {% if images %}
+        <div class="mt-4 grid gap-4">
+          {% for image in images %}
+          <article
+            class="space-y-3 rounded-2xl border border-slate-200/70 bg-white/90 p-4 text-sm shadow-sm transition hover:-translate-y-1 hover:border-brand-400/60 hover:shadow-lg dark:border-slate-800/70 dark:bg-slate-950/70"
+          >
+            <img src="{{ image.image.url }}" alt="{{ image.alt_text }}" class="h-32 w-full rounded-xl object-cover" />
+            <div>
+              <p class="font-semibold text-slate-800 dark:text-slate-100">{{ image.alt_text|default:'No alt text provided' }}</p>
+              {% if image.caption %}
+              <p class="text-xs text-slate-500 dark:text-slate-400">{{ image.caption }}</p>
+              {% endif %}
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" class="chip-button" data-copy="{{ image.image.url }}">Copy URL</button>
+              <button type="button" class="chip-button" data-template="inline-snippet-{{ image.pk }}">Insert Markdown</button>
+              <button type="button" class="chip-button" data-template="figure-snippet-{{ image.pk }}">Insert figure</button>
+              <a href="{% url 'console:blog-image-delete' object.pk image.pk %}" class="chip-button text-red-600 hover:border-red-400 hover:text-red-500">Delete</a>
+            </div>
+            <template id="inline-snippet-{{ image.pk }}"> ![{{ image.alt_text|default:'Descriptive alt text' }}]({{ image.image.url }}) </template>
+            <template id="figure-snippet-{{ image.pk }}">
+              <figure>
+                <img src="{{ image.image.url }}" alt="{{ image.alt_text|default:'Descriptive alt text' }}" />
+                {% if image.caption %}
+                <figcaption>{{ image.caption }}</figcaption>
+                {% endif %}
+              </figure>
+            </template>
+          </article>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p class="mt-4 text-sm text-slate-500 dark:text-slate-400">No images yet. Upload an asset to reuse it in your Markdown.</p>
+        {% endif %}
+      </section>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="flex flex-wrap justify-end gap-3">
+    <button
+      type="submit"
+      class="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-brand-500 to-brand-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:scale-[1.02]"
+    >
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7" />
       </svg>
-      <span class="relative">{% if object.pk %}Update{% else %}Create{% endif %} Blog Post</span>
+      {% if object.pk %}Update{% else %}Create{% endif %} post
     </button>
-
     <a
       href="{% url 'console:blog-post-list' %}"
-      class="inline-flex items-center gap-2 rounded-2xl border border-slate-300/80 px-7 py-3 text-sm font-semibold uppercase tracking-wide text-slate-600 transition hover:-translate-y-0.5 hover:border-brand-500/60 hover:text-brand-600 dark:border-slate-700 dark:text-slate-300 dark:hover:border-brand-500/60"
-      >Cancel</a
+      class="inline-flex items-center gap-2 rounded-2xl border border-slate-300/80 px-6 py-3 text-sm font-semibold text-slate-600 transition hover:-translate-y-0.5 hover:border-brand-500/60 hover:text-brand-600 dark:border-slate-700 dark:text-slate-300"
     >
+      Cancel
+    </a>
   </div>
 </form>
+{% endblock %} {% block extra_css %} {{ block.super }}
+<style>
+  /* Reset base template transitions that conflict with editor */
+  #mdx-editor,
+  #mdx-preview,
+  .mdx-toolbar-button,
+  .chip-button,
+  .editor-panel *,
+  .preview-panel * {
+    transition: none !important;
+  }
+
+  /* Re-enable specific transitions we want */
+  .mdx-toolbar-button,
+  .chip-button {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  /* Toolbar Buttons */
+  .mdx-toolbar-button,
+  .chip-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    border-radius: 0.625rem;
+    border: 1px solid rgba(148, 163, 184, 0.4);
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: rgb(71, 85, 105);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.95));
+    cursor: pointer;
+    position: relative;
+  }
+
+  .mdx-toolbar-button:hover,
+  .chip-button:hover {
+    border-color: rgba(59, 130, 246, 0.5);
+    background: linear-gradient(135deg, rgba(239, 246, 255, 1), rgba(219, 234, 254, 1));
+    color: rgb(37, 99, 235);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+  }
+
+  .mdx-toolbar-button:active,
+  .chip-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
+  }
+
+  .dark .mdx-toolbar-button,
+  .dark .chip-button {
+    border-color: rgba(71, 85, 105, 0.5);
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.9));
+    color: rgb(203, 213, 225);
+  }
+
+  .dark .mdx-toolbar-button:hover,
+  .dark .chip-button:hover {
+    border-color: rgba(96, 165, 250, 0.6);
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.6), rgba(30, 41, 59, 0.9));
+    color: rgb(147, 197, 253);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+  }
+
+  /* Editor Container */
+  .editor-split-view {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 1rem;
+  }
+
+  .editor-split-view.editor-only {
+    grid-template-columns: 1fr;
+  }
+
+  .editor-split-view.editor-only .preview-panel {
+    display: none;
+  }
+
+  .editor-split-view.preview-only {
+    grid-template-columns: 1fr;
+  }
+
+  .editor-split-view.preview-only .editor-panel {
+    display: none;
+  }
+
+  @media (max-width: 1280px) {
+    .editor-split-view {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+
+  /* Editor Textarea - Override base.html input styles */
+  .mdx-editor {
+    width: 100% !important;
+    resize: vertical;
+    min-height: 600px !important;
+    max-height: 1200px !important;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.5) transparent;
+    border-radius: 1rem !important;
+    border: 1px solid rgba(203, 213, 225, 0.8) !important;
+    background-color: rgb(255, 255, 255) !important;
+    padding: 1.5rem !important;
+    font-family: "Courier New", "Consolas", "Monaco", monospace !important;
+    font-size: 0.9375rem !important;
+    line-height: 1.8 !important;
+    color: rgb(30, 41, 59) !important;
+  }
+
+  .mdx-editor:focus {
+    outline: none !important;
+    border-color: rgb(59, 130, 246) !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  }
+
+  .dark .mdx-editor {
+    border-color: rgba(71, 85, 105, 0.8) !important;
+    background-color: rgb(15, 23, 42) !important;
+    color: rgb(226, 232, 240) !important;
+  }
+
+  .dark .mdx-editor:focus {
+    border-color: rgb(96, 165, 250) !important;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1) !important;
+  }
+
+  .mdx-editor::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .mdx-editor::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .mdx-editor::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.5);
+    border-radius: 4px;
+  }
+
+  .mdx-editor::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.7);
+  }
+
+  .dark .mdx-editor::-webkit-scrollbar-thumb {
+    background: rgba(71, 85, 105, 0.5);
+  }
+
+  .dark .mdx-editor::-webkit-scrollbar-thumb:hover {
+    background: rgba(71, 85, 105, 0.7);
+  }
+
+  /* Preview Content Styles */
+  .mdx-preview-content {
+    overflow-y: auto;
+    min-height: 600px !important;
+    max-height: 1200px !important;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.5) transparent;
+    background-color: rgb(255, 255, 255) !important;
+  }
+
+  .dark .mdx-preview-content {
+    background-color: rgb(15, 23, 42) !important;
+  }
+
+  .mdx-preview-content::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .mdx-preview-content::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .mdx-preview-content::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.5);
+    border-radius: 4px;
+  }
+
+  .mdx-preview-content h1 {
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-top: 2rem;
+    margin-bottom: 1.25rem;
+    color: rgb(15, 23, 42);
+    background: linear-gradient(135deg, rgb(59, 130, 246), rgb(139, 92, 246));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .dark .mdx-preview-content h1 {
+    background: linear-gradient(135deg, rgb(147, 197, 253), rgb(196, 181, 253));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .mdx-preview-content h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: rgb(30, 41, 59);
+    padding-bottom: 0.625rem;
+    border-bottom: 2px solid rgba(226, 232, 240, 0.8);
+  }
+
+  .dark .mdx-preview-content h2 {
+    color: rgb(226, 232, 240);
+    border-bottom-color: rgba(51, 65, 85, 0.8);
+  }
+
+  .mdx-preview-content h3 {
+    font-size: 1.375rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-top: 1.75rem;
+    margin-bottom: 0.875rem;
+    color: rgb(51, 65, 85);
+  }
+
+  .dark .mdx-preview-content h3 {
+    color: rgb(203, 213, 225);
+  }
+
+  .mdx-preview-content p {
+    margin: 1.25rem 0;
+    line-height: 1.8;
+    font-size: 1rem;
+  }
+
+  .mdx-preview-content a {
+    color: rgb(59, 130, 246);
+    text-decoration: underline;
+    text-decoration-color: rgba(59, 130, 246, 0.3);
+    text-underline-offset: 2px;
+    transition: all 0.2s;
+  }
+
+  .mdx-preview-content a:hover {
+    color: rgb(37, 99, 235);
+    text-decoration-color: rgb(37, 99, 235);
+  }
+
+  .dark .mdx-preview-content a {
+    color: rgb(147, 197, 253);
+    text-decoration-color: rgba(147, 197, 253, 0.3);
+  }
+
+  .dark .mdx-preview-content a:hover {
+    color: rgb(96, 165, 250);
+    text-decoration-color: rgb(96, 165, 250);
+  }
+
+  .mdx-preview-content ul,
+  .mdx-preview-content ol {
+    margin: 1rem 0;
+    padding-left: 1.75rem;
+    line-height: 1.7;
+  }
+
+  .mdx-preview-content ul li {
+    list-style-type: disc;
+    margin: 0.5rem 0;
+  }
+
+  .mdx-preview-content ol li {
+    list-style-type: decimal;
+    margin: 0.5rem 0;
+  }
+
+  .mdx-preview-content li::marker {
+    color: rgb(59, 130, 246);
+  }
+
+  .dark .mdx-preview-content li::marker {
+    color: rgb(147, 197, 253);
+  }
+
+  .mdx-preview-content blockquote {
+    border-left: 4px solid rgba(59, 130, 246, 0.5);
+    background: linear-gradient(90deg, rgba(239, 246, 255, 0.8), rgba(255, 255, 255, 0.4));
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+    border-radius: 0.75rem;
+    font-style: italic;
+    color: rgb(51, 65, 85);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+  }
+
+  .dark .mdx-preview-content blockquote {
+    background: linear-gradient(90deg, rgba(30, 58, 138, 0.3), rgba(15, 23, 42, 0.2));
+    color: rgb(203, 213, 225);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+  }
+
+  .mdx-preview-content code {
+    background: rgba(226, 232, 240, 0.6);
+    color: rgb(220, 38, 38);
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.375rem;
+    font-family: "Courier New", monospace;
+    font-size: 0.875em;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+  }
+
+  .dark .mdx-preview-content code {
+    background: rgba(30, 41, 59, 0.8);
+    color: rgb(252, 165, 165);
+    border-color: rgba(71, 85, 105, 0.5);
+  }
+
+  .mdx-preview-content pre {
+    margin: 1.5rem 0;
+    padding: 1.25rem;
+    background: linear-gradient(135deg, rgb(15, 23, 42), rgb(30, 41, 59));
+    color: rgb(226, 232, 240);
+    border-radius: 0.875rem;
+    overflow-x: auto;
+    border: 1px solid rgba(71, 85, 105, 0.3);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .mdx-preview-content pre code {
+    background: transparent;
+    border: none;
+    color: inherit;
+    padding: 0;
+    font-size: 0.875rem;
+  }
+
+  .mdx-preview-content table {
+    width: 100%;
+    margin: 1.5rem 0;
+    border-collapse: collapse;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .mdx-preview-content th,
+  .mdx-preview-content td {
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    text-align: left;
+  }
+
+  .mdx-preview-content th {
+    background: linear-gradient(135deg, rgba(239, 246, 255, 0.9), rgba(219, 234, 254, 0.9));
+    font-weight: 600;
+    color: rgb(30, 58, 138);
+  }
+
+  .dark .mdx-preview-content th {
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.5), rgba(30, 41, 59, 0.8));
+    color: rgb(147, 197, 253);
+    border-color: rgba(71, 85, 105, 0.5);
+  }
+
+  .dark .mdx-preview-content td {
+    border-color: rgba(71, 85, 105, 0.5);
+  }
+
+  .mdx-preview-content tr:hover {
+    background: rgba(239, 246, 255, 0.5);
+  }
+
+  .dark .mdx-preview-content tr:hover {
+    background: rgba(30, 58, 138, 0.2);
+  }
+
+  .mdx-preview-content hr {
+    margin: 2rem 0;
+    border: none;
+    border-top: 2px solid rgba(226, 232, 240, 0.8);
+  }
+
+  .dark .mdx-preview-content hr {
+    border-top-color: rgba(71, 85, 105, 0.5);
+  }
+
+  .mdx-preview-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.75rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Keyboard shortcuts */
+  kbd {
+    font-family: "Courier New", monospace;
+    font-size: 0.75rem;
+  }
+
+  /* Override base template form input styles for editor sections */
+  .editor-panel input,
+  .editor-panel textarea,
+  .editor-panel select,
+  .preview-panel input,
+  .preview-panel textarea,
+  .preview-panel select {
+    transition: all 0.2s ease !important;
+  }
+
+  /* Fix input field styling conflicts */
+  form input[type="text"],
+  form input[type="email"],
+  form input[type="password"],
+  form input[type="url"],
+  form input[type="number"],
+  form input[type="date"],
+  form input[type="time"],
+  form input[type="datetime-local"],
+  form select {
+    background-color: rgb(255, 255, 255) !important;
+    border: 1px solid rgb(203, 213, 225) !important;
+  }
+
+  .dark form input[type="text"],
+  .dark form input[type="email"],
+  .dark form input[type="password"],
+  .dark form input[type="url"],
+  .dark form input[type="number"],
+  .dark form input[type="date"],
+  .dark form input[type="time"],
+  .dark form input[type="datetime-local"],
+  .dark form select {
+    background-color: rgb(15, 23, 42) !important;
+    border-color: rgb(51, 65, 85) !important;
+    color: rgb(226, 232, 240) !important;
+  }
+
+  /* Ensure smooth scrolling for editor content */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Better spacing for editor container */
+  .editor-split-view {
+    margin-top: 1rem;
+  }
+
+  /* Fullscreen mode */
+  .editor-fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    background: rgb(255, 255, 255);
+    padding: 2rem;
+    overflow-y: auto;
+  }
+
+  .dark .editor-fullscreen {
+    background: rgb(15, 23, 42);
+  }
+
+  .editor-fullscreen .mdx-editor,
+  .editor-fullscreen .mdx-preview-content {
+    min-height: calc(100vh - 300px) !important;
+    max-height: calc(100vh - 300px) !important;
+  }
+</style>
 {% endblock %} {% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js"></script>
 <script>
-  // Auto-generate slug from title
   document.addEventListener("DOMContentLoaded", function () {
+    // Auto-generate slug from title
     const titleInput = document.querySelector('input[name="title"]');
     const slugInput = document.querySelector('input[name="slug"]');
-
     if (titleInput && slugInput && !slugInput.value) {
       titleInput.addEventListener("input", function () {
+        if (slugInput.dataset.userEdited === "true") {
+          return;
+        }
         const slug = this.value
           .toLowerCase()
           .replace(/[^\w\s-]/g, "")
@@ -261,6 +1058,384 @@
           .replace(/-+/g, "-")
           .trim();
         slugInput.value = slug;
+      });
+      slugInput.addEventListener("input", function () {
+        if (this.value.trim()) {
+          this.dataset.userEdited = "true";
+        } else {
+          delete this.dataset.userEdited;
+        }
+      });
+    }
+
+    // Editor elements
+    const editor = document.getElementById("mdx-editor");
+    const preview = document.getElementById("mdx-preview");
+    const wordCountEl = document.getElementById("mdx-word-count");
+    const readingTimeEl = document.getElementById("mdx-reading-time");
+    const cursorPositionEl = document.getElementById("cursor-position");
+    const toolbarButtons = document.querySelectorAll("[data-snippet]");
+    const templateButtons = document.querySelectorAll("[data-template]");
+    const copyButtons = document.querySelectorAll("[data-copy]");
+
+    // Undo/Redo history
+    let history = [editor ? editor.value : ""];
+    let historyStep = 0;
+    let lastSavedValue = editor ? editor.value : "";
+
+    // Configure marked
+    if (window.marked) {
+      window.marked.setOptions({
+        breaks: true,
+        gfm: true,
+        headerIds: true,
+        mangle: false,
+        highlight: function (code, lang) {
+          return code; // Basic highlighting, can be enhanced with highlight.js
+        },
+      });
+    }
+
+    // Update stats (word count, reading time)
+    function updateStats(value) {
+      const words = value.trim() ? value.trim().split(/\s+/).length : 0;
+      const minutes = words ? Math.max(1, Math.ceil(words / 200)) : 0;
+
+      if (wordCountEl) {
+        const wordSpan = wordCountEl.querySelector("span") || wordCountEl;
+        wordSpan.textContent = words + (words === 1 ? " word" : " words");
+      }
+
+      if (readingTimeEl) {
+        const timeSpan = readingTimeEl.querySelector("span") || readingTimeEl;
+        timeSpan.textContent = minutes ? "~" + minutes + (minutes === 1 ? " min" : " mins") : "0 min";
+      }
+    }
+
+    // Update cursor position
+    function updateCursorPosition() {
+      if (!editor || !cursorPositionEl) return;
+
+      const pos = editor.selectionStart;
+      const textBeforeCursor = editor.value.substring(0, pos);
+      const lines = textBeforeCursor.split("\n");
+      const line = lines.length;
+      const col = lines[lines.length - 1].length + 1;
+
+      cursorPositionEl.textContent = `Line ${line}, Col ${col}`;
+    }
+
+    // Render preview
+    function renderPreview() {
+      if (!preview || !editor) return;
+
+      const raw = editor.value || "";
+
+      if (!raw.trim()) {
+        preview.innerHTML = `
+          <div class="flex flex-col items-center justify-center py-12 text-center text-slate-400 dark:text-slate-500">
+            <svg class="h-12 w-12 mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            <p class="text-sm font-medium">Your preview will appear here</p>
+            <p class="text-xs mt-1">Start typing to see your formatted content</p>
+          </div>
+        `;
+      } else {
+        if (window.marked && window.DOMPurify) {
+          preview.innerHTML = window.DOMPurify.sanitize(window.marked.parse(raw));
+        } else if (window.marked) {
+          preview.innerHTML = window.marked.parse(raw);
+        } else {
+          preview.textContent = raw;
+        }
+      }
+
+      updateStats(raw);
+    }
+
+    // Save to history for undo/redo
+    function saveToHistory(value) {
+      if (value === history[historyStep]) return;
+
+      // Remove any future history if we're not at the end
+      history = history.slice(0, historyStep + 1);
+      history.push(value);
+      historyStep++;
+
+      // Limit history to 50 steps
+      if (history.length > 50) {
+        history.shift();
+        historyStep--;
+      }
+    }
+
+    // Editor event listeners
+    if (editor) {
+      let typingTimer;
+      const typingDelay = 500;
+
+      editor.addEventListener("input", function () {
+        renderPreview();
+        updateCursorPosition();
+
+        // Debounced history save
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(() => {
+          saveToHistory(editor.value);
+        }, typingDelay);
+      });
+
+      editor.addEventListener("keyup", updateCursorPosition);
+      editor.addEventListener("click", updateCursorPosition);
+      editor.addEventListener("focus", updateCursorPosition);
+
+      // Keyboard shortcuts
+      editor.addEventListener("keydown", function (e) {
+        // Ctrl+B for bold
+        if (e.ctrlKey && e.key === "b") {
+          e.preventDefault();
+          insertSnippet("**Bold text**", "Bold text");
+        }
+        // Ctrl+I for italic
+        else if (e.ctrlKey && e.key === "i") {
+          e.preventDefault();
+          insertSnippet("_Italic text_", "Italic text");
+        }
+        // Ctrl+K for link
+        else if (e.ctrlKey && e.key === "k") {
+          e.preventDefault();
+          insertSnippet("[Link text](https://example.com)", "Link text");
+        }
+        // Ctrl+Z for undo
+        else if (e.ctrlKey && e.key === "z" && !e.shiftKey) {
+          e.preventDefault();
+          undo();
+        }
+        // Ctrl+Y or Ctrl+Shift+Z for redo
+        else if ((e.ctrlKey && e.key === "y") || (e.ctrlKey && e.shiftKey && e.key === "z")) {
+          e.preventDefault();
+          redo();
+        }
+        // Ctrl+1, 2, 3 for headings
+        else if (e.ctrlKey && ["1", "2", "3"].includes(e.key)) {
+          e.preventDefault();
+          const level = "#".repeat(parseInt(e.key));
+          insertSnippet(level + " ", "");
+        }
+        // Tab to indent
+        else if (e.key === "Tab") {
+          e.preventDefault();
+          const start = editor.selectionStart;
+          const end = editor.selectionEnd;
+          editor.value = editor.value.substring(0, start) + "  " + editor.value.substring(end);
+          editor.selectionStart = editor.selectionEnd = start + 2;
+          renderPreview();
+        }
+      });
+
+      // Initial render
+      renderPreview();
+      updateCursorPosition();
+    }
+
+    // Insert snippet function
+    function insertSnippet(snippet, highlight) {
+      if (!editor) return;
+
+      const start = editor.selectionStart || 0;
+      const end = editor.selectionEnd || 0;
+      const before = editor.value.slice(0, start);
+      const after = editor.value.slice(end);
+
+      editor.value = before + snippet + after;
+
+      if (highlight && snippet.indexOf(highlight) !== -1) {
+        const highlightStart = before.length + snippet.indexOf(highlight);
+        const highlightEnd = highlightStart + highlight.length;
+        editor.setSelectionRange(highlightStart, highlightEnd);
+      } else {
+        const cursor = before.length + snippet.length;
+        editor.setSelectionRange(cursor, cursor);
+      }
+
+      editor.focus();
+      renderPreview();
+      saveToHistory(editor.value);
+    }
+
+    // Toolbar buttons
+    toolbarButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        const snippet = button.dataset.snippet || "";
+        const highlight = button.dataset.highlight || "";
+        insertSnippet(snippet, highlight);
+      });
+    });
+
+    // Template buttons (for image insertion)
+    templateButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        if (!editor) return;
+
+        const templateId = button.dataset.template;
+        const template = templateId ? document.getElementById(templateId) : null;
+        if (!template || !template.content) return;
+
+        const snippet = template.content.textContent.trim() + "\n\n";
+        insertSnippet(snippet, "");
+      });
+    });
+
+    // Copy buttons
+    copyButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        const value = button.dataset.copy;
+        if (!navigator.clipboard || !value) return;
+
+        const previous = button.textContent;
+        navigator.clipboard
+          .writeText(value)
+          .then(function () {
+            button.textContent = "Copied!";
+            setTimeout(function () {
+              button.textContent = previous;
+            }, 1500);
+          })
+          .catch(function () {
+            button.textContent = "Failed";
+            setTimeout(function () {
+              button.textContent = previous;
+            }, 1500);
+          });
+      });
+    });
+
+    // View mode toggle
+    const toggleViewBtn = document.getElementById("toggle-view-mode");
+    const editorContainer = document.getElementById("editor-container");
+    const viewModeText = document.getElementById("view-mode-text");
+    let currentViewMode = "split"; // split, editor-only, preview-only
+
+    if (toggleViewBtn && editorContainer) {
+      toggleViewBtn.addEventListener("click", function () {
+        if (currentViewMode === "split") {
+          currentViewMode = "editor-only";
+          editorContainer.className = "editor-split-view editor-only";
+          viewModeText.textContent = "Editor";
+        } else if (currentViewMode === "editor-only") {
+          currentViewMode = "preview-only";
+          editorContainer.className = "editor-split-view preview-only";
+          viewModeText.textContent = "Preview";
+        } else {
+          currentViewMode = "split";
+          editorContainer.className = "editor-split-view";
+          viewModeText.textContent = "Split";
+        }
+      });
+    }
+
+    // Clear editor
+    const clearBtn = document.getElementById("clear-editor");
+    if (clearBtn && editor) {
+      clearBtn.addEventListener("click", function () {
+        if (editor.value && confirm("Are you sure you want to clear all content?")) {
+          saveToHistory(editor.value);
+          editor.value = "";
+          renderPreview();
+          updateCursorPosition();
+        }
+      });
+    }
+
+    // Undo
+    function undo() {
+      if (historyStep > 0) {
+        historyStep--;
+        editor.value = history[historyStep];
+        renderPreview();
+        updateCursorPosition();
+      }
+    }
+
+    const undoBtn = document.getElementById("undo-editor");
+    if (undoBtn) {
+      undoBtn.addEventListener("click", undo);
+    }
+
+    // Redo
+    function redo() {
+      if (historyStep < history.length - 1) {
+        historyStep++;
+        editor.value = history[historyStep];
+        renderPreview();
+        updateCursorPosition();
+      }
+    }
+
+    const redoBtn = document.getElementById("redo-editor");
+    if (redoBtn) {
+      redoBtn.addEventListener("click", redo);
+    }
+
+    // Copy HTML
+    const copyHtmlBtn = document.getElementById("copy-html");
+    if (copyHtmlBtn && preview) {
+      copyHtmlBtn.addEventListener("click", function () {
+        if (!navigator.clipboard) return;
+
+        const html = preview.innerHTML;
+        const previous = copyHtmlBtn.innerHTML;
+
+        navigator.clipboard
+          .writeText(html)
+          .then(function () {
+            copyHtmlBtn.innerHTML = `
+              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Copied!
+            `;
+            setTimeout(function () {
+              copyHtmlBtn.innerHTML = previous;
+            }, 1500);
+          })
+          .catch(function () {
+            copyHtmlBtn.textContent = "Failed";
+            setTimeout(function () {
+              copyHtmlBtn.innerHTML = previous;
+            }, 1500);
+          });
+      });
+    }
+
+    // Fullscreen toggle
+    const fullscreenBtn = document.getElementById("toggle-fullscreen");
+    const fullscreenText = document.getElementById("fullscreen-text");
+    const editorSection = document.querySelector(".space-y-6 > section:nth-child(2)");
+    let isFullscreen = false;
+
+    if (fullscreenBtn && editorSection) {
+      fullscreenBtn.addEventListener("click", function () {
+        isFullscreen = !isFullscreen;
+
+        if (isFullscreen) {
+          editorSection.classList.add("editor-fullscreen");
+          fullscreenText.textContent = "Exit";
+          document.body.style.overflow = "hidden";
+        } else {
+          editorSection.classList.remove("editor-fullscreen");
+          fullscreenText.textContent = "Expand";
+          document.body.style.overflow = "";
+        }
+      });
+
+      // ESC key to exit fullscreen
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && isFullscreen) {
+          fullscreenBtn.click();
+        }
       });
     }
   });

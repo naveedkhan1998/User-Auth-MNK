@@ -23,7 +23,7 @@ class BlogPostForm(forms.ModelForm):
 
     tags_input = forms.CharField(
         required=False,
-        widget=forms.TextInput(attrs={"placeholder": "Enter tags separated by commas"}),
+        widget=forms.TextInput(attrs={"placeholder": "design, announcements, releases"}),
         help_text="Separate tags with commas",
     )
 
@@ -78,6 +78,22 @@ class BlogPostForm(forms.ModelForm):
         for field_name, field in self.fields.items():
             existing = field.widget.attrs.get("class", "")
             field.widget.attrs["class"] = f"{existing} {base_classes}".strip()
+
+        placeholders = {
+            "title": "Write a headline readers will remember",
+            "slug": "auto-generated-when-left-empty",
+            "description": "Short excerpt used in previews",
+            "tags_input": "design, announcements, releases",
+            "featured_image_alt": "Describe what the hero image shows",
+            "meta_title": "Optional: override the browser title",
+            "meta_description": "Optional search and social summary",
+        }
+
+        for field_name, placeholder in placeholders.items():
+            if field_name in self.fields:
+                self.fields[field_name].widget.attrs.setdefault(
+                    "placeholder", placeholder
+                )
 
     def clean_tags_input(self):
         """Convert comma-separated tags to list."""
