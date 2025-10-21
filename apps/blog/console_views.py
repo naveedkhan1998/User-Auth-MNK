@@ -9,6 +9,8 @@ from django.urls import reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
+from django.http import JsonResponse
+from django.views import View
 
 from .models import BlogPost, BlogImage
 from .forms import BlogPostForm, BlogImageForm
@@ -183,3 +185,62 @@ class BlogImageDeleteView(StaffOnlyMixin, DeleteView):
         context = super().get_context_data(**kwargs)
         context["blog_post"] = self.blog_post
         return context
+
+
+class BlogImageUploadAPIView(StaffOnlyMixin, View):
+    """
+    JSON API endpoint for uploading images via drag-and-drop or paste.
+    Used by the markdown editor for inline image uploads.
+    """
+
+    def post(self, request, pk):
+        """Handle image upload and return JSON response."""
+        blog_post = get_object_or_404(BlogPost, pk=pk)
+
+        # Check if image file is present
+        if "image" not in request.FILES:
+            return JsonResponse({"error": "No image file provided"}, status=400)
+
+        image_file = request.FILES["image"]
+        alt_text = request.POST.get("alt_text", "")
+        caption = request.POST.get("caption", "")
+
+        # Validate file type
+        allowed_types = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"]
+        if image_file.content_type not in allowed_types:
+            return JsonResponse(
+                {"error": f"Invalid file type. Allowed types: {', '.join(allowed_types)}"},
+                status=400,
+            )
+
+        # Validate file size (max 5MB)
+        max_size = 5 * 1024 * 1024  # 5MB in bytes
+        if image_file.size > max_size:
+            return JsonResponse(
+                {"error": "File size exceeds 5MB limit"}, status=400
+            )
+
+        try:
+            # Create BlogImage instance
+            blog_image = BlogImage.objects.create(
+                blog_post=blog_post,
+                image=image_file,
+                alt_text=alt_text or image_file.name,
+                caption=caption,
+            )
+
+            # Return success response with image URL
+            return JsonResponse(
+                {
+                    "success": True,
+                    "alt_text": blog_image.alt_text,
+                    "image_url": blog_image.image.url,
+                    "caption": blog_image.caption,
+                },
+                status=201,
+            )
+
+        except Exception as e:
+            return JsonResponse(
+                {"error": f"Failed to upload image: {str(e)}"}, status=500
+            )

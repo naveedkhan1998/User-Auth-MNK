@@ -39,8 +39,15 @@ SIMPLE_JWT.update(
 
 # Local development: Use the filesystem for static and media files
 
-STATIC_ROOT = BASE_DIR / "static"
+# Don't set STATIC_ROOT in development - Django will find static files in apps
+# STATIC_ROOT = BASE_DIR / "static"  # Only for production collectstatic
 STATIC_URL = "static/"
+
+# If you have additional static files outside of apps, add them here:
+# STATICFILES_DIRS = [
+#     BASE_DIR / "extra_static",
+# ]
+
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "media/"
 OUTPUT_ROOT = BASE_DIR / "OUTPUTS"

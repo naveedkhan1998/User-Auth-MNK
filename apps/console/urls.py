@@ -26,6 +26,7 @@ from apps.blog.console_views import (
     BlogPostDeleteView,
     BlogImageUploadView,
     BlogImageDeleteView,
+    BlogImageUploadAPIView,
 )
 
 
@@ -76,5 +77,11 @@ urlpatterns = [
         "blog/<uuid:post_pk>/images/<uuid:image_pk>/delete/",
         BlogImageDeleteView.as_view(),
         name="blog-image-delete",
+    ),
+    # JSON API for drag-and-drop image upload
+    path(
+        "blog/<uuid:pk>/upload-image/",
+        BlogImageUploadAPIView.as_view(),
+        name="blog-image-upload-api",
     ),
 ]

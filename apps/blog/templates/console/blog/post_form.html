@@ -1,5 +1,13 @@
-{% extends 'layouts/base_console.html' %} {% block console_title %}{% if object.pk %}Edit{% else %}Create{% endif %} Blog Post{% endblock %} {% block console_section %} Content Studio {% endblock %}
-{% block console_heading %}{% if object.pk %}Update: {{ object.title }}{% else %}Compose a New Blog Story{% endif %}{% endblock %} {% block console_description %}
+{% extends 'layouts/base_console.html' %}
+{% load static %}
+
+{% block console_title %}{% if object.pk %}Edit{% else %}Create{% endif %} Blog Post{% endblock %} 
+
+{% block console_section %} Content Studio {% endblock %}
+
+{% block console_heading %}{% if object.pk %}Update: {{ object.title }}{% else %}Compose a New Blog Story{% endif %}{% endblock %} 
+
+{% block console_description %}
 <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-400">Complete the post details, write in Markdown, and check the live preview before publishing.</p>
 {% endblock %} {% block console_header_actions %}
 <div class="flex flex-wrap items-center gap-3">
@@ -119,6 +127,10 @@
 
           <!-- Stats and Controls -->
           <div class="flex flex-wrap items-center gap-2">
+            <span id="save-status" class="inline-flex items-center gap-1.5 rounded-lg bg-neutral-100 px-3 py-1.5 text-xs font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300">
+              ✓ Saved
+            </span>
+
             <span id="mdx-word-count" class="inline-flex items-center gap-1.5 rounded-lg bg-neutral-100 px-3 py-1.5 text-xs font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300">
               <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -136,6 +148,10 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <span>0 min</span>
+            </span>
+
+            <span id="char-count" class="inline-flex items-center gap-1.5 rounded-lg bg-neutral-100 px-3 py-1.5 text-xs font-medium text-neutral-700 dark:bg-neutral-800 dark:text-neutral-300">
+              0 chars
             </span>
 
             <button
@@ -156,6 +172,28 @@
 
             <button
               type="button"
+              id="toggle-sync-scroll"
+              class="inline-flex items-center gap-1.5 rounded-lg bg-neutral-100 px-3 py-1.5 text-xs font-medium text-neutral-700 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 active"
+              title="Toggle synchronized scrolling"
+            >
+              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+              </svg>
+            </button>
+
+            <button
+              type="button"
+              id="toggle-spell-check"
+              class="inline-flex items-center gap-1.5 rounded-lg bg-neutral-100 px-3 py-1.5 text-xs font-medium text-neutral-700 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 active"
+              title="Toggle spell checking"
+            >
+              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </button>
+
+            <button
+              type="button"
               id="toggle-fullscreen"
               class="inline-flex items-center gap-1.5 rounded-lg bg-neutral-100 px-3 py-1.5 text-xs font-medium text-neutral-700 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
             >
@@ -163,6 +201,17 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
               </svg>
               <span id="fullscreen-text">Expand</span>
+            </button>
+
+            <button
+              type="button"
+              id="show-shortcuts"
+              class="inline-flex items-center gap-1.5 rounded-lg bg-neutral-100 px-3 py-1.5 text-xs font-medium text-neutral-700 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
+              title="Keyboard shortcuts (Ctrl+/)"
+            >
+              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
             </button>
           </div>
         </div>
@@ -262,11 +311,38 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </button>
+              <button type="button" class="mdx-toolbar-button" data-snippet="---&#10;&#10;" data-highlight="" title="Horizontal Rule">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+                </svg>
+              </button>
+            </div>
+
+            <div class="h-6 w-px bg-neutral-300 dark:bg-neutral-600"></div>
+
+            <!-- Advanced -->
+            <div class="flex gap-1">
+              <button type="button" class="mdx-toolbar-button" data-snippet="| Header 1 | Header 2 |&#10;|----------|----------|&#10;| Cell 1   | Cell 2   |&#10;&#10;" data-highlight="" title="Table">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+              </button>
+              <button type="button" class="mdx-toolbar-button" data-snippet="- [ ] Task item&#10;&#10;" data-highlight="Task item" title="Task List">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+              </button>
+              <button type="button" id="quick-templates" class="mdx-toolbar-button" title="Quick Templates">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                </svg>
+              </button>
             </div>
           </div>
 
           <!-- Quick Actions -->
           <div class="flex flex-wrap items-center gap-2">
+            <span class="text-xs text-neutral-500 dark:text-neutral-400 mr-2">💡 Tip: Drag & drop images, use Ctrl+/ for shortcuts</span>
             <button
               type="button"
               id="clear-editor"
@@ -514,7 +590,11 @@ const greeting = 'Hello, World!';
     </a>
   </div>
 </form>
-{% endblock %} {% block extra_css %} {{ block.super }}
+{% endblock %} 
+
+{% block extra_css %} 
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'blog/css/markdown-editor-pro.css' %}">
 <style>
   /* <CHANGE> Simplified toolbar button styling with better contrast */
   .mdx-toolbar-button,
@@ -814,16 +894,18 @@ const greeting = 'Hello, World!';
     background: rgb(24, 24, 27);
   }
 </style>
-{% endblock %} {% block extra_js %}
+{% endblock %} 
+
+{% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js"></script>
-<script>
-  // ... existing code ...
-</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+<script src="{% static 'blog/js/markdown-editor-pro.js' %}"></script>
 
 <script>
+  // Auto-generate slug from title (not part of markdown editor)
   document.addEventListener("DOMContentLoaded", function () {
-    // Auto-generate slug from title
     const titleInput = document.querySelector('input[name="title"]');
     const slugInput = document.querySelector('input[name="slug"]');
 
@@ -845,330 +927,6 @@ const greeting = 'Hello, World!';
           this.dataset.userEdited = "true";
         } else {
           delete this.dataset.userEdited;
-        }
-      });
-    }
-
-    // Editor elements
-    const editor = document.getElementById("mdx-editor");
-    const preview = document.getElementById("mdx-preview");
-    const wordCountEl = document.getElementById("mdx-word-count");
-    const readingTimeEl = document.getElementById("mdx-reading-time");
-    const cursorPositionEl = document.getElementById("cursor-position");
-    const toolbarButtons = document.querySelectorAll("[data-snippet]");
-    const templateButtons = document.querySelectorAll("[data-template]");
-    const copyButtons = document.querySelectorAll("[data-copy]");
-
-    // Undo/Redo history
-    let history = [editor ? editor.value : ""];
-    let historyStep = 0;
-
-    // Configure marked
-    if (window.marked) {
-      window.marked.setOptions({
-        breaks: true,
-        gfm: true,
-        headerIds: true,
-        mangle: false,
-      });
-    }
-
-    // Update stats
-    function updateStats(value) {
-      const words = value.trim() ? value.trim().split(/\s+/).length : 0;
-      const minutes = words ? Math.max(1, Math.ceil(words / 200)) : 0;
-
-      if (wordCountEl) {
-        const wordSpan = wordCountEl.querySelector("span") || wordCountEl;
-        wordSpan.textContent = words + (words === 1 ? " word" : " words");
-      }
-
-      if (readingTimeEl) {
-        const timeSpan = readingTimeEl.querySelector("span") || readingTimeEl;
-        timeSpan.textContent = minutes ? "~" + minutes + (minutes === 1 ? " min" : " mins") : "0 min";
-      }
-    }
-
-    // Update cursor position
-    function updateCursorPosition() {
-      if (!editor || !cursorPositionEl) return;
-
-      const pos = editor.selectionStart;
-      const textBeforeCursor = editor.value.substring(0, pos);
-      const lines = textBeforeCursor.split("\n");
-      const line = lines.length;
-      const col = lines[lines.length - 1].length + 1;
-
-      cursorPositionEl.textContent = `Line ${line}, Col ${col}`;
-    }
-
-    // Render preview
-    function renderPreview() {
-      if (!preview || !editor) return;
-
-      const raw = editor.value || "";
-
-      if (!raw.trim()) {
-        preview.innerHTML = `
-          <div class="flex flex-col items-center justify-center py-16 text-center text-neutral-400 dark:text-neutral-500">
-            <svg class="h-12 w-12 mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-            </svg>
-            <p class="text-sm font-medium">Your preview will appear here</p>
-            <p class="text-xs mt-2">Start typing to see your formatted content</p>
-          </div>
-        `;
-      } else {
-        if (window.marked && window.DOMPurify) {
-          preview.innerHTML = window.DOMPurify.sanitize(window.marked.parse(raw));
-        } else if (window.marked) {
-          preview.innerHTML = window.marked.parse(raw);
-        } else {
-          preview.textContent = raw;
-        }
-      }
-
-      updateStats(raw);
-    }
-
-    // Save to history
-    function saveToHistory(value) {
-      if (value === history[historyStep]) return;
-      history = history.slice(0, historyStep + 1);
-      history.push(value);
-      historyStep++;
-      if (history.length > 50) {
-        history.shift();
-        historyStep--;
-      }
-    }
-
-    // Editor event listeners
-    if (editor) {
-      let typingTimer;
-      const typingDelay = 500;
-
-      editor.addEventListener("input", function () {
-        renderPreview();
-        updateCursorPosition();
-        clearTimeout(typingTimer);
-        typingTimer = setTimeout(() => {
-          saveToHistory(editor.value);
-        }, typingDelay);
-      });
-
-      editor.addEventListener("keyup", updateCursorPosition);
-      editor.addEventListener("click", updateCursorPosition);
-      editor.addEventListener("focus", updateCursorPosition);
-
-      // Keyboard shortcuts
-      editor.addEventListener("keydown", function (e) {
-        if (e.ctrlKey && e.key === "b") {
-          e.preventDefault();
-          insertSnippet("**Bold text**", "Bold text");
-        } else if (e.ctrlKey && e.key === "i") {
-          e.preventDefault();
-          insertSnippet("_Italic text_", "Italic text");
-        } else if (e.ctrlKey && e.key === "k") {
-          e.preventDefault();
-          insertSnippet("[Link text](https://example.com)", "Link text");
-        } else if (e.ctrlKey && e.key === "z" && !e.shiftKey) {
-          e.preventDefault();
-          undo();
-        } else if ((e.ctrlKey && e.key === "y") || (e.ctrlKey && e.shiftKey && e.key === "z")) {
-          e.preventDefault();
-          redo();
-        } else if (e.key === "Tab") {
-          e.preventDefault();
-          const start = editor.selectionStart;
-          const end = editor.selectionEnd;
-          editor.value = editor.value.substring(0, start) + "  " + editor.value.substring(end);
-          editor.selectionStart = editor.selectionEnd = start + 2;
-          renderPreview();
-        }
-      });
-
-      renderPreview();
-      updateCursorPosition();
-    }
-
-    // Insert snippet
-    function insertSnippet(snippet, highlight) {
-      if (!editor) return;
-
-      const start = editor.selectionStart || 0;
-      const end = editor.selectionEnd || 0;
-      const before = editor.value.slice(0, start);
-      const after = editor.value.slice(end);
-
-      editor.value = before + snippet + after;
-
-      if (highlight && snippet.indexOf(highlight) !== -1) {
-        const highlightStart = before.length + snippet.indexOf(highlight);
-        const highlightEnd = highlightStart + highlight.length;
-        editor.setSelectionRange(highlightStart, highlightEnd);
-      } else {
-        const cursor = before.length + snippet.length;
-        editor.setSelectionRange(cursor, cursor);
-      }
-
-      editor.focus();
-      renderPreview();
-      saveToHistory(editor.value);
-    }
-
-    // Toolbar buttons
-    toolbarButtons.forEach(function (button) {
-      button.addEventListener("click", function () {
-        const snippet = button.dataset.snippet || "";
-        const highlight = button.dataset.highlight || "";
-        insertSnippet(snippet, highlight);
-      });
-    });
-
-    // Template buttons
-    templateButtons.forEach(function (button) {
-      button.addEventListener("click", function () {
-        if (!editor) return;
-        const templateId = button.dataset.template;
-        const template = templateId ? document.getElementById(templateId) : null;
-        if (!template || !template.content) return;
-        const snippet = template.content.textContent.trim() + "\n\n";
-        insertSnippet(snippet, "");
-      });
-    });
-
-    // Copy buttons
-    copyButtons.forEach(function (button) {
-      button.addEventListener("click", function () {
-        const value = button.dataset.copy;
-        if (!navigator.clipboard || !value) return;
-        const previous = button.textContent;
-        navigator.clipboard
-          .writeText(value)
-          .then(function () {
-            button.textContent = "Copied!";
-            setTimeout(function () {
-              button.textContent = previous;
-            }, 1500);
-          })
-          .catch(function () {
-            button.textContent = "Failed";
-            setTimeout(function () {
-              button.textContent = previous;
-            }, 1500);
-          });
-      });
-    });
-
-    // View mode toggle
-    const toggleViewBtn = document.getElementById("toggle-view-mode");
-    const editorContainer = document.getElementById("editor-container");
-    const viewModeText = document.getElementById("view-mode-text");
-    let currentViewMode = "split";
-
-    if (toggleViewBtn && editorContainer) {
-      toggleViewBtn.addEventListener("click", function () {
-        if (currentViewMode === "split") {
-          currentViewMode = "editor-only";
-          editorContainer.className = "editor-split-view editor-only";
-          viewModeText.textContent = "Editor";
-        } else if (currentViewMode === "editor-only") {
-          currentViewMode = "preview-only";
-          editorContainer.className = "editor-split-view preview-only";
-          viewModeText.textContent = "Preview";
-        } else {
-          currentViewMode = "split";
-          editorContainer.className = "editor-split-view";
-          viewModeText.textContent = "Split";
-        }
-      });
-    }
-
-    // Clear editor
-    const clearBtn = document.getElementById("clear-editor");
-    if (clearBtn && editor) {
-      clearBtn.addEventListener("click", function () {
-        if (editor.value && confirm("Are you sure you want to clear all content?")) {
-          saveToHistory(editor.value);
-          editor.value = "";
-          renderPreview();
-          updateCursorPosition();
-        }
-      });
-    }
-
-    // Undo
-    function undo() {
-      if (historyStep > 0) {
-        historyStep--;
-        editor.value = history[historyStep];
-        renderPreview();
-        updateCursorPosition();
-      }
-    }
-
-    const undoBtn = document.getElementById("undo-editor");
-    if (undoBtn) {
-      undoBtn.addEventListener("click", undo);
-    }
-
-    // Redo
-    function redo() {
-      if (historyStep < history.length - 1) {
-        historyStep++;
-        editor.value = history[historyStep];
-        renderPreview();
-        updateCursorPosition();
-      }
-    }
-
-    const redoBtn = document.getElementById("redo-editor");
-    if (redoBtn) {
-      redoBtn.addEventListener("click", redo);
-    }
-
-    // Copy HTML
-    const copyHtmlBtn = document.getElementById("copy-html");
-    if (copyHtmlBtn && preview) {
-      copyHtmlBtn.addEventListener("click", function () {
-        if (!navigator.clipboard) return;
-        const html = preview.innerHTML;
-        const previous = copyHtmlBtn.innerHTML;
-        navigator.clipboard.writeText(html).then(function () {
-          copyHtmlBtn.innerHTML =
-            '<svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg> Copied!';
-          setTimeout(function () {
-            copyHtmlBtn.innerHTML = previous;
-          }, 1500);
-        });
-      });
-    }
-
-    // Fullscreen toggle
-    const fullscreenBtn = document.getElementById("toggle-fullscreen");
-    const fullscreenText = document.getElementById("fullscreen-text");
-    const editorSection = document.querySelector(".space-y-6 > section:nth-child(2)");
-    let isFullscreen = false;
-
-    if (fullscreenBtn && editorSection) {
-      fullscreenBtn.addEventListener("click", function () {
-        isFullscreen = !isFullscreen;
-        if (isFullscreen) {
-          editorSection.classList.add("editor-fullscreen");
-          fullscreenText.textContent = "Exit";
-          document.body.style.overflow = "hidden";
-        } else {
-          editorSection.classList.remove("editor-fullscreen");
-          fullscreenText.textContent = "Expand";
-          document.body.style.overflow = "";
-        }
-      });
-
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && isFullscreen) {
-          fullscreenBtn.click();
         }
       });
     }
