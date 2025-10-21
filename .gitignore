@@ -9,4 +9,3 @@ mydatabase
 .venv
 gcpCredentials.json
 media
-static
