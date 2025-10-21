@@ -51,6 +51,12 @@ class MarkdownEditorPro {
   }
 
   init() {
+    // Initialize tag management and image preview first (they work independently)
+    this.setupTagManagement();
+    this.setupImagePreview();
+    this.setupSEOValidator();
+
+    // Only setup editor-specific features if editor exists
     if (!this.editor || !this.preview) return;
 
     this.setupEventListeners();
@@ -901,6 +907,496 @@ Suggestions for improvement...`
     modal.addEventListener('click', (e) => {
       if (e.target === modal) modal.remove();
     });
+  }
+
+  // ==================== SEO OPTIMIZATION ====================
+
+  setupSEOValidator() {
+    const titleInput = document.querySelector('input[name="title"]');
+    const slugInput = document.querySelector('input[name="slug"]');
+    const metaTitleInput = document.querySelector('input[name="meta_title"]');
+    const metaDescInput = document.querySelector('textarea[name="meta_description"]');
+    const descriptionInput = document.querySelector('textarea[name="description"]');
+
+    if (!titleInput || !metaTitleInput || !metaDescInput) return;
+
+    // Initialize on load
+    this.updateSEOPreview();
+    this.validateSEOFields();
+
+    // Add event listeners
+    titleInput.addEventListener('input', () => {
+      this.updateSEOPreview();
+      this.validateSEOFields();
+    });
+
+    slugInput?.addEventListener('input', () => {
+      this.updateSEOPreview();
+    });
+
+    metaTitleInput.addEventListener('input', () => {
+      this.updateSEOPreview();
+      this.validateMetaTitle();
+      this.calculateSEOScore();
+    });
+
+    metaDescInput.addEventListener('input', () => {
+      this.updateSEOPreview();
+      this.validateMetaDescription();
+      this.calculateSEOScore();
+    });
+
+    descriptionInput?.addEventListener('input', () => {
+      this.updateSEOPreview();
+      this.calculateSEOScore();
+    });
+  }
+
+  validateMetaTitle() {
+    const metaTitleInput = document.querySelector('input[name="meta_title"]');
+    const counter = document.getElementById('meta-title-counter');
+    const bar = document.getElementById('meta-title-bar');
+
+    if (!metaTitleInput || !counter || !bar) return;
+
+    const length = metaTitleInput.value.length;
+    const optimal = { min: 50, max: 60 };
+
+    // Update counter
+    counter.textContent = `${length} / 60 characters`;
+
+    // Color coding
+    if (length === 0) {
+      counter.className = 'text-xs font-medium text-gray-500';
+      bar.className = 'h-1 rounded-full mt-1 transition-all bg-gray-200';
+      bar.style.width = '0%';
+    } else if (length < optimal.min) {
+      counter.className = 'text-xs font-medium text-yellow-600 dark:text-yellow-400';
+      bar.className = 'h-1 rounded-full mt-1 transition-all bg-yellow-400';
+      bar.style.width = `${(length / optimal.min) * 100}%`;
+    } else if (length <= optimal.max) {
+      counter.className = 'text-xs font-medium text-green-600 dark:text-green-400';
+      bar.className = 'h-1 rounded-full mt-1 transition-all bg-green-500';
+      bar.style.width = '100%';
+    } else {
+      counter.className = 'text-xs font-medium text-red-600 dark:text-red-400';
+      bar.className = 'h-1 rounded-full mt-1 transition-all bg-red-500';
+      bar.style.width = '100%';
+    }
+  }
+
+  validateMetaDescription() {
+    const metaDescInput = document.querySelector('textarea[name="meta_description"]');
+    const counter = document.getElementById('meta-description-counter');
+    const bar = document.getElementById('meta-description-bar');
+
+    if (!metaDescInput || !counter || !bar) return;
+
+    const length = metaDescInput.value.length;
+    const optimal = { min: 120, max: 160 };
+
+    // Update counter
+    counter.textContent = `${length} / 160 characters`;
+
+    // Color coding
+    if (length === 0) {
+      counter.className = 'text-xs font-medium text-gray-500';
+      bar.className = 'h-1 rounded-full mt-1 transition-all bg-gray-200';
+      bar.style.width = '0%';
+    } else if (length < optimal.min) {
+      counter.className = 'text-xs font-medium text-yellow-600 dark:text-yellow-400';
+      bar.className = 'h-1 rounded-full mt-1 transition-all bg-yellow-400';
+      bar.style.width = `${(length / optimal.min) * 100}%`;
+    } else if (length <= optimal.max) {
+      counter.className = 'text-xs font-medium text-green-600 dark:text-green-400';
+      bar.className = 'h-1 rounded-full mt-1 transition-all bg-green-500';
+      bar.style.width = '100%';
+    } else {
+      counter.className = 'text-xs font-medium text-red-600 dark:text-red-400';
+      bar.className = 'h-1 rounded-full mt-1 transition-all bg-red-500';
+      bar.style.width = '100%';
+    }
+  }
+
+  validateSEOFields() {
+    this.validateMetaTitle();
+    this.validateMetaDescription();
+  }
+
+  updateSEOPreview() {
+    const titleInput = document.querySelector('input[name="title"]');
+    const slugInput = document.querySelector('input[name="slug"]');
+    const metaTitleInput = document.querySelector('input[name="meta_title"]');
+    const metaDescInput = document.querySelector('textarea[name="meta_description"]');
+    const descriptionInput = document.querySelector('textarea[name="description"]');
+
+    const previewTitle = document.getElementById('preview-title');
+    const previewDescription = document.getElementById('preview-description');
+    const previewSlug = document.getElementById('preview-slug');
+
+    if (!previewTitle || !previewDescription || !previewSlug) return;
+
+    // Update preview title (use meta_title if exists, otherwise use title)
+    const displayTitle = metaTitleInput?.value || titleInput?.value || 'Your Post Title';
+    previewTitle.textContent = displayTitle;
+
+    // Update preview description (use meta_description if exists, otherwise use description)
+    const displayDesc = metaDescInput?.value || descriptionInput?.value || 'Your post description will appear here...';
+    previewDescription.textContent = displayDesc;
+
+    // Update preview slug
+    const displaySlug = slugInput?.value || 'your-post-slug';
+    previewSlug.textContent = displaySlug;
+  }
+
+  calculateSEOScore() {
+    const titleInput = document.querySelector('input[name="title"]');
+    const metaTitleInput = document.querySelector('input[name="meta_title"]');
+    const metaDescInput = document.querySelector('textarea[name="meta_description"]');
+    const descriptionInput = document.querySelector('textarea[name="description"]');
+    const badge = document.getElementById('seo-score-badge');
+
+    if (!badge) return;
+
+    let score = 0;
+    let maxScore = 4;
+
+    // Check title length
+    const titleLength = (metaTitleInput?.value || titleInput?.value || '').length;
+    if (titleLength >= 50 && titleLength <= 60) score += 1;
+
+    // Check meta description length
+    const descLength = (metaDescInput?.value || descriptionInput?.value || '').length;
+    if (descLength >= 120 && descLength <= 160) score += 1;
+
+    // Check if meta title exists
+    if (metaTitleInput?.value) score += 1;
+
+    // Check if meta description exists
+    if (metaDescInput?.value) score += 1;
+
+    // Calculate percentage
+    const percentage = Math.round((score / maxScore) * 100);
+
+    // Update badge
+    if (percentage >= 75) {
+      badge.textContent = `${percentage}% Optimized`;
+      badge.className = 'ml-auto text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300';
+    } else if (percentage >= 50) {
+      badge.textContent = `${percentage}% Optimized`;
+      badge.className = 'ml-auto text-xs px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300';
+    } else {
+      badge.textContent = `${percentage}% Optimized`;
+      badge.className = 'ml-auto text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300';
+    }
+  }
+
+  // ==================== TAG MANAGEMENT ====================
+
+  setupTagManagement() {
+    const tagInputField = document.getElementById('tag-input-field');
+    const tagPillsContainer = document.getElementById('tag-pills-container');
+    const originalTagInput = document.querySelector('input[name="tags_input"]');
+    const autocompleteDropdown = document.getElementById('tag-autocomplete');
+
+    console.log('Tag Management Setup:', {
+      tagInputField: !!tagInputField,
+      tagPillsContainer: !!tagPillsContainer,
+      originalTagInput: !!originalTagInput,
+      originalValue: originalTagInput?.value
+    });
+
+    if (!tagInputField || !tagPillsContainer || !originalTagInput) return;
+
+    // State for tags
+    this.tags = [];
+    this.availableTags = [];
+
+    // Load initial tags from form
+    this.loadInitialTags(originalTagInput);
+
+    // Fetch available tags from other posts
+    this.fetchAvailableTags();
+
+    // Event listeners
+    tagInputField.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ',') {
+        e.preventDefault();
+        this.addTag(tagInputField.value.trim());
+        tagInputField.value = '';
+        autocompleteDropdown.classList.add('hidden');
+      } else if (e.key === 'Backspace' && tagInputField.value === '' && this.tags.length > 0) {
+        // Remove last tag on backspace if input is empty
+        this.removeTag(this.tags[this.tags.length - 1]);
+      }
+    });
+
+    tagInputField.addEventListener('input', (e) => {
+      const query = e.target.value.trim().toLowerCase();
+      if (query.length > 0) {
+        this.showAutocomplete(query);
+      } else {
+        autocompleteDropdown.classList.add('hidden');
+      }
+    });
+
+    // Click outside to close autocomplete
+    document.addEventListener('click', (e) => {
+      if (!tagInputField.contains(e.target) && !autocompleteDropdown.contains(e.target)) {
+        autocompleteDropdown.classList.add('hidden');
+      }
+    });
+  }
+
+  loadInitialTags(originalInput) {
+    if (originalInput.value) {
+      const tags = originalInput.value.split(',').map(t => t.trim()).filter(t => t);
+      tags.forEach(tag => this.addTag(tag, false));
+      // Render all tags after loading
+      if (tags.length > 0) {
+        this.renderTags();
+      }
+    }
+  }
+
+  async fetchAvailableTags() {
+    try {
+      // Try to fetch from API endpoint
+      const response = await fetch('/api/blog/posts/?fields=tags');
+      if (response.ok) {
+        const data = await response.json();
+        const tagSet = new Set();
+        
+        data.results?.forEach(post => {
+          if (post.tags && Array.isArray(post.tags)) {
+            post.tags.forEach(tag => tagSet.add(tag));
+          }
+        });
+        
+        this.availableTags = Array.from(tagSet).sort();
+      }
+    } catch (error) {
+      console.log('Could not fetch tags:', error);
+      // Fallback to common tags
+      this.availableTags = ['tutorial', 'announcement', 'release', 'design', 'development', 'guide', 'tips'];
+    }
+  }
+
+  addTag(tagText, updateUI = true) {
+    const tag = tagText.toLowerCase().trim();
+    
+    if (!tag || this.tags.includes(tag)) return;
+    
+    this.tags.push(tag);
+    
+    if (updateUI) {
+      this.renderTags();
+      this.updateOriginalInput();
+    }
+  }
+
+  removeTag(tag) {
+    this.tags = this.tags.filter(t => t !== tag);
+    this.renderTags();
+    this.updateOriginalInput();
+  }
+
+  renderTags() {
+    const container = document.getElementById('tag-pills-container');
+    if (!container) return;
+
+    const colors = [
+      'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
+      'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
+      'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300',
+      'bg-pink-100 text-pink-700 dark:bg-pink-900 dark:text-pink-300',
+      'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300',
+    ];
+
+    container.innerHTML = this.tags.map((tag, index) => {
+      const colorClass = colors[index % colors.length];
+      return `
+        <span class="tag-pill inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium ${colorClass} animate-in">
+          <span>${tag}</span>
+          <button type="button" class="tag-remove hover:bg-black/10 dark:hover:bg-white/10 rounded-full p-0.5 transition" data-tag="${tag}">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </span>
+      `;
+    }).join('');
+
+    // Add click handlers to remove buttons
+    container.querySelectorAll('.tag-remove').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.removeTag(btn.dataset.tag);
+      });
+    });
+  }
+
+  updateOriginalInput() {
+    const originalInput = document.querySelector('input[name="tags_input"]');
+    if (originalInput) {
+      originalInput.value = this.tags.join(', ');
+    }
+  }
+
+  showAutocomplete(query) {
+    const dropdown = document.getElementById('tag-autocomplete');
+    if (!dropdown) return;
+
+    const suggestions = this.availableTags
+      .filter(tag => tag.toLowerCase().includes(query) && !this.tags.includes(tag))
+      .slice(0, 5);
+
+    if (suggestions.length === 0) {
+      dropdown.classList.add('hidden');
+      return;
+    }
+
+    dropdown.innerHTML = suggestions.map(tag => `
+      <button type="button" class="tag-suggestion w-full text-left px-3 py-2 hover:bg-primary-50 dark:hover:bg-primary-950/30 text-sm transition" data-tag="${tag}">
+        <span class="font-medium text-neutral-900 dark:text-neutral-100">${tag}</span>
+      </button>
+    `).join('');
+
+    dropdown.classList.remove('hidden');
+
+    // Add click handlers
+    dropdown.querySelectorAll('.tag-suggestion').forEach(btn => {
+      btn.addEventListener('click', () => {
+        this.addTag(btn.dataset.tag);
+        document.getElementById('tag-input-field').value = '';
+        dropdown.classList.add('hidden');
+      });
+    });
+  }
+
+  // ==================== FEATURED IMAGE PREVIEW ====================
+
+  setupImagePreview() {
+    const fileInput = document.getElementById('id_featured_image');
+    const dropZone = document.getElementById('image-drop-zone');
+    const previewContainer = document.getElementById('featured-image-preview');
+    const thumbnail = document.getElementById('featured-image-thumbnail');
+    const dimensionsSpan = document.getElementById('image-dimensions');
+    const removeBtn = document.getElementById('remove-featured-image');
+
+    if (!fileInput || !dropZone) return;
+
+    // Check if there's an existing image on page load
+    this.checkExistingFeaturedImage();
+
+    // Click to open file dialog
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    // File input change
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        this.previewImage(file);
+      }
+    });
+
+    // Drag and drop
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('border-primary-500', 'bg-primary-50', 'dark:bg-primary-950/30');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('border-primary-500', 'bg-primary-50', 'dark:bg-primary-950/30');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-primary-500', 'bg-primary-50', 'dark:bg-primary-950/30');
+      
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) {
+        // Set the file to the input
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
+        
+        this.previewImage(file);
+      }
+    });
+
+    // Remove button
+    if (removeBtn) {
+      removeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.removeFeaturedImage();
+      });
+    }
+  }
+
+  checkExistingFeaturedImage() {
+    // Check if form has existing featured image (edit mode)
+    const fileInput = document.getElementById('id_featured_image');
+    const existingImageUrl = fileInput?.dataset.existingImage;
+    
+    if (existingImageUrl) {
+      const thumbnail = document.getElementById('featured-image-thumbnail');
+      const previewContainer = document.getElementById('featured-image-preview');
+      const dropZone = document.getElementById('image-drop-zone');
+      
+      if (thumbnail && previewContainer) {
+        thumbnail.src = existingImageUrl;
+        previewContainer.classList.remove('hidden');
+        if (dropZone) dropZone.classList.add('hidden');
+      }
+    }
+  }
+
+  previewImage(file) {
+    const previewContainer = document.getElementById('featured-image-preview');
+    const thumbnail = document.getElementById('featured-image-thumbnail');
+    const dimensionsSpan = document.getElementById('image-dimensions');
+    const dropZone = document.getElementById('image-drop-zone');
+
+    if (!thumbnail || !previewContainer) return;
+
+    const reader = new FileReader();
+    
+    reader.onload = (e) => {
+      thumbnail.src = e.target.result;
+      
+      // Get image dimensions
+      const img = new Image();
+      img.onload = () => {
+        const sizeKB = (file.size / 1024).toFixed(1);
+        if (dimensionsSpan) {
+          dimensionsSpan.textContent = `${img.width} × ${img.height} • ${sizeKB} KB`;
+        }
+      };
+      img.src = e.target.result;
+      
+      // Show preview, hide drop zone
+      previewContainer.classList.remove('hidden');
+      if (dropZone) dropZone.classList.add('hidden');
+      
+      this.showToast('Image loaded! Remember to save the form.', 'success');
+    };
+    
+    reader.readAsDataURL(file);
+  }
+
+  removeFeaturedImage() {
+    const fileInput = document.getElementById('id_featured_image');
+    const previewContainer = document.getElementById('featured-image-preview');
+    const dropZone = document.getElementById('image-drop-zone');
+    const thumbnail = document.getElementById('featured-image-thumbnail');
+
+    if (fileInput) fileInput.value = '';
+    if (thumbnail) thumbnail.src = '';
+    if (previewContainer) previewContainer.classList.add('hidden');
+    if (dropZone) dropZone.classList.remove('hidden');
+
+    this.showToast('Image removed', 'info');
   }
 
   destroy() {

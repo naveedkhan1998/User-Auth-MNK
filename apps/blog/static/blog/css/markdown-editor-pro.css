@@ -496,3 +496,179 @@ button.active {
 * {
   transition: background-color 0.2s ease, border-color 0.2s ease;
 }
+
+/* ==================== SEO OPTIMIZATION STYLES ==================== */
+
+.seo-section {
+  background: linear-gradient(to bottom, transparent, rgba(59, 130, 246, 0.02));
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px dashed rgba(59, 130, 246, 0.2);
+}
+
+/* Character Counter Progress Bars */
+#meta-title-bar,
+#meta-description-bar {
+  transition: all 0.3s ease;
+  height: 3px;
+  border-radius: 2px;
+}
+
+/* Google Search Preview */
+#google-preview {
+  font-family: Arial, sans-serif;
+  animation: fadeIn 0.5s ease;
+}
+
+#preview-title {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#preview-title:hover {
+  text-decoration: underline;
+}
+
+#preview-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* SEO Score Badge */
+#seo-score-badge {
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Dark Mode Adjustments */
+@media (prefers-color-scheme: dark) {
+  .seo-section {
+    background: linear-gradient(to bottom, transparent, rgba(59, 130, 246, 0.05));
+    border-color: rgba(59, 130, 246, 0.3);
+  }
+}
+
+/* ==================== TAG MANAGEMENT STYLES ==================== */
+
+#tag-pills-container {
+  transition: border-color 0.2s ease;
+}
+
+#tag-pills-container:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.tag-pill {
+  animation: slideIn 0.2s ease;
+  transition: all 0.2s ease;
+}
+
+.tag-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.tag-remove {
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.tag-remove:hover {
+  opacity: 1;
+}
+
+/* Tag Autocomplete */
+#tag-autocomplete {
+  animation: dropdownSlide 0.2s ease;
+}
+
+@keyframes dropdownSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tag-suggestion {
+  cursor: pointer;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.tag-suggestion:last-child {
+  border-bottom: none;
+}
+
+/* ==================== FEATURED IMAGE PREVIEW STYLES ==================== */
+
+#image-drop-zone {
+  transition: all 0.3s ease;
+}
+
+#image-drop-zone:hover {
+  border-color: #3b82f6;
+  background-color: rgba(59, 130, 246, 0.02);
+}
+
+#featured-image-preview {
+  animation: fadeIn 0.3s ease;
+}
+
+#featured-image-thumbnail {
+  transition: transform 0.3s ease;
+}
+
+#featured-image-preview:hover #featured-image-thumbnail {
+  transform: scale(1.02);
+}
+
+#remove-featured-image {
+  transition: all 0.2s ease;
+}
+
+#remove-featured-image:hover {
+  background-color: #dc2626;
+  transform: scale(1.05);
+}
+
+#image-dimensions {
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+/* Drag & Drop Active State */
+#image-drop-zone.border-primary-500 {
+  border-color: #3b82f6 !important;
+  background-color: rgba(59, 130, 246, 0.1) !important;
+}
+

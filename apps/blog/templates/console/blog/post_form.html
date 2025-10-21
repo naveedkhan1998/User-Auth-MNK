@@ -84,16 +84,82 @@
             {% endif %}
           </div>
 
+          <!-- Enhanced Tag Management -->
           <div>
-            <label for="{{ form.tags_input.id_for_label }}" class="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1.5">Tags</label>
-            {{ form.tags_input }} {% if form.tags_input.errors %}
+            <label for="tag-input-field" class="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1.5">
+              Tags
+              <span class="text-xs text-neutral-500 dark:text-neutral-400">(Press Enter or comma to add)</span>
+            </label>
+            
+            <!-- Tag Pills Container -->
+            <div id="tag-pills-container" class="flex flex-wrap gap-2 mb-2 min-h-[40px] p-2 rounded-lg border border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900">
+              <!-- Tag pills will be inserted here -->
+            </div>
+            
+            <!-- Tag Input with Autocomplete -->
+            <div class="relative">
+              <input 
+                type="text" 
+                id="tag-input-field"
+                placeholder="Type to add tags..."
+                class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm transition focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                autocomplete="off"
+              />
+              <!-- Autocomplete Dropdown -->
+              <div id="tag-autocomplete" class="hidden absolute z-10 w-full mt-1 bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                <!-- Suggestions will appear here -->
+              </div>
+            </div>
+            
+            <!-- Hidden input for form submission (original field) -->
+            {{ form.tags_input }}
+            <script>
+              // Hide the original input field
+              document.addEventListener('DOMContentLoaded', () => {
+                const originalInput = document.querySelector('input[name="tags_input"]');
+                if (originalInput) {
+                  originalInput.style.display = 'none';
+                }
+              });
+            </script>
+            
+            {% if form.tags_input.errors %}
             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.tags_input.errors.0 }}</p>
             {% endif %}
           </div>
 
+          <!-- Enhanced Featured Image Upload -->
           <div>
             <label for="{{ form.featured_image.id_for_label }}" class="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1.5">Featured Image</label>
-            {{ form.featured_image }} {% if form.featured_image.errors %}
+            
+            <!-- Image Preview Container -->
+            <div id="featured-image-preview" class="{% if not object.featured_image %}hidden{% endif %} mb-3 relative rounded-lg overflow-hidden border-2 border-neutral-200 dark:border-neutral-700">
+              <img id="featured-image-thumbnail" src="{% if object.featured_image %}{{ object.featured_image.url }}{% endif %}" alt="Featured image preview" class="w-full h-48 object-cover">
+              <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+                <div class="flex items-center justify-between text-white text-xs">
+                  <span id="image-dimensions">{% if object.featured_image %}Existing image{% endif %}</span>
+                  <button type="button" id="remove-featured-image" class="px-2 py-1 bg-red-500 hover:bg-red-600 rounded text-white font-medium transition">
+                    Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Drag & Drop Zone -->
+            <div id="image-drop-zone" class="{% if object.featured_image %}hidden{% endif %} relative border-2 border-dashed border-neutral-300 dark:border-neutral-600 rounded-lg p-6 text-center transition-all hover:border-primary-400 hover:bg-primary-50/50 dark:hover:border-primary-600 dark:hover:bg-primary-950/20 cursor-pointer">
+              <input type="file" id="{{ form.featured_image.id_for_label }}" name="featured_image" accept="image/*" class="hidden" {% if object.featured_image %}data-existing-image="{{ object.featured_image.url }}"{% endif %}>
+              <svg class="mx-auto h-12 w-12 text-neutral-400 dark:text-neutral-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <p class="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                Click to upload or drag and drop
+              </p>
+              <p class="text-xs text-neutral-500 dark:text-neutral-400">
+                PNG, JPG, GIF up to 10MB
+              </p>
+            </div>
+            
+            {% if form.featured_image.errors %}
             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.featured_image.errors.0 }}</p>
             {% endif %}
           </div>
@@ -509,18 +575,70 @@ const greeting = 'Hello, World!';
             {% endif %}
           </div>
 
-          <div>
-            <label for="{{ form.meta_title.id_for_label }}" class="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1.5">Meta Title</label>
-            {{ form.meta_title }} {% if form.meta_title.errors %}
-            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.meta_title.errors.0 }}</p>
-            {% endif %}
-          </div>
+          <!-- SEO Section with Enhanced Validation -->
+          <div class="seo-section">
+            <h3 class="text-sm font-semibold text-neutral-900 dark:text-neutral-100 mb-3 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              SEO Optimization
+              <span id="seo-score-badge" class="ml-auto text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800"></span>
+            </h3>
 
-          <div>
-            <label for="{{ form.meta_description.id_for_label }}" class="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1.5">Meta Description</label>
-            {{ form.meta_description }} {% if form.meta_description.errors %}
-            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.meta_description.errors.0 }}</p>
-            {% endif %}
+            <div class="space-y-4">
+              <!-- Meta Title with Character Counter -->
+              <div>
+                <label for="{{ form.meta_title.id_for_label }}" class="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1.5">
+                  Meta Title
+                  <span class="text-xs text-neutral-500 dark:text-neutral-400">(optional)</span>
+                </label>
+                {{ form.meta_title }}
+                <div class="flex justify-between items-center mt-1">
+                  <p class="text-xs text-neutral-600 dark:text-neutral-400">
+                    Leave blank to use post title
+                  </p>
+                  <span id="meta-title-counter" class="text-xs font-medium"></span>
+                </div>
+                <div id="meta-title-bar" class="h-1 rounded-full mt-1 transition-all"></div>
+                {% if form.meta_title.errors %}
+                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.meta_title.errors.0 }}</p>
+                {% endif %}
+              </div>
+
+              <!-- Meta Description with Character Counter -->
+              <div>
+                <label for="{{ form.meta_description.id_for_label }}" class="block text-sm font-medium text-neutral-900 dark:text-neutral-100 mb-1.5">
+                  Meta Description
+                  <span class="text-xs text-neutral-500 dark:text-neutral-400">(optional)</span>
+                </label>
+                {{ form.meta_description }}
+                <div class="flex justify-between items-center mt-1">
+                  <p class="text-xs text-neutral-600 dark:text-neutral-400">
+                    Appears in search results and social shares
+                  </p>
+                  <span id="meta-description-counter" class="text-xs font-medium"></span>
+                </div>
+                <div id="meta-description-bar" class="h-1 rounded-full mt-1 transition-all"></div>
+                {% if form.meta_description.errors %}
+                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ form.meta_description.errors.0 }}</p>
+                {% endif %}
+              </div>
+
+              <!-- Google Search Preview -->
+              <div id="google-preview" class="mt-4 p-4 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800/50">
+                <p class="text-xs font-medium text-neutral-600 dark:text-neutral-400 mb-2 flex items-center gap-1">
+                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                  </svg>
+                  Search Preview
+                </p>
+                <div class="space-y-1">
+                  <div class="text-xs text-blue-600 dark:text-blue-400">{{ request.get_host }} › blog › <span id="preview-slug">your-post-slug</span></div>
+                  <div id="preview-title" class="text-lg text-blue-700 dark:text-blue-300 font-medium hover:underline cursor-pointer">Your Post Title</div>
+                  <div id="preview-description" class="text-sm text-neutral-700 dark:text-neutral-300 line-clamp-2">Your post description will appear here...</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
