@@ -55,6 +55,8 @@ class MarkdownEditorPro {
     this.setupTagManagement();
     this.setupImagePreview();
     this.setupSEOValidator();
+    this.setupVersionHistory();
+    this.setupLinkManagement();
 
     // Only setup editor-specific features if editor exists
     if (!this.editor || !this.preview) return;
@@ -1397,6 +1399,301 @@ Suggestions for improvement...`
     if (dropZone) dropZone.classList.remove('hidden');
 
     this.showToast('Image removed', 'info');
+  }
+
+  // ==================== VERSION HISTORY & DRAFTS ====================
+
+  setupVersionHistory() {
+    const historyBtn = document.getElementById('show-version-history');
+    if (!historyBtn) return;
+
+    historyBtn.addEventListener('click', () => this.showVersionHistoryModal());
+
+    // Save version periodically (every 5 minutes)
+    setInterval(() => {
+      if (this.editor && this.state.isDirty) {
+        this.saveVersion('Auto-save');
+      }
+    }, 5 * 60 * 1000);
+
+    // Keyboard shortcut: Ctrl+H
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key === 'h') {
+        e.preventDefault();
+        this.showVersionHistoryModal();
+      }
+    });
+  }
+
+  saveVersion(label = 'Manual save') {
+    if (!this.editor) return;
+
+    const version = {
+      id: Date.now(),
+      content: this.editor.value,
+      label: label,
+      timestamp: new Date().toISOString(),
+      wordCount: this.stats.words,
+      charCount: this.stats.characters,
+    };
+
+    // Get existing versions
+    const versions = this.getVersions();
+    versions.unshift(version);
+
+    // Keep only last 20 versions
+    const trimmed = versions.slice(0, 20);
+
+    // Save to localStorage
+    const key = this.getVersionStorageKey();
+    localStorage.setItem(key, JSON.stringify(trimmed));
+
+    this.showToast(`Version saved: ${label}`, 'success');
+  }
+
+  getVersions() {
+    const key = this.getVersionStorageKey();
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : [];
+  }
+
+  getVersionStorageKey() {
+    // Use URL path as key to separate versions per post
+    const path = window.location.pathname;
+    return `mdx_versions_${path}`;
+  }
+
+  deleteVersion(versionId) {
+    const versions = this.getVersions().filter(v => v.id !== versionId);
+    const key = this.getVersionStorageKey();
+    localStorage.setItem(key, JSON.stringify(versions));
+    this.showToast('Version deleted', 'info');
+  }
+
+  restoreVersion(versionId) {
+    const versions = this.getVersions();
+    const version = versions.find(v => v.id === versionId);
+    
+    if (version && this.editor) {
+      this.editor.value = version.content;
+      this.renderPreview();
+      this.updateStats();
+      this.state.isDirty = true;
+      this.showToast('Version restored!', 'success');
+    }
+  }
+
+  clearAllVersions() {
+    if (!confirm('Delete all saved versions? This cannot be undone.')) return;
+    
+    const key = this.getVersionStorageKey();
+    localStorage.removeItem(key);
+    this.showToast('All versions cleared', 'info');
+  }
+
+  showVersionHistoryModal() {
+    const versions = this.getVersions();
+
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+      <div class="modal-content-large">
+        <div class="modal-header">
+          <h3 class="text-xl font-bold text-neutral-900 dark:text-neutral-100 flex items-center gap-2">
+            <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Version History
+          </h3>
+          <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          ${versions.length === 0 ? `
+            <div class="text-center py-12 text-neutral-500 dark:text-neutral-400">
+              <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <p class="text-lg font-medium">No versions saved yet</p>
+              <p class="text-sm mt-2">Versions are automatically saved every 5 minutes</p>
+            </div>
+          ` : `
+            <div class="flex justify-between items-center mb-4">
+              <p class="text-sm text-neutral-600 dark:text-neutral-400">
+                ${versions.length} version${versions.length !== 1 ? 's' : ''} saved
+              </p>
+              <button id="clear-all-versions" class="text-xs px-3 py-1 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400 transition">
+                Clear All
+              </button>
+            </div>
+            <div class="version-timeline space-y-3 max-h-96 overflow-y-auto">
+              ${versions.map(version => {
+                const date = new Date(version.timestamp);
+                const timeAgo = this.getTimeAgo(date);
+                const preview = version.content.substring(0, 100) + (version.content.length > 100 ? '...' : '');
+                
+                return `
+                  <div class="version-item border border-neutral-200 dark:border-neutral-700 rounded-lg p-4 hover:border-purple-400 dark:hover:border-purple-600 transition">
+                    <div class="flex justify-between items-start mb-2">
+                      <div>
+                        <p class="font-semibold text-neutral-900 dark:text-neutral-100">${version.label}</p>
+                        <p class="text-xs text-neutral-500 dark:text-neutral-400">${timeAgo} • ${version.wordCount} words • ${version.charCount} chars</p>
+                      </div>
+                      <div class="flex gap-2">
+                        <button class="restore-version text-xs px-2 py-1 rounded bg-purple-100 text-purple-700 hover:bg-purple-200 dark:bg-purple-900/30 dark:text-purple-400 transition" data-id="${version.id}">
+                          Restore
+                        </button>
+                        <button class="delete-version text-xs px-2 py-1 rounded bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400 transition" data-id="${version.id}">
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                    <p class="text-sm text-neutral-600 dark:text-neutral-300 font-mono bg-neutral-50 dark:bg-neutral-800 p-2 rounded">${preview}</p>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          `}
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Event listeners
+    modal.querySelector('.modal-close').addEventListener('click', () => modal.remove());
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.remove();
+    });
+
+    if (versions.length > 0) {
+      modal.querySelectorAll('.restore-version').forEach(btn => {
+        btn.addEventListener('click', () => {
+          this.restoreVersion(parseInt(btn.dataset.id));
+          modal.remove();
+        });
+      });
+
+      modal.querySelectorAll('.delete-version').forEach(btn => {
+        btn.addEventListener('click', () => {
+          this.deleteVersion(parseInt(btn.dataset.id));
+          modal.remove();
+          this.showVersionHistoryModal();
+        });
+      });
+
+      modal.querySelector('#clear-all-versions')?.addEventListener('click', () => {
+        this.clearAllVersions();
+        modal.remove();
+        this.showVersionHistoryModal();
+      });
+    }
+  }
+
+  getTimeAgo(date) {
+    const seconds = Math.floor((new Date() - date) / 1000);
+    const intervals = {
+      year: 31536000,
+      month: 2592000,
+      week: 604800,
+      day: 86400,
+      hour: 3600,
+      minute: 60,
+    };
+
+    for (const [unit, secondsInUnit] of Object.entries(intervals)) {
+      const interval = Math.floor(seconds / secondsInUnit);
+      if (interval >= 1) {
+        return `${interval} ${unit}${interval !== 1 ? 's' : ''} ago`;
+      }
+    }
+    return 'Just now';
+  }
+
+  // ==================== LINK MANAGEMENT ====================
+
+  setupLinkManagement() {
+    if (!this.editor) return;
+
+    // Auto-detect URLs when pasting
+    this.editor.addEventListener('paste', (e) => {
+      const text = e.clipboardData.getData('text');
+      if (this.isValidURL(text)) {
+        e.preventDefault();
+        this.handlePastedURL(text);
+      }
+    });
+
+    // Update link count on content change
+    this.editor.addEventListener('input', () => {
+      this.updateLinkCount();
+    });
+
+    // Initial count
+    this.updateLinkCount();
+  }
+
+  isValidURL(string) {
+    try {
+      const url = new URL(string);
+      return url.protocol === 'http:' || url.protocol === 'https:';
+    } catch {
+      return false;
+    }
+  }
+
+  handlePastedURL(url) {
+    // Create markdown link format
+    const linkText = `[${url}](${url})`;
+    this.insertAtCursor(linkText);
+    this.showToast('Link inserted!', 'success');
+
+    // Try to fetch link preview
+    this.fetchLinkPreview(url);
+  }
+
+  async fetchLinkPreview(url) {
+    try {
+      // Note: This would need a backend endpoint to avoid CORS
+      // For now, just show the URL info
+      const urlObj = new URL(url);
+      const isInternal = urlObj.hostname === window.location.hostname;
+      
+      this.showToast(
+        `${isInternal ? 'Internal' : 'External'} link: ${urlObj.hostname}`,
+        isInternal ? 'success' : 'info'
+      );
+    } catch (error) {
+      console.error('Link preview error:', error);
+    }
+  }
+
+  updateLinkCount() {
+    if (!this.editor) return;
+
+    const content = this.editor.value;
+    
+    // Match markdown links: [text](url)
+    const markdownLinks = content.match(/\[([^\]]+)\]\(([^)]+)\)/g) || [];
+    
+    // Match plain URLs
+    const urlRegex = /https?:\/\/[^\s]+/g;
+    const plainLinks = content.match(urlRegex) || [];
+    
+    // Remove duplicates
+    const allLinks = [...new Set([...markdownLinks, ...plainLinks])];
+    const linkCount = allLinks.length;
+
+    // Update UI
+    const linkCountEl = document.getElementById('link-count');
+    if (linkCountEl) {
+      const span = linkCountEl.querySelector('span');
+      if (span) {
+        span.textContent = `${linkCount} link${linkCount !== 1 ? 's' : ''}`;
+      }
+    }
+
+    // Store for later use
+    this.stats.linkCount = linkCount;
   }
 
   destroy() {
