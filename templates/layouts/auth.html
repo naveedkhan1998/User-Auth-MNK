@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block head_title %}{% block auth_title %}Authentication{% endblock %} - MNK Platform{% endblock %}
+
+{% block header %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block body_class %}flex min-h-screen flex-col bg-neutral-50 text-neutral-900 antialiased dark:bg-neutral-950 dark:text-neutral-50{% endblock %}
+{% block main_class %}flex flex-1 items-center justify-center{% endblock %}
+
+{% block content %}
+  <div class="w-full max-w-6xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+    {% block auth_content %}{% endblock %}
+  </div>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% if messages %}
+  <div class="animate-slide-down fixed right-4 top-20 z-50 w-full max-w-md space-y-3">
+    {% for message in messages %}
+      {% include "components/alert.html" with message=message %}
+    {% endfor %}
+  </div>
+{% endif %}

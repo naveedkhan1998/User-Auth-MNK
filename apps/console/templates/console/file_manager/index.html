@@ -1,4 +1,4 @@
-{% extends 'layouts/base_console.html' %} {% block console_title %} {{ storage_meta.label }} {% endblock %} {% block extra_js %} {{ block.super }}
+{% extends 'layouts/console.html' %} {% block console_title %} {{ storage_meta.label }} {% endblock %} {% block extra_js %} {{ block.super }}
 <script>
   document.addEventListener("click", function (event) {
     var trigger = event.target.closest("[data-copy-url]");
@@ -61,7 +61,7 @@
     {% endfor %}
   </div>
 
-  {% if parent_path is not None %} Simplified navigation buttons
+  {% if parent_path is not None %} 
   <a
     class="inline-flex items-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 py-2 text-sm font-semibold text-neutral-700 transition hover:border-primary-300 hover:bg-primary-50 hover:text-primary-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:border-primary-700 dark:hover:bg-primary-950/50 dark:hover:text-primary-400"
     href="?storage={{ storage_root }}{% if parent_path %}&path={{ parent_path }}{% endif %}"
@@ -395,3 +395,4 @@
   </div>
 </div>
 {% endblock %}
+

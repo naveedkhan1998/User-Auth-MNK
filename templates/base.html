@@ -1,0 +1,210 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="{% block html_lang %}en{% endblock %}" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="description" content="{% block meta_description %}Professional Django Service Platform - Modern Backend Services with REST API, OAuth, and Cloud Storage{% endblock %}" />
+    <meta name="author" content="Mohammad Naveed Khan" />
+    <meta name="theme-color" content="#10b981" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#064e3b" media="(prefers-color-scheme: dark)" />
+    <title>{% block head_title %}MNK Platform{% endblock %}</title>
+
+    {% block head_preload %}
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+      <link rel="preconnect" href="https://cdn.tailwindcss.com" />
+    {% endblock %}
+
+    {% block head_fonts %}
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+    {% endblock %}
+
+    <script>
+      (function () {
+        try {
+          const storedTheme = window.localStorage.getItem("theme");
+          const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          if (storedTheme === "dark" || (!storedTheme && prefersDark)) {
+            document.documentElement.classList.add("dark");
+          } else {
+            document.documentElement.classList.remove("dark");
+          }
+        } catch (err) {
+          console.warn("Theme detection failed:", err);
+        }
+      })();
+    </script>
+
+    {% block head_scripts %}
+      <script src="https://cdn.tailwindcss.com"></script>
+      <script>
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              fontFamily: {
+                sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
+                serif: ["Instrument Serif", "Georgia", "serif"],
+              },
+              colors: {
+                brand: {
+                  50: "#f0fdf4",
+                  100: "#dcfce7",
+                  200: "#bbf7d0",
+                  300: "#86efac",
+                  400: "#4ade80",
+                  500: "#10b981",
+                  600: "#059669",
+                  700: "#047857",
+                  800: "#065f46",
+                  900: "#064e3b",
+                  950: "#022c22",
+                },
+                accent: {
+                  50: "#f0fdfa",
+                  100: "#ccfbf1",
+                  200: "#99f6e4",
+                  300: "#5eead4",
+                  400: "#2dd4bf",
+                  500: "#14b8a6",
+                  600: "#0d9488",
+                  700: "#0f766e",
+                  800: "#115e59",
+                  900: "#134e4a",
+                  950: "#042f2e",
+                },
+                primary: {
+                  50: "#f0fdf4",
+                  100: "#dcfce7",
+                  200: "#bbf7d0",
+                  300: "#86efac",
+                  400: "#4ade80",
+                  500: "#10b981",
+                  600: "#059669",
+                  700: "#047857",
+                  800: "#065f46",
+                  900: "#064e3b",
+                  950: "#022c22",
+                },
+                neutral: {
+                  50: "#fafafa",
+                  100: "#f5f5f5",
+                  200: "#e5e5e5",
+                  300: "#d4d4d4",
+                  400: "#a3a3a3",
+                  500: "#737373",
+                  600: "#525252",
+                  700: "#404040",
+                  800: "#262626",
+                  900: "#171717",
+                  950: "#0a0a0a",
+                },
+                slate: {
+                  50: "#fafafa",
+                  100: "#f5f5f5",
+                  200: "#e5e5e5",
+                  300: "#d4d4d4",
+                  400: "#a3a3a3",
+                  500: "#737373",
+                  600: "#525252",
+                  700: "#404040",
+                  800: "#262626",
+                  900: "#171717",
+                  950: "#0a0a0a",
+                },
+              },
+              animation: {
+                "fade-in": "fadeIn 0.4s ease-out",
+                "slide-up": "slideUp 0.5s ease-out",
+                "slide-down": "slideDown 0.4s ease-out",
+                "scale-in": "scaleIn 0.3s ease-out",
+              },
+              keyframes: {
+                fadeIn: {
+                  "0%": { opacity: "0" },
+                  "100%": { opacity: "1" },
+                },
+                slideUp: {
+                  "0%": { opacity: "0", transform: "translateY(12px)" },
+                  "100%": { opacity: "1", transform: "translateY(0)" },
+                },
+                slideDown: {
+                  "0%": { opacity: "0", transform: "translateY(-12px)" },
+                  "100%": { opacity: "1", transform: "translateY(0)" },
+                },
+                scaleIn: {
+                  "0%": { opacity: "0", transform: "scale(0.95)" },
+                  "100%": { opacity: "1", transform: "scale(1)" },
+                },
+              },
+            },
+          },
+        };
+      </script>
+    {% endblock %}
+    {% block extra_css %}{% endblock %}
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body class="{% block body_class %}flex min-h-screen flex-col bg-white text-neutral-900 antialiased dark:bg-neutral-950 dark:text-neutral-50{% endblock %}">
+    <a href="#main-content" class="sr-only rounded-lg bg-primary-600 px-4 py-2 text-white focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50">
+      Skip to main content
+    </a>
+
+    {% block header %}
+      {% include "partials/site_header.html" %}
+    {% endblock %}
+
+    {% block messages %}
+      {% include "partials/messages.html" %}
+    {% endblock %}
+
+    {% block body_before_main %}{% endblock %}
+    <main id="main-content" class="{% block main_class %}flex-1{% endblock %}" role="main">
+      {% block content %}{% endblock %}
+    </main>
+
+    {% block footer %}
+      {% include "partials/site_footer.html" %}
+    {% endblock %}
+
+    {% block body_after_main %}
+      <script>
+        (function () {
+          const themeToggle = document.getElementById("theme-toggle");
+          const darkIcon = document.getElementById("theme-icon-dark");
+          const lightIcon = document.getElementById("theme-icon-light");
+
+          if (!themeToggle) {
+            return;
+          }
+
+          const applyTheme = (theme) => {
+            const html = document.documentElement;
+            if (theme === "dark") {
+              html.classList.add("dark");
+              if (darkIcon && lightIcon) {
+                darkIcon.classList.remove("hidden");
+                lightIcon.classList.add("hidden");
+              }
+            } else {
+              html.classList.remove("dark");
+              if (darkIcon && lightIcon) {
+                darkIcon.classList.add("hidden");
+                lightIcon.classList.remove("hidden");
+              }
+            }
+            window.localStorage.setItem("theme", theme);
+          };
+
+          themeToggle.addEventListener("click", () => {
+            const html = document.documentElement;
+            const isDark = html.classList.contains("dark");
+            applyTheme(isDark ? "light" : "dark");
+          });
+        })();
+      </script>
+    {% endblock %}
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

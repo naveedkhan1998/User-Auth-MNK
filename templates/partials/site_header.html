@@ -1,0 +1,66 @@
+<header class="sticky top-0 z-40 border-b border-neutral-200 bg-white/95 backdrop-blur-xl transition-colors duration-300 dark:border-neutral-800 dark:bg-neutral-950/95">
+  <div class="mx-auto flex h-16 w-full items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center gap-4">
+      <a href="{% url 'landing' %}" class="group flex items-center gap-2.5" aria-label="MNK Platform Home">
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-600 text-base font-bold text-white shadow-md transition-transform duration-200 group-hover:scale-105 dark:bg-primary-500">
+          M
+        </div>
+        <div class="hidden flex-col sm:flex">
+          <span class="text-base font-bold leading-tight tracking-tight text-neutral-900 dark:text-neutral-50">MNK</span>
+          <span class="text-[10px] font-medium tracking-widest text-neutral-600 dark:text-neutral-400">PLATFORM</span>
+        </div>
+      </a>
+
+      <nav class="hidden items-center gap-1 md:flex" aria-label="Primary navigation">
+        <a href="{% url 'landing' %}" class="rounded-lg px-3 py-2 text-sm font-medium text-neutral-600 transition hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-900 dark:hover:text-neutral-100">
+          Overview
+        </a>
+        <a href="{% url 'schema-yaml' %}" class="rounded-lg px-3 py-2 text-sm font-medium text-neutral-600 transition hover:bg-neutral-100 hover:text-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-900 dark:hover:text-neutral-100">
+          API Schema
+        </a>
+        {% if request.user.is_authenticated and request.user.is_staff %}
+          <a href="{% url 'console:file-manager' %}" class="rounded-lg px-3 py-2 text-sm font-semibold text-primary-700 transition hover:bg-primary-50 dark:text-primary-400 dark:hover:bg-primary-950/50">
+            Console
+          </a>
+        {% endif %}
+      </nav>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button
+        id="theme-toggle"
+        type="button"
+        class="flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-200 bg-white text-neutral-600 transition hover:border-neutral-300 hover:text-neutral-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:text-neutral-100 dark:focus:ring-offset-neutral-950"
+        aria-label="Toggle theme"
+      >
+        <svg id="theme-icon-light" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-10h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        <svg id="theme-icon-dark" class="hidden h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z" />
+        </svg>
+      </button>
+
+      {% if request.user.is_authenticated %}
+        {% if request.user.is_staff %}
+          <a href="{% url 'console:file-manager' %}" class="hidden rounded-lg bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:bg-primary-500 dark:hover:bg-primary-600 dark:focus:ring-offset-neutral-950 md:inline-flex">
+            Manage Console
+          </a>
+        {% endif %}
+        <form method="post" action="{% url 'console:logout' %}" class="m-0">
+          {% csrf_token %}
+          <button
+            type="submit"
+            class="rounded-lg border border-neutral-200 px-3 py-2 text-sm font-medium text-neutral-600 transition hover:border-neutral-300 hover:text-neutral-900 dark:border-neutral-700 dark:text-neutral-300 dark:hover:border-neutral-500 dark:hover:text-neutral-100"
+          >
+            Sign out
+          </button>
+        </form>
+      {% else %}
+        <a href="{% url 'console:login' %}" class="rounded-lg bg-neutral-900 px-3 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-neutral-900 focus:ring-offset-2 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200 dark:focus:ring-neutral-100 dark:focus:ring-offset-neutral-950">
+          Console Login
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</header>

@@ -48,7 +48,7 @@ def format_filesize(bytes_size):
         return "—"
 
 
-@register.inclusion_tag("components/_breadcrumbs.html", takes_context=True)
+@register.inclusion_tag("components/breadcrumbs.html", takes_context=True)
 def render_breadcrumbs(context, *crumbs):
     """Render breadcrumb navigation"""
     return {

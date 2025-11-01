@@ -53,7 +53,7 @@ def active_section(context, *url_names, css_class="active"):
     return ""
 
 
-@register.inclusion_tag("components/_breadcrumb_item.html")
+@register.inclusion_tag("components/breadcrumb_item.html")
 def breadcrumb_item(label, url=None, active=False):
     """
     Renders a breadcrumb item component.
@@ -69,7 +69,7 @@ def breadcrumb_item(label, url=None, active=False):
     }
 
 
-@register.inclusion_tag("components/_alert.html")
+@register.inclusion_tag("components/alert.html")
 def alert(message, type="info", dismissible=True):
     """
     Renders an alert component.
@@ -86,7 +86,7 @@ def alert(message, type="info", dismissible=True):
     }
 
 
-@register.inclusion_tag("components/_badge.html")
+@register.inclusion_tag("components/badge.html")
 def badge(text, variant="default", size="md"):
     """
     Renders a badge component.
@@ -104,7 +104,7 @@ def badge(text, variant="default", size="md"):
     }
 
 
-@register.inclusion_tag("components/_button.html")
+@register.inclusion_tag("components/button.html")
 def button(text, url=None, variant="primary", size="md", icon=None):
     """
     Renders a button component.

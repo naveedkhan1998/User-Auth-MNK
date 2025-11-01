@@ -1,0 +1,81 @@
+<header class="sticky top-0 z-50 border-b border-neutral-200 bg-white/95 shadow-sm backdrop-blur-xl backdrop-saturate-150 transition-all duration-300 dark:border-neutral-800 dark:bg-neutral-950/95">
+  <div class="mx-auto w-full px-4 sm:px-6 lg:px-8">
+    <div class="flex h-16 items-center justify-between gap-4">
+      <div class="flex items-center gap-3 sm:gap-6">
+        <a href="{% url 'landing' %}" class="group flex items-center gap-2.5 transition-transform duration-200 hover:scale-105 active:scale-95" aria-label="MNK Platform Home">
+          <div
+            class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-600 text-base font-bold text-white shadow-md ring-1 ring-primary-500/20 transition-all duration-200 group-hover:bg-primary-700 group-hover:shadow-lg dark:bg-primary-500 dark:ring-primary-400/20 dark:group-hover:bg-primary-600"
+            aria-hidden="true"
+          >
+            M
+          </div>
+          <div class="hidden flex-col sm:flex">
+            <span class="text-base font-bold leading-tight tracking-tight text-neutral-900 dark:text-neutral-50">MNK</span>
+            <span class="text-[10px] font-medium leading-tight tracking-wider text-neutral-600 dark:text-neutral-400">PLATFORM</span>
+          </div>
+        </a>
+
+        {% include "partials/console_nav.html" %}
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button
+          id="theme-toggle"
+          type="button"
+          class="group relative flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-200 bg-white text-neutral-700 transition-all duration-200 hover:bg-neutral-100 hover:text-neutral-900 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-neutral-100 dark:focus:ring-offset-neutral-950"
+          aria-label="Toggle theme"
+        >
+          <svg id="theme-icon-dark" class="hidden h-4 w-4 transition-transform duration-200 group-hover:scale-110 dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+          <svg id="theme-icon-light" class="h-4 w-4 transition-transform duration-200 group-hover:scale-110 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+            />
+          </svg>
+        </button>
+
+        {% if request.user.is_authenticated %}
+          <div class="hidden items-center gap-2.5 rounded-lg border border-neutral-200 bg-white px-3 py-1.5 lg:flex dark:border-neutral-800 dark:bg-neutral-900">
+            <div class="flex h-7 w-7 items-center justify-center rounded-full bg-primary-600 text-xs font-bold text-white dark:bg-primary-500">{{ request.user.name|first|upper }}</div>
+            <span class="text-xs font-semibold text-neutral-900 dark:text-neutral-100">{{ request.user.name|truncatechars:15 }}</span>
+          </div>
+
+          <form method="post" action="{% url 'console:logout' %}" class="m-0 hidden lg:block">
+            {% csrf_token %}
+            <button
+              type="submit"
+              class="group relative flex h-9 items-center gap-2 rounded-lg border border-red-200 bg-white px-3.5 py-2 text-xs font-semibold text-red-600 transition-all duration-200 hover:border-red-300 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:border-red-900/50 dark:bg-neutral-900 dark:text-red-400 dark:hover:border-red-800 dark:hover:bg-red-950/30 dark:focus:ring-offset-neutral-950"
+            >
+              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              Sign out
+            </button>
+          </form>
+        {% endif %}
+
+        {% if request.user.is_authenticated and request.user.is_staff %}
+          <button
+            id="mobile-menu-toggle"
+            type="button"
+            class="flex h-9 w-9 items-center justify-center rounded-lg border border-neutral-200 bg-white text-neutral-700 transition-all duration-200 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 lg:hidden dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:ring-offset-neutral-950"
+            aria-label="Toggle console navigation"
+          >
+            <svg id="menu-icon" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg id="close-icon" class="hidden h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  {% include "partials/console_mobile_menu.html" %}
+</header>

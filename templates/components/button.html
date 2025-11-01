@@ -1,0 +1,46 @@
+{% load static %}
+{% if url %}
+  <a
+    href="{{ url }}"
+    class="inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-950
+    {% if size == 'sm' %} px-3 py-2 text-xs {% elif size == 'lg' %} px-5 py-3 text-base {% else %} px-4 py-2.5 text-sm {% endif %}
+    {% if variant == 'secondary' %}
+      border border-neutral-200 bg-white text-neutral-700 hover:border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:border-neutral-600 dark:hover:bg-neutral-800
+    {% elif variant == 'danger' %}
+      border border-red-200 bg-red-600 text-white hover:border-red-300 hover:bg-red-500 dark:border-red-900 dark:bg-red-700 dark:hover:bg-red-600
+    {% elif variant == 'ghost' %}
+      text-neutral-600 hover:text-primary-600 dark:text-neutral-300 dark:hover:text-primary-400
+    {% else %}
+      bg-primary-600 text-white shadow-sm hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600
+    {% endif %}"
+  >
+    {% if icon %}
+      <span class="inline-flex h-4 w-4 items-center justify-center">
+        <i class="{{ icon }}"></i>
+      </span>
+    {% endif %}
+    {{ text }}
+  </a>
+{% else %}
+  <button
+    type="button"
+    class="inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-950
+    {% if size == 'sm' %} px-3 py-2 text-xs {% elif size == 'lg' %} px-5 py-3 text-base {% else %} px-4 py-2.5 text-sm {% endif %}
+    {% if variant == 'secondary' %}
+      border border-neutral-200 bg-white text-neutral-700 hover:border-neutral-300 hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:border-neutral-600 dark:hover:bg-neutral-800
+    {% elif variant == 'danger' %}
+      border border-red-200 bg-red-600 text-white hover:border-red-300 hover:bg-red-500 dark:border-red-900 dark:bg-red-700 dark:hover:bg-red-600
+    {% elif variant == 'ghost' %}
+      text-neutral-600 hover:text-primary-600 dark:text-neutral-300 dark:hover:text-primary-400
+    {% else %}
+      bg-primary-600 text-white shadow-sm hover:bg-primary-700 dark:bg-primary-500 dark:hover:bg-primary-600
+    {% endif %}"
+  >
+    {% if icon %}
+      <span class="inline-flex h-4 w-4 items-center justify-center">
+        <i class="{{ icon }}"></i>
+      </span>
+    {% endif %}
+    {{ text }}
+  </button>
+{% endif %}

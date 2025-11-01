@@ -1,7 +1,7 @@
-{% extends 'layouts/base_public.html' %}
+{% extends 'layouts/public.html' %}
 {% load ui_tags %}
 
-{% block content %}
+{% block hero %}
   <!-- Hero Section with Animated Background -->
   <section id="overview" class="relative overflow-hidden">
     <!-- Animated Background Gradient -->
@@ -209,6 +209,9 @@
       </div>
     </div>
   </section>
+{% endblock %}
+
+{% block page_content %}
 
   {% if request.user.is_authenticated and request.user.is_staff %}
     <!-- API Endpoints Section -->

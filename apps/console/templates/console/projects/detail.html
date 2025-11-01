@@ -1,4 +1,4 @@
-{% extends 'layouts/base_console.html' %} {% block console_title %} Project {{ project.title }} {% endblock %} {% block console_content %}
+{% extends 'layouts/console.html' %} {% block console_title %} Project {{ project.title }} {% endblock %} {% block console_content %}
 <div class="space-y-8">
   {# Simplified back button with better contrast #}
   <div class="flex items-center justify-between gap-3 text-sm">
@@ -212,3 +212,4 @@
   </div>
 </div>
 {% endblock %}
+

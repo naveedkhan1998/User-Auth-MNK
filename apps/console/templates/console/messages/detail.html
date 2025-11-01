@@ -1,4 +1,4 @@
-{% extends 'layouts/base_console.html' %}
+{% extends 'layouts/console.html' %}
 
 {% block console_title %}
   Message {{ message_obj.name }}
@@ -6,7 +6,7 @@
 
 {% block breadcrumbs %}
   <div class="mb-6">
-    {% include 'components/_breadcrumbs.html' with breadcrumbs=breadcrumbs_list %}
+    {% include 'components/breadcrumbs.html' with breadcrumbs=breadcrumbs_list %}
   </div>
 {% endblock %}
 
@@ -66,3 +66,4 @@
     </article>
   </div>
 {% endblock %}
+
