@@ -67,7 +67,8 @@ SIMPLE_JWT.update(
 
 # Common Settings
 GS_BUCKET_NAME = "mnk-user-auth-bucket"
-
+GS_QUERYSTRING_AUTH = False  # allow public objects to use unsigned URLs
+GS_DEFAULT_ACL = None
 # Handle GCP credentials more gracefully
 GS_CREDENTIALS = None
 # Local development path
