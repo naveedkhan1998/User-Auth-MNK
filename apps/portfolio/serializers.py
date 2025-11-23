@@ -17,6 +17,7 @@ class ImageSerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
     created_at = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S.%fZ")
+    updated_at = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S.%fZ")
 
     class Meta:
         model = Project
@@ -28,6 +29,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             "description",
             "technology_used",
             "live_site_url",
+            "updated_at",
             "github_url",
         ]
 
